@@ -1,10 +1,10 @@
-package server.models;
+package paper.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import server.enums.UserRoles;
+import paper.enums.UserRoles;
 
 import javax.persistence.*;
 import java.sql.Date;

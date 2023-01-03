@@ -1,4 +1,4 @@
-package server.enums;
+package paper.enums;
 
 public enum UserRoles {
     USER,

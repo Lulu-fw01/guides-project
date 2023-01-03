@@ -1,17 +1,14 @@
-package server.controllers;
+package paper.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import server.models.Guide;
-import server.services.GuideHandleService;
+import org.springframework.web.bind.annotation.*;
+import paper.models.Guide;
+import paper.services.GuideHandleService;
 
 import java.util.List;
 
-@Controller("api/v1/guide-handling")
+@RestController
+@RequestMapping(path = "api/v1/guide-handling")
 public class GuideHandleController {
 
     private final GuideHandleService guideHandleService;
@@ -22,12 +19,13 @@ public class GuideHandleController {
     }
 
     @PostMapping
-    public void createGuide(Guide guide) {
+    public void createGuide(@RequestBody Guide guide) {
+        System.out.println(guide.getTitle());
         guideHandleService.createGuide(guide);
     }
 
     @DeleteMapping
-    public void removeGuide(Guide guide) {
+    public void removeGuide(@RequestBody Guide guide) {
         guideHandleService.removeGuide(guide);
     }
 
@@ -37,7 +35,7 @@ public class GuideHandleController {
     }
 
     @PutMapping
-    public void editGuide(Guide guide) {
+    public void editGuide(@RequestBody Guide guide) {
         guideHandleService.editGuide(guide);
     }
 

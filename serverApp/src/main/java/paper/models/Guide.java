@@ -1,4 +1,4 @@
-package server.models;
+package paper.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,10 +19,9 @@ public class Guide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private long id;
 
-    @Column(name = "creator_email")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_email", referencedColumnName = "email")
     private User creatorEmail;
 
