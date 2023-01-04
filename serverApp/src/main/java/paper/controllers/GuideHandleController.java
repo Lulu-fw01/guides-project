@@ -20,7 +20,6 @@ public class GuideHandleController {
 
     @PostMapping
     public void createGuide(@RequestBody Guide guide) {
-        System.out.println(guide.getTitle());
         guideHandleService.createGuide(guide);
     }
 
