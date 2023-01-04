@@ -23,7 +23,7 @@ public class CategoryService {
     }
 
     public void deleteCategory(Category category) {
-        categoryRepository.deleteById(category.getCategoryName());
+        categoryRepository.deleteById(category.getName());
     }
 
     public List<Category> getCategories() {

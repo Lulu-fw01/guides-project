@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import paper.compositeId.TagId;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -13,15 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "tags", schema = "public")
-public class Tag {
+public class Tag implements Serializable {
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guide_id", referencedColumnName = "id")
-    public Guide guideId;
-
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_name", referencedColumnName = "category_name")
-    public Category categoryName;
+    @EmbeddedId
+    private TagId tagId;
 }
