@@ -1,15 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:guide_app/features/auth/providers/view_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  final FocusNode _loginFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    var viewProvider = Provider.of<ViewProvider>(context);
     var theme = Provider.of<MainTheme>(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -25,11 +30,11 @@ class Login extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        _buildLoginInput(theme),
+        _buildLoginInput(viewProvider, theme),
         const SizedBox(
           height: 8,
         ),
-        _buildPasswordInput(theme),
+        _buildPasswordInput(viewProvider, theme),
         const SizedBox(
           height: 32,
         ),
@@ -42,34 +47,46 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginInput(MainTheme theme) => TextField(
-        keyboardType: TextInputType.emailAddress,
-        style: TextStyle(color: theme.onSurface),
-        cursorColor: theme.onSurface,
-        decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: theme.onSurface)),
-            suffixStyle: TextStyle(color: theme.onSurface),
-            hintText: 'Почта или логин',
-            hintStyle: TextStyle(color: theme.onSurfaceVariant)),
-        textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
-      );
+  /// Email or login input
+  Widget _buildLoginInput(ViewProvider provider, MainTheme theme) {
+    // Need this provider to remove guide logo from screen.
+    _loginFocus.addListener(() => provider.isInputView = _loginFocus.hasFocus);
+    return TextField(
+      focusNode: _loginFocus,
+      keyboardType: TextInputType.emailAddress,
+      style: TextStyle(color: theme.onSurface),
+      cursorColor: theme.onSurface,
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: theme.onSurface)),
+          suffixStyle: TextStyle(color: theme.onSurface),
+          hintText: 'Почта или логин',
+          hintStyle: TextStyle(color: theme.onSurfaceVariant)),
+      textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
+    );
+  }
 
-  /// Password input text field
-  Widget _buildPasswordInput(MainTheme theme) => TextField(
-        obscureText: true,
-        enableSuggestions: false,
-        autocorrect: false,
-        style: TextStyle(color: theme.onSurface),
-        cursorColor: theme.onSurface,
-        decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: theme.onSurface)),
-            suffixStyle: TextStyle(color: theme.onSurface),
-            hintText: 'Пароль',
-            hintStyle: TextStyle(color: theme.onSurfaceVariant)),
-        textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
-      );
+  /// Password input text field.
+  Widget _buildPasswordInput(ViewProvider provider, MainTheme theme) {
+    // Need this provider to remove guide logo from screen.
+    _passwordFocus
+        .addListener((() => provider.isInputView = _passwordFocus.hasFocus));
+    return TextField(
+      focusNode: _passwordFocus,
+      obscureText: true,
+      enableSuggestions: false,
+      autocorrect: false,
+      style: TextStyle(color: theme.onSurface),
+      cursorColor: theme.onSurface,
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: theme.onSurface)),
+          suffixStyle: TextStyle(color: theme.onSurface),
+          hintText: 'Пароль',
+          hintStyle: TextStyle(color: theme.onSurfaceVariant)),
+      textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
+    );
+  }
 
   /// Login button.
   Widget _buildLoginButton(MainTheme theme) => ElevatedButton(
