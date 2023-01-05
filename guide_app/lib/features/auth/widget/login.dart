@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:guide_app/features/auth/providers/view_provider.dart';
+import 'package:guide_app/features/auth/widget/input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
@@ -49,43 +48,17 @@ class Login extends StatelessWidget {
 
   /// Email or login input
   Widget _buildLoginInput(ViewProvider provider, MainTheme theme) {
-    // Need this provider to remove guide logo from screen.
     _loginFocus.addListener(() => provider.isInputView = _loginFocus.hasFocus);
-    return TextField(
-      focusNode: _loginFocus,
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyle(color: theme.onSurface),
-      cursorColor: theme.onSurface,
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: theme.onSurface)),
-          suffixStyle: TextStyle(color: theme.onSurface),
-          hintText: 'Почта или логин',
-          hintStyle: TextStyle(color: theme.onSurfaceVariant)),
-      textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
-    );
+    return buildInput(theme, _loginFocus, 'Почта или логин',
+        keyboardType: TextInputType.emailAddress);
   }
 
   /// Password input text field.
   Widget _buildPasswordInput(ViewProvider provider, MainTheme theme) {
-    // Need this provider to remove guide logo from screen.
     _passwordFocus
         .addListener((() => provider.isInputView = _passwordFocus.hasFocus));
-    return TextField(
-      focusNode: _passwordFocus,
-      obscureText: true,
-      enableSuggestions: false,
-      autocorrect: false,
-      style: TextStyle(color: theme.onSurface),
-      cursorColor: theme.onSurface,
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: theme.onSurface)),
-          suffixStyle: TextStyle(color: theme.onSurface),
-          hintText: 'Пароль',
-          hintStyle: TextStyle(color: theme.onSurfaceVariant)),
-      textInputAction: Platform.isIOS ? TextInputAction.continueAction : null,
-    );
+    return buildInput(theme, _passwordFocus, 'Пароль',
+        obscureText: true, enableSuggestions: false, autoCorrect: false);
   }
 
   /// Login button.
