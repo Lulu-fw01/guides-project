@@ -113,11 +113,12 @@ class SignUp extends StatelessWidget {
           backgroundColor: theme.onSurface,
           textStyle: const TextStyle(fontSize: 14)),
       onPressed: () {},
-      child: const Text('Зарегистрироваться'));
+      child: Text('Зарегистрироваться', /*style: TextStyle(color: theme.surface)*/));
 
   /// TextButton, after click go to sign up screen.
   Widget _buildLoginButton(AuthCubit authCubit, MainTheme theme) => TextButton(
         style: TextButton.styleFrom(
+          foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
         child: Text(

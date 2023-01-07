@@ -80,6 +80,7 @@ class Login extends StatelessWidget {
   /// TextButton, after click go to sign up screen.
   Widget _buildSignUpButton(AuthCubit authCubit, MainTheme theme) => TextButton(
         style: TextButton.styleFrom(
+          foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
         child: Text(
