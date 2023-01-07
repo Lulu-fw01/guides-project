@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/features/auth/providers/view_provider.dart';
+import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
@@ -8,7 +8,9 @@ import 'input_field.dart';
 
 /// Sign up form.
 class SignUp extends StatelessWidget {
-  SignUp({super.key});
+  SignUp({super.key, this.onViewChange});
+
+  final void Function(bool inputView)? onViewChange;
 
   final _loginFocus = FocusNode();
   final _passwordFocus = FocusNode();
@@ -18,8 +20,9 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var viewProvider = Provider.of<ViewProvider>(context);
     var theme = Provider.of<MainTheme>(context);
+    final authCubit = Provider.of<AuthCubit>(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,23 +37,23 @@ class SignUp extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        _buildNameInput(viewProvider, theme),
+        _buildNameInput(theme),
         const SizedBox(
           height: 8,
         ),
-        _buildLoginInput(viewProvider, theme),
+        _buildLoginInput(theme),
         const SizedBox(
           height: 8,
         ),
-        _buildEmailInput(viewProvider, theme),
+        _buildEmailInput(theme),
         const SizedBox(
           height: 8,
         ),
-        _buildPasswordInput(viewProvider, theme),
+        _buildPasswordInput(theme),
         const SizedBox(
           height: 8,
         ),
-        _buildRepeatPasswordInput(viewProvider, theme),
+        _buildRepeatPasswordInput(theme),
         const SizedBox(
           height: 32,
         ),
@@ -58,44 +61,49 @@ class SignUp extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        _buildLoginButton(theme)
+        _buildLoginButton(authCubit, theme)
       ],
     );
   }
 
   /// Name input.
-  Widget _buildNameInput(ViewProvider provider, MainTheme theme) {
-    _nameFocus.addListener(() => provider.isInputView = _nameFocus.hasFocus);
+  Widget _buildNameInput(MainTheme theme) {
+    _addOnViewChange(_nameFocus);
     return buildInput(theme, _nameFocus, 'Имя',
         keyboardType: TextInputType.name);
   }
 
   /// Login input.
-  Widget _buildLoginInput(ViewProvider provider, MainTheme theme) {
-    _loginFocus.addListener(() => provider.isInputView = _loginFocus.hasFocus);
+  Widget _buildLoginInput(MainTheme theme) {
+    _addOnViewChange(_loginFocus);
     return buildInput(theme, _loginFocus, 'Логин',
         keyboardType: TextInputType.name);
   }
 
-  Widget _buildEmailInput(ViewProvider provider, MainTheme theme) {
-    _emailFocus.addListener(() => provider.isInputView = _emailFocus.hasFocus);
+  Widget _buildEmailInput(MainTheme theme) {
+    _addOnViewChange(_emailFocus);
     return buildInput(theme, _emailFocus, 'Email',
         keyboardType: TextInputType.emailAddress);
   }
 
   /// Password input text field.
-  Widget _buildPasswordInput(ViewProvider provider, MainTheme theme) {
-    _passwordFocus
-        .addListener((() => provider.isInputView = _passwordFocus.hasFocus));
+  Widget _buildPasswordInput(MainTheme theme) {
+    _addOnViewChange(_passwordFocus);
     return buildInput(theme, _passwordFocus, 'Пароль',
         obscureText: true, enableSuggestions: false, autoCorrect: false);
   }
 
-  Widget _buildRepeatPasswordInput(ViewProvider provider, MainTheme theme) {
-    _repeatPasswordFocus.addListener(
-        (() => provider.isInputView = _repeatPasswordFocus.hasFocus));
+  Widget _buildRepeatPasswordInput(MainTheme theme) {
+    _addOnViewChange(_repeatPasswordFocus);
     return buildInput(theme, _repeatPasswordFocus, 'Пароль еще раз',
         obscureText: true, enableSuggestions: false, autoCorrect: false);
+  }
+
+  /// TODO add into mixin.
+  void _addOnViewChange(FocusNode node) {
+    if (onViewChange != null) {
+      node.addListener(() => onViewChange!(node.hasFocus));
+    }
   }
 
   /// Login button.
@@ -108,7 +116,7 @@ class SignUp extends StatelessWidget {
       child: const Text('Зарегистрироваться'));
 
   /// TextButton, after click go to sign up screen.
-  Widget _buildLoginButton(MainTheme theme) => TextButton(
+  Widget _buildLoginButton(AuthCubit authCubit, MainTheme theme) => TextButton(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
@@ -116,6 +124,8 @@ class SignUp extends StatelessWidget {
           'Войти',
           style: TextStyle(color: theme.onSurface),
         ),
-        onPressed: () {},
+        onPressed: () {
+          authCubit.goToLogin();
+        },
       );
 }

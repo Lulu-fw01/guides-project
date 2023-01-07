@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/widget/input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,8 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<MainTheme>(context);
+    final authCubit = Provider.of<AuthCubit>(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,7 +44,7 @@ class Login extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        _buildSignUpButton(theme)
+        _buildSignUpButton(authCubit, theme)
       ],
     );
   }
@@ -75,7 +78,7 @@ class Login extends StatelessWidget {
       child: const Text('Войти'));
 
   /// TextButton, after click go to sign up screen.
-  Widget _buildSignUpButton(MainTheme theme) => TextButton(
+  Widget _buildSignUpButton(AuthCubit authCubit, MainTheme theme) => TextButton(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
@@ -83,6 +86,8 @@ class Login extends StatelessWidget {
           'Зарегистрироваться',
           style: TextStyle(color: theme.onSurface),
         ),
-        onPressed: () {},
+        onPressed: () {
+          authCubit.goToSignUp();
+        },
       );
 }

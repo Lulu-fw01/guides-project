@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/features/auth/providers/view_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/widget/guide_logo.dart';
 import 'package:guide_app/features/auth/widget/login.dart';
 import 'package:guide_app/features/auth/widget/sign_up.dart';
-import 'package:provider/provider.dart';
 
 /// Screen for user authorization.
 class AuthScreen extends StatefulWidget {
@@ -58,10 +58,18 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
-          child: ChangeNotifierProvider(
-            create: (context) => ViewProvider(),
-            child: _buildLogin(),
-          ),
+          child: BlocProvider(
+              create: (context) => AuthCubit(),
+              child:
+                  BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+                if (state is AuthLoginState) {
+                  return _buildLogin();
+                }
+                if (state is AuthSignUpState) {
+                  return _buildSignUp();
+                }
+                return const CircularProgressIndicator();
+              })),
         ),
       ),
     ));
@@ -69,35 +77,41 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   Widget _buildLogin() => Column(
         //mainAxisAlignment: MainAxisAlignment.start,
-        children: [_buildDynamicGuideLogo(), Login(onViewChange: _viewChange,)],
+        children: [
+          _buildDynamicGuideLogo(),
+          Login(
+            onViewChange: _viewChange,
+          )
+        ],
       );
 
   Widget _buildSignUp() => Column(
         //mainAxisAlignment: MainAxisAlignment.center,
-        children: [_buildDynamicGuideLogo(), SignUp()],
+        children: [
+          _buildDynamicGuideLogo(),
+          SignUp(
+            onViewChange: _viewChange,
+          )
+        ],
       );
 
-  Widget _buildDynamicGuideLogo() {
-    return Consumer<ViewProvider>(
-      builder: (context, view, child) {
-        return SizeTransition(
-          sizeFactor: _animation,
-          axis: Axis.vertical,
-          child: Center(
-            child: Column(
-              children: const [
-                SizedBox(height: 8,),
-                GuideLogo(),
-                SizedBox(
-                  height: 16,
-                ),
-              ],
-            ),
+  Widget _buildDynamicGuideLogo() => SizeTransition(
+        sizeFactor: _animation,
+        axis: Axis.vertical,
+        child: Center(
+          child: Column(
+            children: const [
+              SizedBox(
+                height: 8,
+              ),
+              GuideLogo(),
+              SizedBox(
+                height: 16,
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 
   @override
   dispose() {
