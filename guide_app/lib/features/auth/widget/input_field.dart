@@ -3,10 +3,14 @@ import 'package:guide_app/common/themes/main_theme.dart';
 
 Widget buildInput(MainTheme theme, FocusNode focusNode, String hint,
         {TextInputType? keyboardType,
+        TextEditingController? controller,
+        String? Function(String?)? validator,
         bool obscureText = false,
         bool enableSuggestions = true,
         bool autoCorrect = true}) =>
-    TextField(
+    TextFormField(
+      controller: controller,
+      validator: validator,
       obscureText: obscureText,
       enableSuggestions: enableSuggestions,
       autocorrect: autoCorrect,

@@ -8,11 +8,18 @@ import 'package:guide_app/common/themes/main_theme.dart';
 import 'input_field.dart';
 
 /// Sign up form.
-class SignUp extends StatelessWidget with ViewDependency {
-  SignUp({super.key, this.onViewChange});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key, this.onViewChange});
+
+  final void Function(bool inputView)? onViewChange;
 
   @override
-  final void Function(bool inputView)? onViewChange;
+  SignUpState createState() => SignUpState();
+}
+
+class SignUpState extends State<SignUp> with ViewDependency {
+  @override
+  void Function(bool inputView)? get onViewChange => widget.onViewChange;
 
   final _loginFocus = FocusNode();
   final _passwordFocus = FocusNode();
@@ -20,51 +27,56 @@ class SignUp extends StatelessWidget with ViewDependency {
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<MainTheme>(context);
     final authCubit = Provider.of<AuthCubit>(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          style: GoogleFonts.lato(
-              color: theme.onSurface,
-              fontSize: 24,
-              fontWeight: FontWeight.w500),
-          "Регистрация",
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildNameInput(theme),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildLoginInput(theme),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildEmailInput(theme),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildPasswordInput(theme),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildRepeatPasswordInput(theme),
-        const SizedBox(
-          height: 32,
-        ),
-        _buildSignUpButton(theme),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildLoginButton(authCubit, theme)
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            style: GoogleFonts.lato(
+                color: theme.onSurface,
+                fontSize: 24,
+                fontWeight: FontWeight.w500),
+            "Регистрация",
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildNameInput(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildLoginInput(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildEmailInput(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildPasswordInput(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildRepeatPasswordInput(theme),
+          const SizedBox(
+            height: 32,
+          ),
+          _buildSignUpButton(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildLoginButton(authCubit, theme)
+        ],
+      ),
     );
   }
 
@@ -72,33 +84,64 @@ class SignUp extends StatelessWidget with ViewDependency {
   Widget _buildNameInput(MainTheme theme) {
     addOnViewChange(_nameFocus);
     return buildInput(theme, _nameFocus, 'Имя',
-        keyboardType: TextInputType.name);
+        keyboardType: TextInputType.name, validator: (value) {
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    });
   }
 
   /// Login input.
   Widget _buildLoginInput(MainTheme theme) {
     addOnViewChange(_loginFocus);
     return buildInput(theme, _loginFocus, 'Логин',
-        keyboardType: TextInputType.name);
+        keyboardType: TextInputType.name, validator: (value) {
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    });
   }
 
   Widget _buildEmailInput(MainTheme theme) {
     addOnViewChange(_emailFocus);
     return buildInput(theme, _emailFocus, 'Email',
-        keyboardType: TextInputType.emailAddress);
+        keyboardType: TextInputType.emailAddress, validator: (value) {
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    });
   }
 
   /// Password input text field.
   Widget _buildPasswordInput(MainTheme theme) {
     addOnViewChange(_passwordFocus);
     return buildInput(theme, _passwordFocus, 'Пароль',
-        obscureText: true, enableSuggestions: false, autoCorrect: false);
+        obscureText: true,
+        enableSuggestions: false,
+        autoCorrect: false, validator: (value) {
+      // TODO add more.
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    });
   }
 
   Widget _buildRepeatPasswordInput(MainTheme theme) {
     addOnViewChange(_repeatPasswordFocus);
     return buildInput(theme, _repeatPasswordFocus, 'Пароль еще раз',
-        obscureText: true, enableSuggestions: false, autoCorrect: false);
+        obscureText: true,
+        enableSuggestions: false,
+        autoCorrect: false, validator: (value) {
+      // TODO add more.
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    });
   }
 
   /// Login button.
@@ -107,7 +150,7 @@ class SignUp extends StatelessWidget with ViewDependency {
           padding: const EdgeInsets.only(left: 24, right: 24),
           backgroundColor: theme.onSurface,
           textStyle: const TextStyle(fontSize: 14)),
-      onPressed: () {},
+      onPressed: _onSignUpButtonClick,
       child: const Text(
         'Зарегистрироваться',
       ));
@@ -118,12 +161,17 @@ class SignUp extends StatelessWidget with ViewDependency {
           foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
+        onPressed: authCubit.goToLogin,
         child: Text(
           'Войти',
           style: TextStyle(color: theme.onSurface),
         ),
-        onPressed: () {
-          authCubit.goToLogin();
-        },
       );
+
+  void _onSignUpButtonClick() {
+    if (_formKey.currentState!.validate()) {
+      // TODO add code if all ok.
+      // call repository etc.
+    }
+  }
 }

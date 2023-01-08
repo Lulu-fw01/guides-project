@@ -11,10 +11,10 @@ class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AuthScreenState();
+  AuthScreenState createState() => AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
+class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _inputView = false;
@@ -87,6 +87,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         ],
       );
 
+  // TODO wrap with listView, maybe do something with center widget in build method.
   Widget _buildSignUp() => Column(
         //mainAxisAlignment: MainAxisAlignment.center,
         children: [
