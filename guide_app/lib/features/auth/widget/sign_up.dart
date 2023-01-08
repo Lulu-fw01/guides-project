@@ -108,8 +108,8 @@ class SignUp extends StatelessWidget with ViewDependency {
           backgroundColor: theme.onSurface,
           textStyle: const TextStyle(fontSize: 14)),
       onPressed: () {},
-      child: Text(
-        'Зарегистрироваться', /*style: TextStyle(color: theme.surface)*/
+      child: const Text(
+        'Зарегистрироваться',
       ));
 
   /// TextButton, after click go to sign up screen.

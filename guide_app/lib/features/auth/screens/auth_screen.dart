@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
+import 'package:guide_app/features/auth/repository/auth_repository.dart';
 import 'package:guide_app/features/auth/widget/guide_logo.dart';
 import 'package:guide_app/features/auth/widget/login.dart';
 import 'package:guide_app/features/auth/widget/sign_up.dart';
@@ -54,26 +55,26 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
-          child: BlocProvider(
-              create: (context) => AuthCubit(),
-              child:
-                  BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-                if (state is AuthLoginState) {
-                  return _buildLogin();
-                }
-                if (state is AuthSignUpState) {
-                  return _buildSignUp();
-                }
-                return const CircularProgressIndicator();
-              })),
-        ),
-      ),
-    ));
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
+              child: BlocProvider(
+                  create: (context) => AuthCubit(AuthRepository()),
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                      builder: (context, state) {
+                    if (state is AuthLoginState) {
+                      return _buildLogin();
+                    }
+                    if (state is AuthSignUpState) {
+                      return _buildSignUp();
+                    }
+                    return const CircularProgressIndicator();
+                  })),
+            ),
+          ),
+        ));
   }
 
   Widget _buildLogin() => Column(

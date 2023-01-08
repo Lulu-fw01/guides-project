@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 
+/// Login form.
 class Login extends StatelessWidget with ViewDependency {
   Login({super.key, this.onViewChange});
 
