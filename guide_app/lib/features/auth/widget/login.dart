@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
+import 'package:guide_app/features/auth/mixin/view_dependency.dart';
 import 'package:guide_app/features/auth/widget/input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatelessWidget with ViewDependency {
   Login({super.key, this.onViewChange});
 
+  @override
   final void Function(bool inputView)? onViewChange;
 
   final FocusNode _loginFocus = FocusNode();
@@ -51,19 +53,14 @@ class Login extends StatelessWidget {
 
   /// Email or login input
   Widget _buildLoginInput(MainTheme theme) {
-    if (onViewChange != null) {
-      _loginFocus.addListener(() => onViewChange!(_loginFocus.hasFocus));
-    }
+    addOnViewChange(_loginFocus);
     return buildInput(theme, _loginFocus, 'Почта или логин',
         keyboardType: TextInputType.emailAddress);
   }
 
   /// Password input text field.
   Widget _buildPasswordInput(MainTheme theme) {
-    if (onViewChange != null) {
-      _passwordFocus
-          .addListener((() => onViewChange!(_passwordFocus.hasFocus)));
-    }
+    addOnViewChange(_passwordFocus);
     return buildInput(theme, _passwordFocus, 'Пароль',
         obscureText: true, enableSuggestions: false, autoCorrect: false);
   }
