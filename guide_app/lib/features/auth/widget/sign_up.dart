@@ -50,14 +50,6 @@ class SignUpState extends State<SignUp> with ViewDependency {
           const SizedBox(
             height: 8,
           ),
-          _buildNameInput(theme),
-          const SizedBox(
-            height: 8,
-          ),
-          _buildLoginInput(theme),
-          const SizedBox(
-            height: 8,
-          ),
           _buildEmailInput(theme),
           const SizedBox(
             height: 8,

@@ -16,7 +16,7 @@ class AuthScreen extends StatefulWidget {
 
 class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  late Animation<double> _animationShow;
   bool _inputView = false;
 
   @override
@@ -27,7 +27,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    _animation = CurvedAnimation(
+    _animationShow = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOutQuart,
     );
@@ -99,7 +99,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       );
 
   Widget _buildDynamicGuideLogo() => SizeTransition(
-        sizeFactor: _animation,
+        sizeFactor: _animationShow,
         axis: Axis.vertical,
         child: Center(
           child: Column(
