@@ -24,11 +24,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        // TODO: add additional constraints according to users' roles
         return httpSecurity
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers("")
+                .antMatchers("api/v1/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
