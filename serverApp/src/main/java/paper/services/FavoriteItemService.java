@@ -2,7 +2,7 @@ package paper.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import paper.models.FavoriteItem;
+import paper.entities.FavoriteItem;
 import paper.repository.FavoriteItemRepository;
 
 

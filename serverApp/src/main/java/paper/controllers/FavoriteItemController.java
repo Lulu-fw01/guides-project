@@ -2,11 +2,8 @@ package paper.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import paper.models.FavoriteItem;
-import paper.models.User;
+import paper.entities.FavoriteItem;
 import paper.services.FavoriteItemService;
-
-import java.util.List;
 
 
 @RestController

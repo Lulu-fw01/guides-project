@@ -1,7 +1,7 @@
 package paper.services;
 
 import org.springframework.stereotype.Service;
-import paper.models.Subscription;
+import paper.entities.Subscription;
 import paper.repository.SubscriptionRepository;
 
 @Service

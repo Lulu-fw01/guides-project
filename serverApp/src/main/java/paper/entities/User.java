@@ -1,4 +1,4 @@
-package paper.models;
+package paper.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package paper.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import paper.models.Tag;
+import paper.entities.Tag;
 import paper.services.TagService;
 
 @RestController

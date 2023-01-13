@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import paper.models.Guide;
-import paper.models.User;
+import paper.entities.Guide;
+import paper.entities.User;
 
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;

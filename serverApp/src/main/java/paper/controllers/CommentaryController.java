@@ -1,7 +1,7 @@
 package paper.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import paper.models.Commentary;
+import paper.entities.Commentary;
 import paper.services.CommentaryService;
 
 
