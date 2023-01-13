@@ -1,8 +1,8 @@
 package paper.compositeId;
 
 import lombok.*;
-import paper.models.Category;
-import paper.models.Guide;
+import paper.entities.Category;
+import paper.entities.Guide;
 
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;

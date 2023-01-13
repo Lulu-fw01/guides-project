@@ -2,7 +2,7 @@ package paper.services;
 
 import org.springframework.stereotype.Service;
 import paper.compositeId.TagId;
-import paper.models.Tag;
+import paper.entities.Tag;
 import paper.repository.TagRepository;
 
 @Service

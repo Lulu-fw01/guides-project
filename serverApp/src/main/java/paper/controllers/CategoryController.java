@@ -2,7 +2,7 @@ package paper.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import paper.models.Category;
+import paper.entities.Category;
 import paper.services.CategoryService;
 
 import java.util.List;

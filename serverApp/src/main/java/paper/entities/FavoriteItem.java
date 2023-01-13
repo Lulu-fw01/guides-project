@@ -1,10 +1,10 @@
-package paper.models;
+package paper.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import paper.compositeId.SubscriptionId;
+import paper.compositeId.FavoriteId;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -15,9 +15,9 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "subscriptions", schema = "public")
-public class Subscription {
+@Table(name = "favourites", schema = "public")
+public class FavoriteItem {
 
     @EmbeddedId
-    private SubscriptionId subscriptionId;
+    private FavoriteId favoriteId;
 }
