@@ -6,7 +6,7 @@ import 'package:guide_app/features/profile/screens/profile_screen.dart';
 import 'package:guide_app/features/search/screens/search_screen.dart';
 import 'package:provider/provider.dart';
 
-/// Main screen of the app with navigation bottom bar.
+/// Main component of the app with navigation bottom bar.
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -16,8 +16,12 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int selectedPageIndex = 0;
-  static const _pages = [HomeScreen(), SearchScreen(), FavoritesScreen(), ProfileScreen()];
-
+  static const _pages = [
+    HomeScreen(),
+    SearchScreen(),
+    FavoritesScreen(),
+    ProfileScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(
+          height: 80,
           selectedIndex: selectedPageIndex,
           backgroundColor: theme.surface,
           onDestinationSelected: (int index) {
