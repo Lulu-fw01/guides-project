@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
+import 'package:guide_app/features/home/screens/home_screen.dart';
+import 'package:guide_app/features/profile/screens/profile_screen.dart';
+import 'package:guide_app/features/search/screens/search_screen.dart';
 import 'package:provider/provider.dart';
 
 /// Main screen of the app with navigation bottom bar.
@@ -13,12 +16,19 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int selectedPageIndex = 0;
+  static const _pages = [HomeScreen(), SearchScreen(), FavoritesScreen(), ProfileScreen()];
+
 
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
+      body: SafeArea(child: _pages[selectedPageIndex]),
+      bottomNavigationBar: _buildBottomNavigationBar(theme),
+    );
+  }
+
+  Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(
           selectedIndex: selectedPageIndex,
           backgroundColor: theme.surface,
           onDestinationSelected: (int index) {
@@ -57,7 +67,5 @@ class MainScreenState extends State<MainScreen> {
                   color: theme.onSurface,
                 ),
                 label: "Профиль")
-          ]),
-    );
-  }
+          ]);
 }

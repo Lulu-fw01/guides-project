@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/features/main_screen/main_screen.dart';
+import 'package:guide_app/features/main/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/cubit/init_cubit.dart';
