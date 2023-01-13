@@ -42,12 +42,13 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         var jwt = header.substring(7);
+        System.out.println(jwt);
+
         var email = jwtService.getClaim(jwt, Claims::getSubject);
 
         // check if user is not authenticated
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -58,6 +59,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
         filterChain.doFilter(request, response);

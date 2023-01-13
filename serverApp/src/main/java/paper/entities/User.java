@@ -22,6 +22,20 @@ import java.util.List;
 @Table(name = "users", schema = "public")
 public class User implements UserDetails {
 
+    public User(String email,
+                String name,
+                String login,
+                String password,
+                Date birthday,
+                Boolean isBlocked) {
+        this.email = email;
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.birthday = birthday;
+        this.isBlocked = isBlocked;
+    }
+
     @Id
     @Column(name = "email")
     private String email;

@@ -18,14 +18,15 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private final ConfigYaml configYaml;
+    // TODO: fix configs
+    //private final ConfigYaml configYaml;
 
-    @Autowired
-    public JwtService(ConfigYaml configYaml) {
-        this.configYaml = configYaml;
-    }
+//    @Autowired
+//    public JwtService(ConfigYaml configYaml) {
+//        this.configYaml = configYaml;
+//    }
 
-    // private static final String SEC_TOKEN = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
+    private static final String SEC_TOKEN = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
@@ -65,7 +66,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        var keyBytes = Decoders.BASE64.decode(configYaml.getToken());
+        var keyBytes = Decoders.BASE64.decode(SEC_TOKEN);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

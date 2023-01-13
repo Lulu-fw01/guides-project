@@ -1,5 +1,6 @@
 package paper.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Guide {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_email", referencedColumnName = "email")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User creatorEmail;
 
     @Column(name = "title")
