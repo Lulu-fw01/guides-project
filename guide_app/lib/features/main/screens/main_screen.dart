@@ -27,6 +27,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(child: _pages[selectedPageIndex]),
       bottomNavigationBar: _buildBottomNavigationBar(theme),
     );
