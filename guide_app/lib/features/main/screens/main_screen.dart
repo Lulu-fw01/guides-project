@@ -29,8 +29,9 @@ class MainScreenState extends State<MainScreen> {
     final theme = Provider.of<MainTheme>(context);
     return Scaffold(
       appBar: _buildAppBar(context),
-      backgroundColor: Colors.white,
-      body: SafeArea(child: _pages[selectedPageIndex]),
+      body: SafeArea(
+          child:
+              Container(color: Colors.white, child: _pages[selectedPageIndex])),
       bottomNavigationBar: _buildBottomNavigationBar(theme),
       floatingActionButton: selectedPageIndex == 3
           ? FloatingActionButton(

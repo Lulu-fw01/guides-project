@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/features/search/widgets/search_input_decoration.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -41,33 +42,9 @@ class SearchScreenState extends State<SearchScreen> {
         controller: _searchTextController,
         cursorColor: theme.onSurface,
         style: TextStyle(color: theme.onSurface),
-        decoration: _searchFieldDecoration(theme),
+        decoration: searchInputDecoration(
+            theme, _searchTextController, _clearSearchInput),
       );
-
-  InputDecoration _searchFieldDecoration(MainTheme theme) => InputDecoration(
-      hintText: 'Поиск',
-      hintStyle: TextStyle(color: theme.onSurfaceVariant),
-      enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.surface),
-          borderRadius: BorderRadius.circular(16)),
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.surface),
-          borderRadius: BorderRadius.circular(16)),
-      prefixIcon: Icon(
-        Icons.search,
-        color: theme.onSurfaceVariant,
-      ),
-      suffixIcon: _searchTextController.text.isEmpty
-          ? null
-          : IconButton(
-              icon: Icon(
-                Icons.clear,
-                color: theme.onSurfaceVariant,
-              ),
-              onPressed: _clearSearchInput,
-            ),
-      filled: true,
-      fillColor: theme.surface);
 
   @override
   void dispose() {
