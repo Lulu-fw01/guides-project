@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import paper.dto.GuideDTO;
 import paper.entities.Guide;
 import paper.repository.GuideHandleRepository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class GuideHandleService {
@@ -24,20 +27,36 @@ public class GuideHandleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
+        checkIfSomeFieldIsNull(guide);
+
         guideHandleRepository.save(guide);
     }
 
-    public void removeGuide(Guide guide) {
-        if (guide == null) {
+    public void removeGuide(Long id) {
+        if (id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
-        guideHandleRepository.deleteById(guide.getId());
-
+        if (guideHandleRepository.existsById(id)) {
+            guideHandleRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The guide with the specified id does not exist");
+        }
     }
 
-    public List<Guide> getListOfAllGuides() {
-        return guideHandleRepository.findAll();
+    public List<GuideDTO> getListOfAllGuides() {
+        var guides = guideHandleRepository.findAll();
+
+        return guides.stream()
+                .map(guide -> new GuideDTO(
+                        guide.getId(),
+                        guide.getCreatorEmail().getEmail(),
+                        guide.getTitle(),
+                        guide.getFileBytes(),
+                        guide.getEditDate(),
+                        guide.getIsBlocked()
+                ))
+                .toList();
     }
 
     public void editGuide(Guide guide) {
@@ -45,19 +64,38 @@ public class GuideHandleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
-        var selectedGuide = guideHandleRepository.findById(guide.getId());
+        checkIfSomeFieldIsNull(guide);
 
-        selectedGuide.ifPresent(value -> {
-            value.setId(guide.getId());
-            value.setCreatorEmail(guide.getCreatorEmail());
-            value.setEditDate(guide.getEditDate());
-            value.setTitle(guide.getTitle());
-            value.setFileBytes(guide.getFileBytes());
-            value.setIsBlocked(guide.getIsBlocked());
-        });
+        var selectedGuideOptional = guideHandleRepository.findById(guide.getId());
 
-        selectedGuide.ifPresent(guideHandleRepository::save);
+        if (selectedGuideOptional.isPresent()) {
+            var selectedGuide = selectedGuideOptional.get();
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find the object by given id");
+            selectedGuide.setId(guide.getId());
+            selectedGuide.setCreatorEmail(guide.getCreatorEmail());
+            selectedGuide.setEditDate(guide.getEditDate());
+            selectedGuide.setTitle(guide.getTitle());
+            selectedGuide.setFileBytes(guide.getFileBytes());
+            selectedGuide.setIsBlocked(guide.getIsBlocked());
+
+            guideHandleRepository.save(selectedGuide);
+            return;
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find the guide by given id");
+    }
+
+    private void checkIfSomeFieldIsNull(Guide guide) {
+        if (Stream.of(guide.getCreatorEmail(),
+                        guide.getTitle(),
+                        guide.getFileBytes(),
+                        guide.getEditDate(),
+                        guide.getIsBlocked())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "One of the transferred attributes is null." +
+                            " Consider sending request in the following format:" +
+                            " email, title, file bytes, edit date, isBlocked");
+        }
     }
 }

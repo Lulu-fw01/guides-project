@@ -30,7 +30,6 @@ public class Commentary {
     private Guide guideId;
 
     @Column(name = "edit_date")
-//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp editDate;
 
     @Column(name = "content")

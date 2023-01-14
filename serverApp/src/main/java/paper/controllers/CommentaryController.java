@@ -1,8 +1,11 @@
 package paper.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import paper.dto.CommentaryResponseDTO;
 import paper.entities.Commentary;
 import paper.services.CommentaryService;
+
+import java.util.List;
 
 
 @RestController
@@ -27,5 +30,8 @@ public class CommentaryController {
 
     // TODO: PUT or PATCH method to edit commentary?
 
-    // TODO: add GetMapping to get commentaries for particular guide
+    @GetMapping
+    public List<CommentaryResponseDTO> commentariesByPost(@RequestBody Long id) {
+        return commentaryService.getCommentariesByPost(id);
+    }
 }

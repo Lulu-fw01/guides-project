@@ -2,6 +2,7 @@ package paper.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import paper.dto.GuideDTO;
 import paper.entities.Guide;
 import paper.services.GuideHandleService;
 
@@ -24,12 +25,12 @@ public class GuideHandleController {
     }
 
     @DeleteMapping
-    public void removeGuide(@RequestBody Guide guide) {
-        guideHandleService.removeGuide(guide);
+    public void removeGuide(@RequestBody Long id) {
+        guideHandleService.removeGuide(id);
     }
 
     @GetMapping
-    public List<Guide> getListOfAllGuides() {
+    public List<GuideDTO> getListOfAllGuides() {
         return guideHandleService.getListOfAllGuides();
     }
 

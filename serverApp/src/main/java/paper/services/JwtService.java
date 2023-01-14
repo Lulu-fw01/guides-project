@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class JwtService {
 
     // TODO: fix configs
-    //private final ConfigYaml configYaml;
+//    private final ConfigYaml configYaml;
 
 //    @Autowired
 //    public JwtService(ConfigYaml configYaml) {
