@@ -37,6 +37,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
+    // TODO: validation
     public JwtResponseDTO register(RegisterDTO registerRequestBody) {
         // TODO handle mocks
         var user = new User(
