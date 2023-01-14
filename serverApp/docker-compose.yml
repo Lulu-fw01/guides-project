@@ -1,0 +1,19 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: guide_postgres
+      PGDATA: /data/postgres
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5433:5432"
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
