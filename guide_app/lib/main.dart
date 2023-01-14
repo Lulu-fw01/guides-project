@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/features/main/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/cubit/init_cubit.dart';
@@ -30,9 +31,10 @@ class MyApp extends StatelessWidget {
           }
           if (state is InitAuthorized) {
             // TODO add correct feature
-            return const Scaffold(backgroundColor: Colors.red);
+            return MainScreen();
           }*/
-              return AuthScreen();
+              return MainScreen();
+              //return AuthScreen();
             }),
           ),
         ));
