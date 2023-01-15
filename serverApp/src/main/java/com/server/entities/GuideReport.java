@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class GuideReport {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -38,3 +39,15 @@ public class GuideReport {
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 }
+
+//{
+//        "reporterEmail": {
+//        "email": "uhh@uhh.com"
+//        },
+//        "violatorEmail": {
+//        "email": "mail@mail.com"
+//        },
+//        "comment": "sad",
+//        "category": "FRAUD",
+//        "status": "OPENED"
+//        }

@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class UserReport {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 

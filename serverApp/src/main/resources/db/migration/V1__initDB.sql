@@ -1,18 +1,4 @@
--- we don't know how to generate root <with-no-name> (class Root) :(
-
-create type user_role as enum ('user', 'administrator', 'moderator');
-
-alter type user_role owner to postgres;
-
-create type report_reason as enum ('spam', 'violence', 'fraud');
-
-alter type report_reason owner to postgres;
-
-create type report_status as enum ('opened', 'rejected', 'resolved');
-
-alter type report_status owner to postgres;
-
-create table users
+create table if not exists public.users
 (
     email      text                      not null
         primary key,
@@ -25,19 +11,19 @@ create table users
             check (char_length((login)::text) >= 2),
     password   text                      not null,
     birthday   date,
-    role       varchar(20) default 'user'::user_role,
+    role       varchar(20) default 'USER'::character varying,
     is_blocked boolean     default false not null
 );
 
-alter table users
+alter table public.users
     owner to postgres;
 
-create table guides
+create table if not exists public.guides
 (
     id            bigserial
         primary key,
     creator_email text                  not null
-        references users,
+        references public.users,
     title         varchar(50)           not null
         constraint title_check
             check (char_length((title)::text) >= 1),
@@ -46,10 +32,10 @@ create table guides
     is_blocked    boolean default false not null
 );
 
-alter table guides
+alter table public.guides
     owner to postgres;
 
-create table categories
+create table if not exists public.categories
 (
     category_name varchar(16) not null
         primary key
@@ -57,108 +43,109 @@ create table categories
             check (char_length((category_name)::text) >= 2)
 );
 
-alter table categories
+alter table public.categories
     owner to postgres;
 
-create table tags
+create table if not exists public.tags
 (
     guide_id      bigint not null
-        references guides,
+        references public.guides,
     category_name text   not null
-        references categories,
+        references public.categories,
     primary key (guide_id, category_name)
 );
 
-alter table tags
+alter table public.tags
     owner to postgres;
 
-create table interactions
+create table if not exists public.interactions
 (
     user_email text   not null
-        references users,
+        references public.users,
     guide_id   bigint not null
-        references guides,
+        references public.guides,
     users_mark integer,
     view_date  timestamp,
     primary key (user_email, guide_id)
 );
 
-alter table interactions
+alter table public.interactions
     owner to postgres;
 
-create table comments
+create table if not exists public.comments
 (
     id         bigserial
         primary key,
     user_email text         not null
-        references users,
+        references public.users,
     guide_id   bigint       not null
-        references guides,
+        references public.guides,
     edit_date  timestamp,
     content    varchar(256) not null
         constraint content_check
             check (char_length((content)::text) >= 1)
 );
 
-alter table comments
+alter table public.comments
     owner to postgres;
 
-create table favourites
+create table if not exists public.favourites
 (
     guide_id   bigint not null
-        references guides,
+        references public.guides,
     user_email text   not null
-        references users,
+        references public.users,
     primary key (guide_id, user_email)
 );
 
-alter table favourites
+alter table public.favourites
     owner to postgres;
 
-create table subscriptions
+create table if not exists public.subscriptions
 (
     user_email              text not null
-        references users,
+        references public.users,
     subscription_user_email text not null
-        references users,
+        references public.users,
     primary key (user_email, subscription_user_email)
 );
 
-alter table subscriptions
+alter table public.subscriptions
     owner to postgres;
 
-create table user_reports
+create table if not exists public.user_reports
 (
     id             bigserial
         primary key,
-    reporter_email text                                          not null
-        references users,
-    violator_email text                                          not null
-        references users,
+    reporter_email text                                            not null
+        references public.users,
+    violator_email text                                            not null
+        references public.users,
     comment        varchar(256)
         constraint user_report_comment_check
             check (char_length((comment)::text) >= 1),
-    category       report_reason                                 not null,
-    status         report_status default 'opened'::report_status not null
+    category       varchar(20)                                     not null,
+    status         varchar(20) default 'OPENED'::character varying not null
 );
 
-alter table user_reports
+alter table public.user_reports
     owner to postgres;
 
-create table guide_reports
+create table if not exists public.guide_reports
 (
     id             bigserial
         primary key,
-    reporter_email text                                          not null
-        references users,
-    guide_id       bigint                                        not null
-        references guides,
+    reporter_email text                                            not null
+        references public.users,
+    guide_id       bigint                                          not null
+        references public.guides,
     comment        varchar(256)
         constraint guide_report_comment_check
             check (char_length((comment)::text) >= 1),
-    category       report_reason                                 not null,
-    status         report_status default 'opened'::report_status not null
+    category       varchar(20)                                     not null,
+    status         varchar(20) default 'OPENED'::character varying not null
 );
 
-alter table guide_reports
+alter table public.guide_reports
     owner to postgres;
+
