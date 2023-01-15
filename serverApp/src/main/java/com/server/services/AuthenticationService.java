@@ -41,7 +41,6 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    // TODO: validation
     public JwtResponseDTO register(RegisterDTO registerRequestBody) {
         if (registerRequestBody == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
@@ -63,7 +62,7 @@ public class AuthenticationService {
                "mockLogin",
                 passwordEncoder.encode(registerRequestBody.getPassword()),
                 Date.valueOf("2023-01-01"), // mock date
-                UserRoles.user,
+                UserRoles.USER,
                 false
         );
 

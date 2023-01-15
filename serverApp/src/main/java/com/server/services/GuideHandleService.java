@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.dto.GuideDTO;
 import com.server.repository.GuideHandleRepository;
+import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
-public class GuideHandleService {
+public class GuideHandleService implements Validator {
 
     private final GuideHandleRepository guideHandleRepository;
 
@@ -23,9 +24,7 @@ public class GuideHandleService {
     }
 
     public void createGuide(Guide guide) {
-        if (guide == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
-        }
+        nullBodyRequestCheck(guide);
 
         checkIfSomeFieldIsNull(guide);
 
@@ -60,9 +59,7 @@ public class GuideHandleService {
     }
 
     public void editGuide(Guide guide) {
-        if (guide == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
-        }
+        nullBodyRequestCheck(guide);
 
         checkIfSomeFieldIsNull(guide);
 
@@ -85,7 +82,10 @@ public class GuideHandleService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find the guide by given id");
     }
 
-    private void checkIfSomeFieldIsNull(Guide guide) {
+    @Override
+    public <T> void checkIfSomeFieldIsNull(T obj) {
+        var guide = (Guide) obj;
+
         if (Stream.of(guide.getCreatorEmail(),
                         guide.getTitle(),
                         guide.getFileBytes(),
@@ -96,6 +96,15 @@ public class GuideHandleService {
                     "One of the transferred attributes is null." +
                             " Consider sending request in the following format:" +
                             " email, title, file bytes, edit date, isBlocked");
+        }
+    }
+
+    @Override
+    public <T> void nullBodyRequestCheck(T obj) {
+        var guide = (Guide) obj;
+
+        if (guide == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
     }
 }

@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.dto.CommentaryResponseDTO;
 import com.server.entities.Commentary;
+import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
-public class CommentaryService {
+public class CommentaryService implements Validator {
 
     private final CommentaryRepository commentaryRepository;
 
@@ -23,9 +24,7 @@ public class CommentaryService {
     }
 
     public void addCommentary(Commentary commentary) {
-        if (commentary == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
-        }
+        nullBodyRequestCheck(commentary);
 
         checkIfSomeFieldIsNull(commentary);
 
@@ -33,9 +32,7 @@ public class CommentaryService {
     }
 
     public void deleteCommentary(Commentary commentary) {
-        if (commentary == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
-        }
+        nullBodyRequestCheck(commentary);
 
         checkIfSomeFieldIsNull(commentary);
 
@@ -64,7 +61,10 @@ public class CommentaryService {
                 .toList();
     }
 
-    public void checkIfSomeFieldIsNull(Commentary commentary) {
+    @Override
+    public <T> void checkIfSomeFieldIsNull(T obj) {
+        var commentary = (Commentary) obj;
+
         if (Stream.of(commentary.getUserEmail(),
                         commentary.getGuideId(),
                         commentary.getEditDate(),
@@ -74,6 +74,15 @@ public class CommentaryService {
                     "One of the transferred attributes is null." +
                             " Consider sending request in the following format: " +
                             "user email, guide id, edit date, contents");
+        }
+    }
+
+    @Override
+    public <T> void nullBodyRequestCheck(T obj) {
+        var commentary = (Commentary) obj;
+
+        if (commentary == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
     }
 }
