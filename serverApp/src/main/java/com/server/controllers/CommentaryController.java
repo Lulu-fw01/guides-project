@@ -1,7 +1,9 @@
 package com.server.controllers;
 
+import com.server.repository.GuideHandleRepository;
+import com.server.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
-import com.server.dto.CommentaryResponseDTO;
+import com.server.dto.CommentaryDTO;
 import com.server.entities.Commentary;
 import com.server.services.CommentaryService;
 
@@ -19,19 +21,19 @@ public class CommentaryController {
     }
 
     @PostMapping
-    public void addCommentary(@RequestBody Commentary commentary) {
+    public void addCommentary(@RequestBody CommentaryDTO commentary) {
         commentaryService.addCommentary(commentary);
     }
 
     @DeleteMapping
-    public void deleteCommentary(@RequestBody Commentary commentary) {
+    public void deleteCommentary(@RequestBody CommentaryDTO commentary) {
         commentaryService.deleteCommentary(commentary);
     }
 
     // TODO: PUT or PATCH method to edit commentary?
 
     @GetMapping
-    public List<CommentaryResponseDTO> commentariesByPost(@RequestBody Long id) {
+    public List<CommentaryDTO> commentariesByPost(@RequestBody Long id) {
         return commentaryService.getCommentariesByPost(id);
     }
 }

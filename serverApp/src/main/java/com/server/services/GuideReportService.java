@@ -1,10 +1,14 @@
 package com.server.services;
 
+import com.server.dto.GuideReportDTO;
 import com.server.entities.GuideReport;
+import com.server.repository.GuideHandleRepository;
 import com.server.repository.GuideReportRepository;
+import com.server.repository.UserRepository;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,19 +19,38 @@ import java.util.stream.Stream;
 public class GuideReportService implements ReportService, Validator {
 
     private final GuideReportRepository guideReportRepository;
+    private final UserRepository userRepository;
+    private final GuideHandleRepository guideHandleRepository;
 
     @Autowired
-    public GuideReportService(GuideReportRepository guideReportRepository) {
+    public GuideReportService(GuideReportRepository guideReportRepository,
+                              UserRepository userRepository,
+                              GuideHandleRepository guideHandleRepository) {
         this.guideReportRepository = guideReportRepository;
+        this.userRepository = userRepository;
+        this.guideHandleRepository = guideHandleRepository;
     }
 
     @Override
-    public <T> void createReport(T report) {
+    public <T> void createReport(T reportDTOGen) {
+        var reportDTO = (GuideReportDTO) reportDTOGen;
+        var report = new GuideReport(
+                reportDTO.getId(),
+                userRepository
+                        .findByEmail(reportDTO.getReporterEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
+                guideHandleRepository
+                        .findById(reportDTO.getGuideId())
+                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                reportDTO.getComment(),
+                reportDTO.getReportCategory(),
+                reportDTO.getReportStatus()
+        );
         nullBodyRequestCheck(report);
 
-        checkIfSomeFieldIsNull((GuideReport) report);
+        checkIfSomeFieldIsNull(report);
 
-        guideReportRepository.save((GuideReport) report);
+        guideReportRepository.save(report);
     }
 
     @Override

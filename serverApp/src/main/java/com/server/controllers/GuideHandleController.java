@@ -20,7 +20,7 @@ public class GuideHandleController {
     }
 
     @PostMapping
-    public void createGuide(@RequestBody Guide guide) {
+    public void createGuide(@RequestBody GuideDTO guide) {
         guideHandleService.createGuide(guide);
     }
 
@@ -35,7 +35,7 @@ public class GuideHandleController {
     }
 
     @PutMapping
-    public void editGuide(@RequestBody Guide guide) {
+    public void editGuide(@RequestBody GuideDTO guide) {
         guideHandleService.editGuide(guide);
     }
 

@@ -2,9 +2,11 @@ package com.server.services;
 
 import com.server.dto.GuideDTO;
 import com.server.repository.GuideHandleRepository;
+import com.server.repository.UserRepository;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.server.entities.Guide;
@@ -17,13 +19,25 @@ import java.util.stream.Stream;
 public class GuideHandleService implements Validator {
 
     private final GuideHandleRepository guideHandleRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public GuideHandleService(GuideHandleRepository guideHandleRepository) {
+    public GuideHandleService(GuideHandleRepository guideHandleRepository, UserRepository userRepository) {
         this.guideHandleRepository = guideHandleRepository;
+        this.userRepository = userRepository;
     }
 
-    public void createGuide(Guide guide) {
+    public void createGuide(GuideDTO guideDTO) {
+        var guide = new Guide(
+                guideDTO.getId(),
+                userRepository
+                        .findByEmail(guideDTO.getCreatorEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
+                guideDTO.getTitle(),
+                guideDTO.getFileBytes(),
+                guideDTO.getEditDate(),
+                guideDTO.getIsBlocked()
+        );
         nullBodyRequestCheck(guide);
 
         checkIfSomeFieldIsNull(guide);
@@ -58,7 +72,18 @@ public class GuideHandleService implements Validator {
                 .toList();
     }
 
-    public void editGuide(Guide guide) {
+    public void editGuide(GuideDTO guideDTO) {
+        var guide = new Guide(
+                guideDTO.getId(),
+                userRepository
+                        .findByEmail(guideDTO.getCreatorEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
+                guideDTO.getTitle(),
+                guideDTO.getFileBytes(),
+                guideDTO.getEditDate(),
+                guideDTO.getIsBlocked()
+        );
+
         nullBodyRequestCheck(guide);
 
         checkIfSomeFieldIsNull(guide);

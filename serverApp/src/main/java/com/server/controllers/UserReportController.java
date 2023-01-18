@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.dto.UserReportDTO;
 import com.server.entities.UserReport;
 import com.server.services.UserReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserReportController {
     }
 
     @PostMapping
-    public void createReport(@RequestBody UserReport userReport) {
+    public void createReport(@RequestBody UserReportDTO userReport) {
         userReportService.createReport(userReport);
     }
 

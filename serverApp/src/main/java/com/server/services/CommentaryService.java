@@ -1,10 +1,13 @@
 package com.server.services;
 
-import com.server.dto.CommentaryResponseDTO;
+import com.server.dto.CommentaryDTO;
 import com.server.entities.Commentary;
+import com.server.repository.GuideHandleRepository;
+import com.server.repository.UserRepository;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.server.repository.CommentaryRepository;
@@ -17,13 +20,31 @@ import java.util.stream.Stream;
 public class CommentaryService implements Validator {
 
     private final CommentaryRepository commentaryRepository;
+    private final UserRepository userRepository;
+    private final GuideHandleRepository guideHandleRepository;
 
     @Autowired
-    public CommentaryService(CommentaryRepository commentaryRepository) {
+    public CommentaryService(CommentaryRepository commentaryRepository,
+                             UserRepository userRepository,
+                             GuideHandleRepository guideHandleRepository) {
         this.commentaryRepository = commentaryRepository;
+        this.userRepository = userRepository;
+        this.guideHandleRepository = guideHandleRepository;
     }
 
-    public void addCommentary(Commentary commentary) {
+    public void addCommentary(CommentaryDTO commentaryDTO) {
+        var commentary = new Commentary(
+                commentaryDTO.getId(),
+                userRepository
+                        .findByEmail(commentaryDTO.getUserEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("The user does not exist")),
+                guideHandleRepository
+                        .findById(commentaryDTO.getGuideId())
+                        .orElseThrow(() -> new IllegalArgumentException("The guide does not exist")),
+                commentaryDTO.getEditDate(),
+                commentaryDTO.getContents()
+        );
+
         nullBodyRequestCheck(commentary);
 
         checkIfSomeFieldIsNull(commentary);
@@ -31,7 +52,19 @@ public class CommentaryService implements Validator {
         commentaryRepository.save(commentary);
     }
 
-    public void deleteCommentary(Commentary commentary) {
+    public void deleteCommentary(CommentaryDTO commentaryDTO) {
+        var commentary = new Commentary(
+                commentaryDTO.getId(),
+                userRepository
+                        .findByEmail(commentaryDTO.getUserEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("The user does not exist")),
+                guideHandleRepository
+                        .findById(commentaryDTO.getGuideId())
+                        .orElseThrow(() -> new IllegalArgumentException("The guide does not exist")),
+                commentaryDTO.getEditDate(),
+                commentaryDTO.getContents()
+        );
+
         nullBodyRequestCheck(commentary);
 
         checkIfSomeFieldIsNull(commentary);
@@ -43,7 +76,7 @@ public class CommentaryService implements Validator {
         }
     }
 
-    public List<CommentaryResponseDTO> getCommentariesByPost(Long id) {
+    public List<CommentaryDTO> getCommentariesByPost(Long id) {
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
@@ -51,7 +84,7 @@ public class CommentaryService implements Validator {
         var comentaries = commentaryRepository.commentariesByPost(id);
 
         return comentaries.stream()
-                .map(commentary -> new CommentaryResponseDTO(
+                .map(commentary -> new CommentaryDTO(
                         commentary.getId(),
                         commentary.getUserEmail().getEmail(),
                         commentary.getGuideId().getId(),

@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.dto.GuideReportDTO;
 import com.server.entities.GuideReport;
 import com.server.services.GuideReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class GuideReportController {
     }
 
     @PostMapping
-    public void createReport(@RequestBody GuideReport guideReport) {
+    public void createReport(@RequestBody GuideReportDTO guideReport) {
         guideReportService.createReport(guideReport);
     }
 

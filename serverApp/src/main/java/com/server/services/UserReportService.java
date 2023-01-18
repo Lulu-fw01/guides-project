@@ -1,10 +1,13 @@
 package com.server.services;
 
+import com.server.dto.UserReportDTO;
 import com.server.entities.UserReport;
 import com.server.repository.UserReportRepository;
+import com.server.repository.UserRepository;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,19 +18,35 @@ import java.util.stream.Stream;
 public class UserReportService implements ReportService, Validator {
 
     private final UserReportRepository userReportRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserReportService(UserReportRepository userReportRepository) {
+    public UserReportService(UserReportRepository userReportRepository, UserRepository userRepository) {
         this.userReportRepository = userReportRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public <T> void createReport(T report) {
+    public <T> void createReport(T reportDTOGen) {
+        var reportDTO = (UserReportDTO) reportDTOGen;
+        var report = new UserReport(
+                reportDTO.getId(),
+                userRepository
+                        .findByEmail(reportDTO.getReporterEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User reporter does not exist")),
+                userRepository
+                        .findByEmail(reportDTO.getReporterEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("Violator user does not exist")),
+                reportDTO.getComment(),
+                reportDTO.getReportCategory(),
+                reportDTO.getReportStatus()
+        );
+
         nullBodyRequestCheck(report);
 
-        checkIfSomeFieldIsNull((UserReport) report);
+        checkIfSomeFieldIsNull(report);
 
-        userReportRepository.save((UserReport) report);
+        userReportRepository.save(report);
     }
 
     @Override
