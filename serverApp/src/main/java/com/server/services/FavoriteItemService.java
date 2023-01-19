@@ -7,9 +7,11 @@ import com.server.repository.FavoriteItemRepository;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.server.entities.FavoriteItem;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,6 +33,10 @@ public class FavoriteItemService {
     }
 
     public void addToFavorites(FavoriteItemDTO favoriteItemDTO) {
+        if (favoriteItemDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var favoriteItem = new FavoriteItem(
                 new FavoriteId(
                         guideHandleRepository
@@ -46,6 +52,10 @@ public class FavoriteItemService {
     }
 
     public void removeFromFavorites(FavoriteItemDTO favoriteItemDTO) {
+        if (favoriteItemDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var id = new FavoriteId(
                 guideHandleRepository
                         .findById(favoriteItemDTO.getGuideId())
@@ -59,6 +69,10 @@ public class FavoriteItemService {
     }
 
     public List<GuideDTO> getFavorites(String email) {
+        if (email == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var guideIds = favoriteItemRepository
                 .findFavoritesByConcreteUser(email);
 

@@ -28,6 +28,10 @@ public class TagService {
     }
 
     public void addTag(TagDTO tagDTO) {
+        if (tagDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var tag = new Tag(
                 new TagId(
                         guideHandleRepository
@@ -42,6 +46,10 @@ public class TagService {
     }
 
     public void deleteTag(TagDTO tagDTO) {
+        if (tagDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var id = new TagId(
                 guideHandleRepository
                         .findById(tagDTO.getGuideId())
@@ -59,6 +67,10 @@ public class TagService {
     }
 
     public List<String> getTags(Long id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         return tagRepository
                 .findTagsByGuideId(id);
     }

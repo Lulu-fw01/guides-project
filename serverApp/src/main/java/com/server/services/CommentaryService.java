@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
-public class CommentaryService implements Validator {
+public class CommentaryService implements Validator<Commentary> {
 
     private final CommentaryRepository commentaryRepository;
     private final UserRepository userRepository;
@@ -95,13 +95,11 @@ public class CommentaryService implements Validator {
     }
 
     @Override
-    public <T> void checkIfSomeFieldIsNull(T obj) {
-        var commentary = (Commentary) obj;
-
-        if (Stream.of(commentary.getUserEmail(),
-                        commentary.getGuideId(),
-                        commentary.getEditDate(),
-                        commentary.getContent())
+    public void checkIfSomeFieldIsNull(Commentary obj) {
+        if (Stream.of((obj).getUserEmail(),
+                        (obj).getGuideId(),
+                        (obj).getEditDate(),
+                        (obj).getContent())
                 .anyMatch(Objects::isNull)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "One of the transferred attributes is null." +
@@ -111,10 +109,8 @@ public class CommentaryService implements Validator {
     }
 
     @Override
-    public <T> void nullBodyRequestCheck(T obj) {
-        var commentary = (Commentary) obj;
-
-        if (commentary == null) {
+    public void nullBodyRequestCheck(Commentary obj) {
+        if (obj == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
     }

@@ -22,6 +22,10 @@ public class SubscriptionService {
     }
 
     public void subscribe(SubscriptionDTO subscriptionDTO) {
+        if (subscriptionDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var subscription = new Subscription(
                 new SubscriptionId(
                         userRepository
@@ -38,6 +42,10 @@ public class SubscriptionService {
     }
 
     public void unsubscribe(SubscriptionDTO subscriptionDTO) {
+        if (subscriptionDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var id = new SubscriptionId(
                 userRepository
                         .findByEmail(subscriptionDTO.getUserEmail())

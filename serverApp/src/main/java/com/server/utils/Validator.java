@@ -1,7 +1,7 @@
 package com.server.utils;
 
-public interface Validator {
-    <T> void checkIfSomeFieldIsNull(T obj);
+public interface Validator<T> {
+    void checkIfSomeFieldIsNull(T obj);
 
-    <T> void nullBodyRequestCheck(T obj);
+    void nullBodyRequestCheck(T obj);
 }

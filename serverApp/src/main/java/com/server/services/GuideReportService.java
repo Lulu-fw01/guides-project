@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
-public class GuideReportService implements ReportService, Validator {
+public class GuideReportService implements ReportService, Validator<GuideReport> {
 
     private final GuideReportRepository guideReportRepository;
     private final UserRepository userRepository;
@@ -54,13 +54,12 @@ public class GuideReportService implements ReportService, Validator {
     }
 
     @Override
-    public <T> void checkIfSomeFieldIsNull(T obj) {
-        var report = (GuideReport) obj;
-        if (Stream.of(report.getReporterEmail(),
-                        report.getGuideId(),
-                        report.getComment(),
-                        report.getCategory(),
-                        report.getStatus())
+    public void checkIfSomeFieldIsNull(GuideReport obj) {
+        if (Stream.of(obj.getReporterEmail(),
+                        obj.getGuideId(),
+                        obj.getComment(),
+                        obj.getCategory(),
+                        obj.getStatus())
                 .anyMatch(Objects::isNull)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "One of the transferred attributes is null." +
@@ -70,9 +69,8 @@ public class GuideReportService implements ReportService, Validator {
     }
 
     @Override
-    public <T> void nullBodyRequestCheck(T obj) {
-        var report = (GuideReport) obj;
-        if (report == null) {
+    public void nullBodyRequestCheck(GuideReport obj) {
+        if (obj == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body is null");
         }
     }
