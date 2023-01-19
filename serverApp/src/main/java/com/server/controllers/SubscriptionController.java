@@ -1,10 +1,7 @@
 package com.server.controllers;
 
 import com.server.dto.SubscriptionDTO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.server.services.SubscriptionService;
 
 @RestController
@@ -22,6 +19,10 @@ public class SubscriptionController {
         subscriptionService.subscribe(subscription);
     }
 
-    // TODO: add unsubscribe method
+    @DeleteMapping
+    public void unsubscribe(@RequestBody SubscriptionDTO subscription) {
+        subscriptionService.unsubscribe(subscription);
+    }
+
     // TODO: get list of subscribers/subscriptions
 }

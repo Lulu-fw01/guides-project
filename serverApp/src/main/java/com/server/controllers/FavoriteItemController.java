@@ -1,10 +1,13 @@
 package com.server.controllers;
 
 import com.server.dto.FavoriteItemDTO;
+import com.server.dto.GuideDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.entities.FavoriteItem;
 import com.server.services.FavoriteItemService;
+
+import java.util.List;
 
 
 @RestController
@@ -23,6 +26,13 @@ public class FavoriteItemController {
         favoriteItemService.addToFavorites(favoriteItem);
     }
 
-    // TODO: return list of favorites by user using GET method
-    // TODO: add DELETE method
+    @GetMapping
+    public List<GuideDTO> getFavorites(@RequestBody String email) {
+        return favoriteItemService.getFavorites(email);
+    }
+
+    @DeleteMapping
+    public void removeFromFavorites(@RequestBody FavoriteItemDTO favoriteItem) {
+        favoriteItemService.removeFromFavorites(favoriteItem);
+    }
 }

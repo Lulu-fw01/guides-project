@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import com.server.entities.Tag;
 import com.server.services.TagService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/tags")
 public class TagController {
@@ -20,9 +22,13 @@ public class TagController {
         tagService.addTag(tag);
     }
 
-    // TODO: fix deleting
-//    @DeleteMapping
-//    public void deleteTag(@RequestBody Tag tag) {
-//        tagService.deleteTag(tag);
-//    }
+    @GetMapping
+    public List<String> getTags(@RequestBody Long id) {
+        return tagService.getTags(id);
+    }
+
+    @DeleteMapping
+    public void removeTag(@RequestBody TagDTO tag) {
+        tagService.deleteTag(tag);
+    }
 }
