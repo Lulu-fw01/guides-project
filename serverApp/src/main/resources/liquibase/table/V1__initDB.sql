@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset Luka:users
 create table if not exists public.users
 (
     email      text                      not null
@@ -18,6 +21,7 @@ create table if not exists public.users
 alter table public.users
     owner to postgres;
 
+--changeset Luka:guides
 create table if not exists public.guides
 (
     id            bigserial
@@ -35,6 +39,7 @@ create table if not exists public.guides
 alter table public.guides
     owner to postgres;
 
+--changeset Luka:categories
 create table if not exists public.categories
 (
     category_name varchar(16) not null
@@ -46,6 +51,7 @@ create table if not exists public.categories
 alter table public.categories
     owner to postgres;
 
+--changeset Luka:tags
 create table if not exists public.tags
 (
     guide_id      bigint not null
@@ -58,6 +64,7 @@ create table if not exists public.tags
 alter table public.tags
     owner to postgres;
 
+--changeset Luka:interactions
 create table if not exists public.interactions
 (
     user_email text   not null
@@ -72,6 +79,7 @@ create table if not exists public.interactions
 alter table public.interactions
     owner to postgres;
 
+--changeset Luka:comments
 create table if not exists public.comments
 (
     id         bigserial
@@ -89,6 +97,7 @@ create table if not exists public.comments
 alter table public.comments
     owner to postgres;
 
+--changeset Luka:favourites
 create table if not exists public.favourites
 (
     guide_id   bigint not null
@@ -101,6 +110,7 @@ create table if not exists public.favourites
 alter table public.favourites
     owner to postgres;
 
+--changeset Luka:subscriptions
 create table if not exists public.subscriptions
 (
     user_email              text not null
@@ -113,6 +123,7 @@ create table if not exists public.subscriptions
 alter table public.subscriptions
     owner to postgres;
 
+--changeset Luka:user_reports
 create table if not exists public.user_reports
 (
     id             bigserial
@@ -128,9 +139,11 @@ create table if not exists public.user_reports
     status         varchar(20) default 'OPENED'::character varying not null
 );
 
+
 alter table public.user_reports
     owner to postgres;
 
+--changeset Luka:guide_reports
 create table if not exists public.guide_reports
 (
     id             bigserial
@@ -149,3 +162,5 @@ create table if not exists public.guide_reports
 alter table public.guide_reports
     owner to postgres;
 
+--changeset Luka:users_table_comment_2
+COMMENT ON TABLE public.users IS 'Пользователи';
