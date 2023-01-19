@@ -1,10 +1,10 @@
 package com.server.controllers;
 
+import com.server.dto.SubscriptionDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.server.entities.Subscription;
 import com.server.services.SubscriptionService;
 
 @RestController
@@ -18,7 +18,7 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public void subscribe(@RequestBody Subscription subscription) {
+    public void subscribe(@RequestBody SubscriptionDTO subscription) {
         subscriptionService.subscribe(subscription);
     }
 

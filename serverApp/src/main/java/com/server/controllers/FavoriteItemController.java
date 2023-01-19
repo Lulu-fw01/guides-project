@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.dto.FavoriteItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.entities.FavoriteItem;
@@ -18,7 +19,7 @@ public class FavoriteItemController {
     }
 
     @PostMapping
-    public void addToFavorites(@RequestBody FavoriteItem favoriteItem) {
+    public void addToFavorites(@RequestBody FavoriteItemDTO favoriteItem) {
         favoriteItemService.addToFavorites(favoriteItem);
     }
 
