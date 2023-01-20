@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.compositeId.SubscriptionId;
 import com.server.dto.SubscriptionDTO;
+import com.server.dto.UserDTO;
 import com.server.repository.SubscriptionRepository;
 import com.server.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.server.entities.Subscription;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class SubscriptionService {
@@ -61,5 +64,27 @@ public class SubscriptionService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The id does not exist");
         }
+    }
+
+    public List<UserDTO> getSubscribers(String userEmail) {
+        var usersEmails = subscriptionRepository.getSubscribers(userEmail);
+
+        return usersEmails.stream()
+                .map(email ->
+                        userRepository.findByEmail(email).orElseThrow(() ->
+                                new UsernameNotFoundException("User does not exist")))
+                .map(user -> new UserDTO(user.getEmail(), user.getName()))
+                .toList();
+    }
+
+    public List<UserDTO> getSubscriptions(String userEmail) {
+        var usersEmails = subscriptionRepository.getSubscriptions(userEmail);
+
+        return usersEmails.stream()
+                .map(email ->
+                        userRepository.findByEmail(email).orElseThrow(() ->
+                                new UsernameNotFoundException("User does not exist")))
+                .map(user -> new UserDTO(user.getEmail(), user.getName()))
+                .toList();
     }
 }
