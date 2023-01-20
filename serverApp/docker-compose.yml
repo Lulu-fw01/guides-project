@@ -1,19 +1,13 @@
+version: "3.9"
 services:
-  db:
-    container_name: postgres
-    image: postgres
+  postgres-database:
+    image: postgres:14.5
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: guide_postgres
-      PGDATA: /data/postgres
-    volumes:
-      - db:/data/postgres
+      POSTGRES_DB: "GUIDE_DB"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "guide_postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata-guides"
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
-
-networks:
-  db:
-    driver: bridge
-
-volumes:
-  db:
