@@ -6,7 +6,7 @@ services:
       POSTGRES_DB: "GUIDE_DB"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "guide_postgres"
-      PGDATA: "/var/lib/postgresql/data/pgdata-guides"
+#      PGDATA: "/var/lib/postgresql/data/pgdata-guides"
 #    volumes:
 #      - ./data:/var/lib/postgresql/data
     ports:
