@@ -16,14 +16,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // TODO: fix configs
-//    private final ConfigYaml configYaml;
-
-//    @Autowired
-//    public JwtService(ConfigYaml configYaml) {
-//        this.configYaml = configYaml;
-//    }
-
     private static final String SEC_TOKEN = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
