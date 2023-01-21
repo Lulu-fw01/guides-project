@@ -11,22 +11,55 @@ class GuideEditScreen extends StatefulWidget {
 }
 
 class GuideEditScreenState extends State<GuideEditScreen> {
+  final _fileDataController = TextEditingController();
+  String data = '';
 
-  bool _isPreview = false;
+  @override
+  void initState() {
+    super.initState();
+    _fileDataController.addListener(() {
+      setState(() {
+        data = _fileDataController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fileDataController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.secondaryContainer,
-        actions: [_buildNextButton(theme)],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.secondaryContainer,
+          actions: [_buildNextButton(theme)],
+          bottom: TabBar(
+            labelColor: theme.onSurface,
+            indicatorColor: theme.onSurface,
+            tabs: const [
+              Tab(
+                child: Text('Редактор'),
+              ),
+              Tab(
+                child: Text('Превью'),
+              )
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TabBarView(
+                  children: [_buildGuideInput(), Markdown(data: data)],
+                ))),
       ),
-      backgroundColor: Colors.white,
-      body: SafeArea(child:  Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _isPreview ? Markdown(data: '',) : TextField(),
-      )),
     );
   }
 
@@ -37,5 +70,22 @@ class GuideEditScreenState extends State<GuideEditScreen> {
           'Дальше',
           style: TextStyle(color: theme.onSurface),
         ));
+  }
+
+  Widget _buildGuideInput() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: _fileDataController,
+            scrollPadding: const EdgeInsets.all(20.0),
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            autofocus: true,
+          )
+        ],
+      ),
+    );
   }
 }
