@@ -20,7 +20,7 @@ public class Interaction {
     @EmbeddedId
     private InteractionId interactionId;
 
-    private Integer mark;
+    private Integer usersMark;
 
     private Timestamp viewDate;
 }
