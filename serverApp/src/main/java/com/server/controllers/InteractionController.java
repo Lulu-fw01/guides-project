@@ -37,13 +37,13 @@ public class InteractionController {
         interactionService.deleteReaction(interactionDTO);
     }
 
-//    @GetMapping("/recently-viewed")
-//    public List<GuideDTO> getRecentlyViewed(@RequestBody UserDTO user) {
-//        return interactionService.getRecentlyViewed(user);
-//    }
-//
-//    @GetMapping("/top")
-//    public List<GuideDTO> getTopRated() {
-//        return interactionService.getTopRated();
-//    }
+    @GetMapping("/recently-viewed")
+    public List<GuideDTO> getRecentlyViewed(@RequestBody UserDTO user) {
+        return interactionService.getRecentlyViewed(user);
+    }
+
+    @GetMapping("/top")
+    public List<GuideDTO> getTopRated() {
+        return interactionService.getTopRated();
+    }
 }

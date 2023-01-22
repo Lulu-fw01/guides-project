@@ -24,11 +24,4 @@ public interface InteractionRepository extends JpaRepository<Interaction, Intera
             "ORDER BY i.view_date DESC " +
             "LIMIT 10", nativeQuery = true)
     List<InteractionDTO> getRecentlyViewed(@Param("email") String email);
-
-    @Query(value = "SELECT guide_id, SUM(users_mark) as guide_rating " +
-            "FROM interactions " +
-            "GROUP BY guide_id " +
-            "ORDER BY guide_rating " +
-            "LIMIT 10", nativeQuery = true)
-    List<RatingDTO> getTopRated();
 }

@@ -3,22 +3,31 @@ package com.server.services;
 import com.server.compositeId.InteractionId;
 import com.server.dto.GuideDTO;
 import com.server.dto.InteractionDTO;
+import com.server.dto.RatingDTO;
 import com.server.dto.UserDTO;
 import com.server.entities.Interaction;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.InteractionRepository;
 import com.server.repository.UserRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class InteractionService {
-
     private final InteractionRepository interactionRepository;
     private final UserRepository userRepository;
     private final GuideHandleRepository guideHandleRepository;
@@ -81,21 +90,46 @@ public class InteractionService {
 
     // TODO: fix the methods below
     public List<GuideDTO> getTopRated() {
-        return interactionRepository
-                .getTopRated()
-                .stream()
-                .map(rated -> guideHandleRepository
-                        .findById(rated.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")))
-                .map(guide -> new GuideDTO(
-                       guide.getId(),
-                       guide.getCreatorEmail().getEmail(),
-                       guide.getTitle(),
-                       guide.getFileBytes(),
-                       guide.getEditDate(),
-                       guide.getIsBlocked()
-                ))
-                .toList();
+        List<GuideDTO> result;
+        var cfg = new Configuration().addAnnotatedClass(RatingDTO.class);
+        try (SessionFactory sessionFactory = cfg.configure().buildSessionFactory()) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            NativeQuery<Object[]> query = session.createNativeQuery(
+                    "SELECT guide_id, SUM(users_mark) as guide_rating " +
+                    "FROM interactions " +
+                    "GROUP BY guide_id " +
+                    "ORDER BY guide_rating " +
+                    "LIMIT 10")
+                    .addScalar("guide_id", LongType.INSTANCE)
+                    .addScalar("guide_rating", IntegerType.INSTANCE);
+
+            var list = query.list();
+
+            List<RatingDTO> ratings = new ArrayList<>();
+            for (var item : list) {
+                ratings.add(new RatingDTO((Long) item[0], (Integer) item[1]));
+            }
+
+            result = ratings
+                    .stream()
+                    .map(rated -> guideHandleRepository
+                            .findById(rated.getGuideId())
+                            .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")))
+                    .map(guide -> new GuideDTO(
+                            guide.getId(),
+                            guide.getCreatorEmail().getEmail(),
+                            guide.getTitle(),
+                            guide.getFileBytes(),
+                            guide.getEditDate(),
+                            guide.getIsBlocked()
+                    ))
+                    .toList();
+
+            session.getTransaction().commit();
+        }
+        return result;
     }
 
     public List<GuideDTO> getRecentlyViewed(UserDTO user) {
