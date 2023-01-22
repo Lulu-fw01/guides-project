@@ -13,15 +13,17 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
+import org.hibernate.type.StringType;
+import org.hibernate.type.TimestampType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,10 +48,10 @@ public class InteractionService {
                 .getPostsUserInteractedWith(userDTO.getEmail())
                 .stream()
                 .map(interaction -> new InteractionDTO(
-                       interaction.getInteractionId().getEmail().getEmail(),
-                       interaction.getInteractionId().getId().getId(),
-                       interaction.getUsersMark(),
-                       interaction.getViewDate()
+                        interaction.getInteractionId().getEmail().getEmail(),
+                        interaction.getInteractionId().getId().getId(),
+                        interaction.getUsersMark(),
+                        interaction.getViewDate()
                 ))
                 .toList();
     }
@@ -91,17 +93,16 @@ public class InteractionService {
     // TODO: fix the methods below
     public List<GuideDTO> getTopRated() {
         List<GuideDTO> result;
-        var cfg = new Configuration().addAnnotatedClass(RatingDTO.class);
-        try (SessionFactory sessionFactory = cfg.configure().buildSessionFactory()) {
+        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
 
             NativeQuery<Object[]> query = session.createNativeQuery(
-                    "SELECT guide_id, SUM(users_mark) as guide_rating " +
-                    "FROM interactions " +
-                    "GROUP BY guide_id " +
-                    "ORDER BY guide_rating " +
-                    "LIMIT 10")
+                            "SELECT guide_id, SUM(users_mark) as guide_rating " +
+                                    "FROM interactions " +
+                                    "GROUP BY guide_id " +
+                                    "ORDER BY guide_rating " +
+                                    "LIMIT 10")
                     .addScalar("guide_id", LongType.INSTANCE)
                     .addScalar("guide_rating", IntegerType.INSTANCE);
 
@@ -133,8 +134,40 @@ public class InteractionService {
     }
 
     public List<GuideDTO> getRecentlyViewed(UserDTO user) {
-        var ids = interactionRepository
-                .getRecentlyViewed(user.getEmail())
+
+        List<InteractionDTO> interactionDTOS = new ArrayList<>();
+
+        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            NativeQuery<Object[]> query = session.createNativeQuery(
+                            "SELECT user_email, guide_id, users_mark, view_date FROM interactions i " +
+                                    "JOIN guides ON guide_id = guides.id " +
+                                    "WHERE i.user_email = " + "'" + user.getEmail() + "'" +
+                                    " ORDER BY i.view_date DESC " +
+                                    "LIMIT 10"
+                    )
+                    .addScalar("user_email", StringType.INSTANCE)
+                    .addScalar("guide_id", LongType.INSTANCE)
+                    .addScalar("users_mark", IntegerType.INSTANCE)
+                    .addScalar("view_date", TimestampType.INSTANCE);
+
+            var list = query.list();
+
+            for (var item : list) {
+                interactionDTOS.add(new InteractionDTO(
+                        (String) item[0],
+                        (Long) item[1],
+                        (Integer) item[2],
+                        (Timestamp) item[3])
+                );
+            }
+
+            session.getTransaction().commit();
+        }
+
+        var ids = interactionDTOS
                 .stream()
                 .map(InteractionDTO::getGuideId)
                 .toList();

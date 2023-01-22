@@ -2,8 +2,6 @@ package com.server.repository;
 
 import com.server.compositeId.InteractionId;
 import com.server.dto.InteractionDTO;
-import com.server.dto.RatingDTO;
-import com.server.entities.Guide;
 import com.server.entities.Interaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
