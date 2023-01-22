@@ -4,6 +4,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:provider/provider.dart';
 
+/// Guide edit screen.
 class GuideEditScreen extends StatefulWidget {
   const GuideEditScreen({super.key});
 
@@ -46,7 +47,7 @@ class GuideEditScreenState extends State<GuideEditScreen> {
           child: Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
               child: quill.QuillEditor.basic(
-                  controller: _quillController, readOnly: false))),
+                  controller: _quillController, readOnly: true))),
     );
   }
 
