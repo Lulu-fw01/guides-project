@@ -7,10 +7,10 @@
             org.postgresql.Driver
         </property>
         <property name="hibernate.connection.password">
-            myPassword
+            guide_postgres
         </property>
         <property name="hibernate.connection.url">
-            jdbc:postgresql://localhost:5432/paper_guide
+            jdbc:postgresql://localhost:5433/GUIDE_DB
         </property>
         <property name="hibernate.connection.username">
             postgres
