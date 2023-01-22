@@ -47,7 +47,7 @@ class GuideEditScreenState extends State<GuideEditScreen> {
           child: Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
               child: quill.QuillEditor.basic(
-                  controller: _quillController, readOnly: true))),
+                  controller: _quillController, readOnly: false))),
     );
   }
 
