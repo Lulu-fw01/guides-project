@@ -1,4 +1,5 @@
 class ApiConstants {
-  // TODO add all necessary.
-  static String baseUrl = '';
-}
+  static String baseUrl = 'localhost:8080/api/v1';
+  static String signUpEndpoint = '/auth/register';
+  static String loginEndpoint = '/auth';
+  }
