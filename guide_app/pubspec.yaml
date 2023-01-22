@@ -41,6 +41,7 @@ dependencies:
   google_fonts: ^3.0.1
   provider: ^6.0.5
   flutter_markdown: ^0.6.13
+  flutter_quill: ^6.2.2
 
 dev_dependencies:
   flutter_test:

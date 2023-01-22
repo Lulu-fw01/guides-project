@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ class GuideEditScreen extends StatefulWidget {
 
 class GuideEditScreenState extends State<GuideEditScreen> {
   final _fileDataController = TextEditingController();
+  final _quillController = quill.QuillController.basic();
   String data = '';
 
   @override
@@ -33,6 +35,90 @@ class GuideEditScreenState extends State<GuideEditScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: theme.secondaryContainer,
+        actions: [_buildNextButton(theme)],
+      ),
+      floatingActionButton: _buildToolbarV1(theme),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
+              child: quill.QuillEditor.basic(
+                  controller: _quillController, readOnly: false))),
+    );
+  }
+
+  Widget _buildNextButton(MainTheme theme) {
+    return TextButton(
+        onPressed: () {},
+        child: Text(
+          'Дальше',
+          style: TextStyle(color: theme.onSurface),
+        ));
+  }
+
+  Widget _buildGuideInput() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: _fileDataController,
+            scrollPadding: const EdgeInsets.all(20.0),
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            autofocus: true,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToolbarV1(MainTheme theme) {
+    return quill.QuillToolbar.basic(
+      customButtons: const [
+        //quill.QuillCustomButton(icon: Icons.image)
+      ],
+      controller: _quillController,
+      iconTheme: quill.QuillIconTheme(
+          iconSelectedColor: theme.onSurface,
+          iconSelectedFillColor: Colors.white,
+          iconUnselectedFillColor: Colors.white),
+      dialogTheme: quill.QuillDialogTheme(
+        labelTextStyle: TextStyle(color: theme.onSurface),
+        inputTextStyle: TextStyle(color: theme.onSurface),
+      ),
+      showClearFormat: false,
+      showIndent: false,
+      showInlineCode: false,
+      showDividers: false,
+      showStrikeThrough: false,
+      showSearchButton: false,
+      showFontSize: false,
+      showFontFamily: false,
+      showRightAlignment: false,
+      showLeftAlignment: false,
+      showCenterAlignment: false,
+      showUnderLineButton: false,
+      showBackgroundColorButton: false,
+      showColorButton: false,
+      showListCheck: false,
+      showRedo: false,
+      showUndo: false,
+    );
+  }
+
+  // TODO implement our more beautiful toolbar.
+  Widget _buildToolbarV2() {
+    return const quill.QuillToolbar(
+      children: [],
+    );
+  }
+
+  /// First variant of guide edit screen.
+  Widget _buildMarkDownPage(MainTheme theme) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -59,32 +145,6 @@ class GuideEditScreenState extends State<GuideEditScreen> {
                 child: TabBarView(
                   children: [_buildGuideInput(), Markdown(data: data)],
                 ))),
-      ),
-    );
-  }
-
-  Widget _buildNextButton(MainTheme theme) {
-    return TextButton(
-        onPressed: () {},
-        child: Text(
-          'Дальше',
-          style: TextStyle(color: theme.onSurface),
-        ));
-  }
-
-  Widget _buildGuideInput() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: _fileDataController,
-            scrollPadding: const EdgeInsets.all(20.0),
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            autofocus: true,
-          )
-        ],
       ),
     );
   }
