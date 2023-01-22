@@ -9,7 +9,9 @@ class MainTheme {
   Color onSurfaceVariant = const Color(0xFF2E1A7E).withOpacity(0.4);
 
   ThemeData get lightTheme {
-    return ThemeData(useMaterial3: true, colorScheme: ColorScheme(
+    return ThemeData(useMaterial3: true,
+    textSelectionTheme: TextSelectionThemeData(cursorColor: onSurface),
+    colorScheme: ColorScheme(
     surface: surface,
     onSurface: onSurface,
     secondaryContainer: secondaryContainer,
