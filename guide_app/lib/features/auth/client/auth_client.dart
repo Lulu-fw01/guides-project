@@ -13,6 +13,7 @@ class AuthClient implements IAuthClient {
     throw UnimplementedError();
   }
 
+  // TODO move error handling to repo.
   @override
   Future<String> signUp(AuthDto dto) async {
     var url = Uri.parse(
@@ -23,7 +24,7 @@ class AuthClient implements IAuthClient {
       var response = await http.post(url,
           headers: {"Content-Type": "application/json"}, body: dto);
       if (response.statusCode != 200) {
-        // TODO throw error if wrong code.
+        _throwError(response);
       }
       var body = jsonDecode(response.body);
       response = body['token'];
@@ -31,5 +32,20 @@ class AuthClient implements IAuthClient {
       throw FetchDataException('No Internet connection.');
     }
     return response;
+  }
+
+  // TODO implement function.
+  void _throwError(http.Response response) {
+    switch (response.statusCode) {
+      case 400:
+      //throw BadRequestException(response.body.toString());
+      case 401:
+      case 403:
+      //throw UnauthorisedException(response.body.toString());
+      case 500:
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
   }
 }

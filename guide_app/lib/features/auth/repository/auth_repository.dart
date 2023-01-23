@@ -1,21 +1,19 @@
+import 'package:guide_app/features/auth/client/dto/auth_dto.dart';
+import 'package:guide_app/features/auth/client/i_auth_client.dart';
 import 'package:guide_app/features/auth/repository/i_auth_repository.dart';
 
 class AuthRepository implements IAuthRepository {
-  AuthRepository({this.onSuccessAuth});
+  AuthRepository(this.client);
+  final IAuthClient client;
 
   @override
-  void Function()? onSuccessAuth;
-  
-  @override
-  Future<Object> signIn() {
+  Future<String> signIn(String email, String password) {
     // TODO: implement signIn
     throw UnimplementedError();
   }
 
   @override
-  Future<Object> signUp() {
-    // TODO: implement signUp
-    throw UnimplementedError();
+  Future<String> signUp(String email, String password) {
+    return client.signUp(AuthDto(email, password));
   }
-
 }

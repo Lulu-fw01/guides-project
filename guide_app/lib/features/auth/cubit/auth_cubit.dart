@@ -5,10 +5,12 @@ import 'package:guide_app/features/auth/repository/i_auth_repository.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this.authRepository) : super(AuthLoginState());
+  AuthCubit(this.authRepository, this.onSuccessAuth) : super(AuthLoginState());
   final IAuthRepository authRepository;
+  // TODO add token repo.
+  final void Function() onSuccessAuth;
 
-  void goToSignUp() {
+  void goToSignUp() async {
     emit(AuthSignUpState());
   }
 
@@ -17,7 +19,14 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   /// Login function.
-  void signIn(String login, String password) {}
+  void signIn(String email, String password) {}
 
-  void signUp(String name, String login, String email, String password) {}
+  void signUp(String email, String password) {
+    emit(AuthLoadingState());
+    authRepository.signUp(email, password).then((value) {
+      onSuccessAuth();
+    }).catchError((e) {
+      emit(AuthErrorState());
+    });
+  }
 }

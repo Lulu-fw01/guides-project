@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/features/auth/client/auth_client.dart';
 import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/repository/auth_repository.dart';
 import 'package:guide_app/features/auth/widget/guide_logo.dart';
@@ -65,7 +66,8 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           child: Padding(
             padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
             child: BlocProvider(
-                create: (context) => AuthCubit(AuthRepository()),
+                create: (context) =>
+                    AuthCubit(AuthRepository(AuthClient()), () {}),
                 child: BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                   if (state is AuthLoginState) {

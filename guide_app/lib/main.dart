@@ -24,17 +24,15 @@ class MyApp extends StatelessWidget {
           child: BlocProvider(
             create: (BuildContext context) => InitCubit(),
             child: BlocBuilder<InitCubit, InitState>(builder: (context, state) {
-              /*if (state is InitLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (state is InitAuthorized) {
-            // TODO add correct feature
-            return MainScreen();
-          }*/
-              return MainScreen();
-              //return AuthScreen();
+              if (state is InitLoading) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (state is InitAuthorized) {
+                return MainScreen();
+              }
+              return AuthScreen();
             }),
           ),
         ));
