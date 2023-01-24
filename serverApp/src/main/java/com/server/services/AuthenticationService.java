@@ -55,6 +55,10 @@ public class AuthenticationService {
                             " email, password");
         }
 
+        if (userRepository.findByEmail(registerRequestBody.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user already exists");
+        }
+
         // TODO handle mocks
         var user = new User(
                registerRequestBody.getEmail(),

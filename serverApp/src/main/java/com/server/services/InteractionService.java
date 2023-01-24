@@ -25,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -90,7 +89,6 @@ public class InteractionService {
         }
     }
 
-    // TODO: fix the methods below
     public List<GuideDTO> getTopRated() {
         List<GuideDTO> result;
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {

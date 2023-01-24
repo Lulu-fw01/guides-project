@@ -18,7 +18,7 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/sign-up")
     public JwtResponseDTO register(@RequestBody RegisterDTO registerRequestBody) {
         return authenticationService.register(registerRequestBody);
     }
