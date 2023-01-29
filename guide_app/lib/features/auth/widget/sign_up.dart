@@ -29,9 +29,9 @@ class SignUpState extends State<SignUp> with ViewDependency {
 
   final _formKey = GlobalKey<FormState>();
 
-  String email = '';
-  String password = '';
-  String password2 = '';
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _password2Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +108,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
         return "Введите что-нибудь";
       }
       return null;
-    }, onFieldSubmitted: (value) {
-      email = value;
-    });
+    }, controller: _emailController);
   }
 
   /// Password input text field.
@@ -125,9 +123,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
         return "Введите что-нибудь";
       }
       return null;
-    }, onFieldSubmitted: (value) {
-      password = value;
-    });
+    }, controller: _passwordController);
   }
 
   Widget _buildRepeatPasswordInput(MainTheme theme) {
@@ -135,15 +131,13 @@ class SignUpState extends State<SignUp> with ViewDependency {
     return buildInput(theme, _repeatPasswordFocus, 'Пароль еще раз',
         obscureText: true,
         enableSuggestions: false,
-        autoCorrect: false,
-        validator: (value) {
-          // TODO add more.
-          if (value == null || value == "") {
-            return "Введите что-нибудь";
-          }
-          return null;
-        },
-        onFieldSubmitted: (value) => {password2 = value});
+        autoCorrect: false, validator: (value) {
+      // TODO add more.
+      if (value == null || value == "") {
+        return "Введите что-нибудь";
+      }
+      return null;
+    }, controller: _password2Controller);
   }
 
   /// Login button.
@@ -174,7 +168,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
   void _onSignUpButtonClick(AuthCubit authCubit) {
     if (_formKey.currentState!.validate()) {
       debugPrint('signup clicked');
-      authCubit.signUp(email, password);
+      authCubit.signUp(_emailController.text, _passwordController.text);
     }
   }
 }

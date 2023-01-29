@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide_app/common/exceptions/app_exception.dart';
 import 'package:guide_app/features/auth/repository/i_auth_repository.dart';
 
 part 'auth_state.dart';
@@ -26,8 +27,11 @@ class AuthCubit extends Cubit<AuthState> {
     authRepository.signUp(email, password).then((value) {
       debugPrint("Got token.");
       onSuccessAuth();
-    }).catchError((e) {
-      emit(AuthErrorState());
-    });
+    }).catchError(
+      (e) {
+        emit(AuthErrorState(errorMessage: (e as AppException).message));
+      },
+      test: (error) => error is AppException,
+    );
   }
 }

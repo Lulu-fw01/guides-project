@@ -77,13 +77,15 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     }),
                 child: BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
+                  if (state is AuthLoadingState) {
+                    return CircularProgressIndicator(
+                      color: theme.onSurface,
+                    );
+                  }
                   if (state is AuthLoginState) {
                     return _buildLogin();
                   }
-                  if (state is AuthSignUpState) {
-                    return _buildSignUp();
-                  }
-                  return CircularProgressIndicator(color: theme.onSurface,);
+                  return _buildSignUp();
                 })),
           ),
         ));
