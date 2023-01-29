@@ -4,7 +4,8 @@ import 'package:meta/meta.dart';
 part 'init_state.dart';
 
 class InitCubit extends Cubit<InitState> {
-  InitCubit() : super(InitLoading());
+  InitCubit(bool hasToken)
+      : super(hasToken ? InitAuthorized() : InitUnauthorized());
 
   void login() {
     emit(InitAuthorized());

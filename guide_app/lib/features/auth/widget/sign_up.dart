@@ -29,6 +29,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
 
   final _formKey = GlobalKey<FormState>();
 
+  String email = '';
+  String password = '';
+  String password2 = '';
+
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<MainTheme>(context);
@@ -62,7 +66,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
           const SizedBox(
             height: 32,
           ),
-          _buildSignUpButton(theme),
+          _buildSignUpButton(theme, authCubit),
           const SizedBox(
             height: 8,
           ),
@@ -104,6 +108,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
         return "Введите что-нибудь";
       }
       return null;
+    }, onFieldSubmitted: (value) {
+      email = value;
     });
   }
 
@@ -119,6 +125,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
         return "Введите что-нибудь";
       }
       return null;
+    }, onFieldSubmitted: (value) {
+      password = value;
     });
   }
 
@@ -127,25 +135,28 @@ class SignUpState extends State<SignUp> with ViewDependency {
     return buildInput(theme, _repeatPasswordFocus, 'Пароль еще раз',
         obscureText: true,
         enableSuggestions: false,
-        autoCorrect: false, validator: (value) {
-      // TODO add more.
-      if (value == null || value == "") {
-        return "Введите что-нибудь";
-      }
-      return null;
-    });
+        autoCorrect: false,
+        validator: (value) {
+          // TODO add more.
+          if (value == null || value == "") {
+            return "Введите что-нибудь";
+          }
+          return null;
+        },
+        onFieldSubmitted: (value) => {password2 = value});
   }
 
   /// Login button.
-  Widget _buildSignUpButton(MainTheme theme) => ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          backgroundColor: theme.onSurface,
-          textStyle: const TextStyle(fontSize: 14)),
-      onPressed: _onSignUpButtonClick,
-      child: const Text(
-        'Зарегистрироваться',
-      ));
+  Widget _buildSignUpButton(MainTheme theme, AuthCubit authCubit) =>
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.only(left: 24, right: 24),
+              backgroundColor: theme.onSurface,
+              textStyle: const TextStyle(fontSize: 14)),
+          onPressed: () => _onSignUpButtonClick(authCubit),
+          child: const Text(
+            'Зарегистрироваться',
+          ));
 
   /// TextButton, after click go to sign up screen.
   Widget _buildLoginButton(AuthCubit authCubit, MainTheme theme) => TextButton(
@@ -160,10 +171,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
         ),
       );
 
-  void _onSignUpButtonClick() {
+  void _onSignUpButtonClick(AuthCubit authCubit) {
     if (_formKey.currentState!.validate()) {
-      // TODO add code if all ok.
-      // call repository etc.
+      debugPrint('signup clicked');
+      authCubit.signUp(email, password);
     }
   }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/cubit/init_cubit.dart';
 import 'package:guide_app/features/auth/client/auth_client.dart';
 import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/repository/auth_repository.dart';
 import 'package:guide_app/features/auth/widget/guide_logo.dart';
 import 'package:guide_app/features/auth/widget/login.dart';
 import 'package:guide_app/features/auth/widget/sign_up.dart';
+import 'package:provider/provider.dart';
 
 /// Screen for user authorization.
 class AuthScreen extends StatefulWidget {
@@ -60,6 +63,8 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // TODO Add bloc listener.
+    final initCubit = Provider.of<InitCubit>(context);
+    final theme = Provider.of<MainTheme>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -67,7 +72,9 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
             child: BlocProvider(
                 create: (context) =>
-                    AuthCubit(AuthRepository(AuthClient()), () {}),
+                    AuthCubit(AuthRepository(AuthClient()), () {
+                      initCubit.login();
+                    }),
                 child: BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                   if (state is AuthLoginState) {
@@ -76,7 +83,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                   if (state is AuthSignUpState) {
                     return _buildSignUp();
                   }
-                  return const CircularProgressIndicator();
+                  return CircularProgressIndicator(color: theme.onSurface,);
                 })),
           ),
         ));

@@ -24,6 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
   void signUp(String email, String password) {
     emit(AuthLoadingState());
     authRepository.signUp(email, password).then((value) {
+      debugPrint("Got token.");
       onSuccessAuth();
     }).catchError((e) {
       emit(AuthErrorState());
