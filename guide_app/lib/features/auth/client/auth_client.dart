@@ -12,9 +12,8 @@ class AuthClient implements IAuthClient {
   Future<http.Response> login(AuthDto dto) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint);
     try {
-      // TODO check if it should be not post.
-      var response =
-          await http.post(url, headers: {"Content-Type": "application/json"});
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"}, body: jsonEncode(dto));
       return response;
     } catch (e) {
       throw FetchDataException(e.toString());

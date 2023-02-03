@@ -12,8 +12,13 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<String> signIn(String email, String password) {
-    // TODO: implement signIn
-    throw UnimplementedError();
+    return client.login(AuthDto(email, password)).then((response) {
+      if (response.statusCode != 200) {
+        _throwError(response);
+      }
+      var body = jsonDecode(response.body);
+      return body['token'];
+    });
   }
 
   @override
@@ -29,6 +34,7 @@ class AuthRepository implements IAuthRepository {
 
   // TODO move to mixin.
   void _throwError(http.Response response) {
+    // TODO handle {"timestamp":"2023-02-03T23:24:37.352+00:00","status":400,"error":"Bad Request","message":"The user already exists","path":"/api/v1/auth/sign-up"}
     switch (response.statusCode) {
       case 400:
         throw BadRequestException(response.body.toString());

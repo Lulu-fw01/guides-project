@@ -9,9 +9,11 @@ import 'input_field.dart';
 
 /// Sign up form.
 class SignUp extends StatefulWidget {
-  const SignUp({super.key, this.onViewChange});
+  const SignUp({super.key, this.onViewChange, this.onLoginClicked});
 
   final void Function(bool inputView)? onViewChange;
+    final void Function()? onLoginClicked;
+
 
   @override
   SignUpState createState() => SignUpState();
@@ -158,7 +160,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
           foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
-        onPressed: authCubit.goToLogin,
+        onPressed: widget.onLoginClicked,
         child: Text(
           'Войти',
           style: TextStyle(color: theme.onSurface),

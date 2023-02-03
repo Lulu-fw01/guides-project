@@ -22,6 +22,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _inputView = false;
+  bool _isSignUp = true;
 
   /// Time of guide logo animation i milliseconds.
   static const _animationTime = 500;
@@ -62,7 +63,6 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // TODO Add bloc listener.
     final initCubit = Provider.of<InitCubit>(context);
     final theme = Provider.of<MainTheme>(context);
     return Scaffold(
@@ -75,27 +75,36 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     AuthCubit(AuthRepository(AuthClient()), () {
                       initCubit.login();
                     }),
-                child: BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
+                child: BlocConsumer<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                  if (state is AuthErrorState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(duration: const Duration(seconds: 3),  content: Text(state.errorMessage)));
+                  }
+                }, builder: (context, state) {
                   if (state is AuthLoadingState) {
-                    return CircularProgressIndicator(
-                      color: theme.onSurface,
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: theme.onSurface,
+                      ),
                     );
                   }
-                  if (state is AuthLoginState) {
-                    return _buildLogin();
-                  }
-                  return _buildSignUp();
+                  return _buildBody();
                 })),
           ),
         ));
   }
+
+  Widget _buildBody() => _isSignUp ? _buildSignUp() : _buildLogin();
 
   Widget _buildLogin() => Column(
         children: [
           _buildDynamicGuideLogo(),
           Login(
             onViewChange: _viewChange,
+            onSignUpClicked: () => setState(() {
+              _isSignUp = true;
+            }),
           )
         ],
       );
@@ -106,6 +115,9 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           _buildDynamicGuideLogo(),
           SignUp(
             onViewChange: _viewChange,
+            onLoginClicked: () => setState(() {
+              _isSignUp = false;
+            }),
           )
         ],
       );

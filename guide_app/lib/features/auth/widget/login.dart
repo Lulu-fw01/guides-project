@@ -8,9 +8,10 @@ import 'package:guide_app/common/themes/main_theme.dart';
 
 /// Login form.
 class Login extends StatefulWidget {
-  const Login({super.key, this.onViewChange});
+  const Login({super.key, this.onViewChange, this.onSignUpClicked});
 
   final void Function(bool inputView)? onViewChange;
+  final void Function()? onSignUpClicked;
 
   @override
   LoginState createState() => LoginState();
@@ -105,7 +106,7 @@ class LoginState extends State<Login> with ViewDependency {
           foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
-        onPressed: authCubit.goToSignUp,
+        onPressed: widget.onSignUpClicked,
         child: Text(
           'Зарегистрироваться',
           style: TextStyle(color: theme.onSurface),

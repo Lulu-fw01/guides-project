@@ -29,9 +29,10 @@ class AuthCubit extends Cubit<AuthState> {
       onSuccessAuth();
     }).catchError(
       (e) {
-        emit(AuthErrorState(errorMessage: (e as AppException).message));
+        emit(AuthErrorState((e as AppException).message != null ? e.message! : ''));
       },
       test: (error) => error is AppException,
     );
+    // TODO add logic for other errors.
   }
 }
