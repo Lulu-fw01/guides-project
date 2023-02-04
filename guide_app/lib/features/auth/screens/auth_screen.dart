@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/repository/credentials_repository.dart';
+import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/cubit/init_cubit.dart';
+import 'package:guide_app/features/auth/client/auth_client.dart';
 import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/repository/auth_repository.dart';
 import 'package:guide_app/features/auth/widget/guide_logo.dart';
 import 'package:guide_app/features/auth/widget/login.dart';
 import 'package:guide_app/features/auth/widget/sign_up.dart';
+import 'package:provider/provider.dart';
 
 /// Screen for user authorization.
 class AuthScreen extends StatefulWidget {
@@ -18,6 +23,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _inputView = false;
+  bool _isSignUp = true;
 
   /// Time of guide logo animation i milliseconds.
   static const _animationTime = 500;
@@ -58,33 +64,50 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // TODO Add bloc listener.
+    final initCubit = Provider.of<InitCubit>(context);
+    final theme = Provider.of<MainTheme>(context);
+    final credentialsRepo = CredentialsRepository();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
             child: BlocProvider(
-                create: (context) => AuthCubit(AuthRepository()),
-                child: BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                  if (state is AuthLoginState) {
-                    return _buildLogin();
+                create: (context) => AuthCubit(
+                    AuthRepository(AuthClient()),
+                    (email, token) => _onSuccessAuth(
+                        initCubit, credentialsRepo, email, token)),
+                child: BlocConsumer<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                  if (state is AuthErrorState) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(seconds: 3),
+                        content: Text(state.errorMessage)));
                   }
-                  if (state is AuthSignUpState) {
-                    return _buildSignUp();
+                }, builder: (context, state) {
+                  if (state is AuthLoadingState) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: theme.onSurface,
+                      ),
+                    );
                   }
-                  return const CircularProgressIndicator();
+                  return _buildBody();
                 })),
           ),
         ));
   }
+
+  Widget _buildBody() => _isSignUp ? _buildSignUp() : _buildLogin();
 
   Widget _buildLogin() => Column(
         children: [
           _buildDynamicGuideLogo(),
           Login(
             onViewChange: _viewChange,
+            onSignUpClicked: () => setState(() {
+              _isSignUp = true;
+            }),
           )
         ],
       );
@@ -95,10 +118,14 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           _buildDynamicGuideLogo(),
           SignUp(
             onViewChange: _viewChange,
+            onLoginClicked: () => setState(() {
+              _isSignUp = false;
+            }),
           )
         ],
       );
 
+  // TODO move to another file.
   Widget _buildDynamicGuideLogo() => SizeTransition(
         sizeFactor: _animation,
         axis: Axis.vertical,
@@ -116,6 +143,13 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           ),
         ),
       );
+
+  void _onSuccessAuth(InitCubit initCubit,
+      CredentialsRepository credentialsRepository, String email, String token) {
+    credentialsRepository.saveEmail(email);
+    credentialsRepository.saveToken(token);
+    initCubit.login(email, token);
+  }
 
   @override
   dispose() {

@@ -8,9 +8,10 @@ import 'package:guide_app/common/themes/main_theme.dart';
 
 /// Login form.
 class Login extends StatefulWidget {
-  const Login({super.key, this.onViewChange});
+  const Login({super.key, this.onViewChange, this.onSignUpClicked});
 
   final void Function(bool inputView)? onViewChange;
+  final void Function()? onSignUpClicked;
 
   @override
   LoginState createState() => LoginState();
@@ -19,6 +20,9 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> with ViewDependency {
   final _loginFocus = FocusNode();
   final _passwordFocus = FocusNode();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void Function(bool inputView)? get onViewChange => widget.onViewChange;
@@ -54,7 +58,7 @@ class LoginState extends State<Login> with ViewDependency {
           const SizedBox(
             height: 32,
           ),
-          _buildLoginButton(theme),
+          _buildLoginButton(theme, authCubit),
           const SizedBox(
             height: 8,
           ),
@@ -68,7 +72,8 @@ class LoginState extends State<Login> with ViewDependency {
   Widget _buildLoginInput(MainTheme theme) {
     addOnViewChange(_loginFocus);
     return buildInput(theme, _loginFocus, 'Почта или логин',
-        keyboardType: TextInputType.emailAddress, validator: (value) {
+        keyboardType: TextInputType.emailAddress,
+        controller: _emailController, validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь";
       }
@@ -82,7 +87,8 @@ class LoginState extends State<Login> with ViewDependency {
     return buildInput(theme, _passwordFocus, 'Пароль',
         obscureText: true,
         enableSuggestions: false,
-        autoCorrect: false, validator: (value) {
+        autoCorrect: false,
+        controller: _passwordController, validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь";
       }
@@ -91,13 +97,21 @@ class LoginState extends State<Login> with ViewDependency {
   }
 
   /// Login button.
-  Widget _buildLoginButton(MainTheme theme) => ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          backgroundColor: theme.onSurface,
-          textStyle: const TextStyle(fontSize: 14)),
-      onPressed: _onLoginButtonClick,
-      child: const Text('Войти'));
+  Widget _buildLoginButton(MainTheme theme, AuthCubit authCubit) =>
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.only(left: 24, right: 24),
+              backgroundColor: theme.onSurface,
+              textStyle: const TextStyle(fontSize: 14)),
+          onPressed: () => _onLoginButtonClick(authCubit),
+          child: const Text('Войти'));
+
+  void _onLoginButtonClick(AuthCubit authCubit) {
+    if (_formKey.currentState!.validate()) {
+      debugPrint('signup clicked');
+      authCubit.signIn(_emailController.text, _passwordController.text);
+    }
+  }
 
   /// TextButton, after click go to sign up screen.
   Widget _buildSignUpButton(AuthCubit authCubit, MainTheme theme) => TextButton(
@@ -105,17 +119,10 @@ class LoginState extends State<Login> with ViewDependency {
           foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
-        onPressed: authCubit.goToSignUp,
+        onPressed: widget.onSignUpClicked,
         child: Text(
           'Зарегистрироваться',
           style: TextStyle(color: theme.onSurface),
         ),
       );
-
-  void _onLoginButtonClick() {
-    if (_formKey.currentState!.validate()) {
-      // TODO add code if all ok.
-      // call repository etc.
-    }
-  }
 }

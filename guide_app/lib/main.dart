@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/models/user_credentials.dart';
+import 'package:guide_app/common/repository/credentials_repository.dart';
 import 'package:guide_app/features/main/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/cubit/init_cubit.dart';
-import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
 import 'package:guide_app/features/auth/screens/auth_screen.dart';
 
-void main() {
+String? token;
+String? email;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final repo = CredentialsRepository();
+
+  token = await repo.getToken();
+  email = await repo.getEmail();
+
   runApp(const MyApp());
 }
 
@@ -22,19 +31,12 @@ class MyApp extends StatelessWidget {
         home: Provider<MainTheme>.value(
           value: appTheme,
           child: BlocProvider(
-            create: (BuildContext context) => InitCubit(),
+            create: (BuildContext context) => InitCubit(email, token),
             child: BlocBuilder<InitCubit, InitState>(builder: (context, state) {
-              /*if (state is InitLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (state is InitAuthorized) {
-            // TODO add correct feature
-            return MainScreen();
-          }*/
-              return MainScreen();
-              //return AuthScreen();
+              if (state is InitAuthorized) {
+                return MainScreen(UserCredentials(state.email, state.token));
+              }
+              return AuthScreen();
             }),
           ),
         ));
