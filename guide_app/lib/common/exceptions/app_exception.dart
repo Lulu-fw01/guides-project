@@ -1,3 +1,5 @@
+import 'package:guide_app/common/models/response_exception_body.dart';
+
 class AppException implements Exception {
   AppException([this.message]);
 
@@ -5,17 +7,25 @@ class AppException implements Exception {
 }
 
 class FetchDataException extends AppException {
-  FetchDataException([String? message]) : super(message);
+  FetchDataException(String message) : super(message);
 }
 
-class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message);
+class ResponseException implements Exception {
+  ResponseException(this.responseBody);
+  final ResponseExceptionBody? responseBody;
 }
 
-class UnauthorizedException extends AppException {
-  UnauthorizedException([message]) : super(message);
+class BadRequestException extends ResponseException {
+  BadRequestException([ResponseExceptionBody? responseBody])
+      : super(responseBody);
 }
 
-class InvalidInputException extends AppException {
-  InvalidInputException([message]) : super(message);
+class UnauthorizedException extends ResponseException {
+  UnauthorizedException([ResponseExceptionBody? responseBody])
+      : super(responseBody);
+}
+
+class InvalidInputException extends ResponseException {
+  InvalidInputException([ResponseExceptionBody? responseBody])
+      : super(responseBody);
 }

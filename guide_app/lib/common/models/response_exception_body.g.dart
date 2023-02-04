@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'request_exception_body.dart';
+part of 'response_exception_body.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RequestExceptionBody _$RequestExceptionBodyFromJson(
+ResponseExceptionBody _$ResponseExceptionBodyFromJson(
         Map<String, dynamic> json) =>
-    RequestExceptionBody(
+    ResponseExceptionBody(
       json['timestamp'] as String,
       json['status'] as int,
       json['error'] as String,
@@ -16,8 +16,8 @@ RequestExceptionBody _$RequestExceptionBodyFromJson(
       json['path'] as String,
     );
 
-Map<String, dynamic> _$RequestExceptionBodyToJson(
-        RequestExceptionBody instance) =>
+Map<String, dynamic> _$ResponseExceptionBodyToJson(
+        ResponseExceptionBody instance) =>
     <String, dynamic>{
       'timestamp': instance.timestamp,
       'status': instance.status,

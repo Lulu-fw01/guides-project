@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/repository/credentials_repository.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/cubit/init_cubit.dart';
 import 'package:guide_app/features/auth/client/auth_client.dart';
@@ -65,21 +66,23 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final initCubit = Provider.of<InitCubit>(context);
     final theme = Provider.of<MainTheme>(context);
+    final credentialsRepo = CredentialsRepository();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 24, right: 64, left: 64),
             child: BlocProvider(
-                create: (context) =>
-                    AuthCubit(AuthRepository(AuthClient()), () {
-                      initCubit.login();
-                    }),
+                create: (context) => AuthCubit(
+                    AuthRepository(AuthClient()),
+                    (email, token) => _onSuccessAuth(
+                        initCubit, credentialsRepo, email, token)),
                 child: BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                   if (state is AuthErrorState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(duration: const Duration(seconds: 3),  content: Text(state.errorMessage)));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(seconds: 3),
+                        content: Text(state.errorMessage)));
                   }
                 }, builder: (context, state) {
                   if (state is AuthLoadingState) {
@@ -122,6 +125,7 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         ],
       );
 
+  // TODO move to another file.
   Widget _buildDynamicGuideLogo() => SizeTransition(
         sizeFactor: _animation,
         axis: Axis.vertical,
@@ -139,6 +143,13 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           ),
         ),
       );
+
+  void _onSuccessAuth(InitCubit initCubit,
+      CredentialsRepository credentialsRepository, String email, String token) {
+    credentialsRepository.saveEmail(email);
+    credentialsRepository.saveToken(token);
+    initCubit.login(email, token);
+  }
 
   @override
   dispose() {

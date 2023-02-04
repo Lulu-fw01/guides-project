@@ -8,6 +8,11 @@ import 'package:http/http.dart' as http;
 
 /// Client for sign in and sign up.
 class AuthClient implements IAuthClient {
+  /// Sign in service.
+  /// dto - dto with email and password and other credentials.
+  /// Returns [http.Response].
+  /// Throws [FetchDataException].
+  /// Author - @Lulu-fw01.
   @override
   Future<http.Response> login(AuthDto dto) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint);

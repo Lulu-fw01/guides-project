@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guide_app/common/models/user_credentials.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
 import 'package:guide_app/features/guide/screens/guide_edit_screen.dart';
@@ -10,7 +11,8 @@ import 'package:provider/provider.dart';
 
 /// Main component of the app with navigation bottom bar.
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen(this.userCredentials, {super.key});
+  final UserCredentials userCredentials;
 
   @override
   MainScreenState createState() => MainScreenState();

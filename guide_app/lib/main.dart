@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/repository/token_repository.dart';
+import 'package:guide_app/common/models/user_credentials.dart';
+import 'package:guide_app/common/repository/credentials_repository.dart';
 import 'package:guide_app/features/main/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
@@ -8,14 +9,14 @@ import 'package:guide_app/cubit/init_cubit.dart';
 import 'package:guide_app/features/auth/screens/auth_screen.dart';
 
 String? token;
+String? email;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final tokenRepository = TokenRepository();
+  final repo = CredentialsRepository();
 
-  // TODO remove later.
-  tokenRepository.removeToken();
+  token = await repo.getToken();
+  email = await repo.getEmail();
 
-  token = await tokenRepository.getToken();
   runApp(const MyApp());
 }
 
@@ -30,15 +31,10 @@ class MyApp extends StatelessWidget {
         home: Provider<MainTheme>.value(
           value: appTheme,
           child: BlocProvider(
-            create: (BuildContext context) => InitCubit(token != null),
+            create: (BuildContext context) => InitCubit(email, token),
             child: BlocBuilder<InitCubit, InitState>(builder: (context, state) {
-              /*if (state is InitLoading) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
-              }*/
               if (state is InitAuthorized) {
-                return MainScreen();
+                return MainScreen(UserCredentials(state.email, state.token));
               }
               return AuthScreen();
             }),
