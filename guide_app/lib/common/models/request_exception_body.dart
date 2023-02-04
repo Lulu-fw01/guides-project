@@ -1,3 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'request_exception_body.g.dart';
+
+
+/// Http request exception dto.
+/// For code generation run  flutter pub run build_runner build --delete-conflicting-outputs .
 @JsonSerializable()
 class RequestExceptionBody {
 RequestExceptionBody(this.timestamp, this.status, this.error, this.message, this.path);
@@ -6,7 +13,7 @@ int status;
 String error;
 String message;
 String path;
-Map<String, dynamic> toJson() => _$AuthDtoToJson(this);
+Map<String, dynamic> toJson() => _$RequestExceptionBodyToJson(this);
 }
 
 
