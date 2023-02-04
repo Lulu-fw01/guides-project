@@ -23,7 +23,7 @@ public class AuthenticationController {
         return authenticationService.register(registerRequestBody);
     }
 
-    @GetMapping
+    @PostMapping
     public JwtResponseDTO login(@RequestBody LoginDTO loginRequestBody) {
         return authenticationService.login(loginRequestBody);
     }
