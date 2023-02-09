@@ -12,6 +12,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
       - name: Maven Package
         run: mvn -B clean package
 
@@ -25,5 +26,6 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
       - name: Maven Verify
         run: mvn -B clean verify
