@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:guide_app/common/widgets/guide_card.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -10,6 +11,6 @@ class FavoritesScreen extends StatefulWidget {
 class FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Text('Favorites page');
+    return Column(children: [GuideCard()],);
   }
 }
