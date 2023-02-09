@@ -27,6 +27,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Maven Verify
+      - name: Maven test
         working-directory: ./serverApp
         run: mvn -B clean test
