@@ -73,7 +73,7 @@ public class SubscriptionService {
                 .map(email ->
                         userRepository.findByEmail(email).orElseThrow(() ->
                                 new UsernameNotFoundException("User does not exist")))
-                .map(user -> new UserDTO(user.getEmail(), user.getName()))
+                .map(user -> new UserDTO(user.getEmail()))
                 .toList();
     }
 
@@ -84,7 +84,7 @@ public class SubscriptionService {
                 .map(email ->
                         userRepository.findByEmail(email).orElseThrow(() ->
                                 new UsernameNotFoundException("User does not exist")))
-                .map(user -> new UserDTO(user.getEmail(), user.getName()))
+                .map(user -> new UserDTO(user.getEmail()))
                 .toList();
     }
 }

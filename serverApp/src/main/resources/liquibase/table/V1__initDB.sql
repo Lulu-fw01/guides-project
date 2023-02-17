@@ -5,9 +5,6 @@ create table if not exists public.users
 (
     email      text                      not null
         primary key,
-    name       varchar(32)
-        constraint username_check
-            check (char_length((name)::text) >= 2),
     login      varchar(20)               not null
         unique
         constraint login_check
