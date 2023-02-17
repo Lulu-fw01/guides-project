@@ -29,7 +29,6 @@ public class GuideHandleService implements Validator<Guide> {
 
     public void createGuide(GuideDTO guideDTO) {
         var guide = new Guide(
-                guideDTO.getId(),
                 userRepository
                         .findByEmail(guideDTO.getCreatorEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),

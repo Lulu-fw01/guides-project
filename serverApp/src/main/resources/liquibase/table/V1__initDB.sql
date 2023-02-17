@@ -31,7 +31,7 @@ create table if not exists public.guides
     title         varchar(50)           not null
         constraint title_check
             check (char_length((title)::text) >= 1),
-    file_bytes    bytea                 not null,
+    file_bytes    text                 not null,
     edit_date     timestamp,
     is_blocked    boolean default false not null
 );
