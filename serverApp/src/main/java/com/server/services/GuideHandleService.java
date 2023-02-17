@@ -1,10 +1,14 @@
 package com.server.services;
 
 import com.server.dto.GuideDTO;
+import com.server.dto.GuidePageDTO;
+import com.server.dto.UserDTO;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -56,8 +60,9 @@ public class GuideHandleService implements Validator<Guide> {
         }
     }
 
-    public List<GuideDTO> getListOfAllGuides() {
-        var guides = guideHandleRepository.findAll();
+    public List<GuideDTO> getListOfAllGuides(GuidePageDTO guidePageDTO) {
+        var guides = guideHandleRepository
+                .findAll(PageRequest.of(guidePageDTO.getPageNumber(), guidePageDTO.getPageSize(), Sort.by("id")));
 
         return guides.stream()
                 .map(guide -> new GuideDTO(
@@ -126,5 +131,20 @@ public class GuideHandleService implements Validator<Guide> {
         if (obj == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
+    }
+
+    public List<GuideDTO> getListOfGuidesByUser(UserDTO userDTO) {
+        return guideHandleRepository
+                .findByUser(userDTO.getEmail())
+                .stream()
+                .map(guide -> new GuideDTO(
+                        guide.getId(),
+                        guide.getCreatorEmail().getEmail(),
+                        guide.getTitle(),
+                        guide.getFileBytes(),
+                        guide.getEditDate(),
+                        guide.getIsBlocked()
+                ))
+                .toList();
     }
 }
