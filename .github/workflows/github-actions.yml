@@ -35,7 +35,7 @@ jobs:
       - run: flutter pub get
       - name: Codestyle check.
         # TODO add later: --set-exit-if-changed
-        run: dart format -o none.
+        run: dart format -o none .
       - name: Analyze the Dart code for any errors.
         run: flutter analyze .
       - name: Run tests.
