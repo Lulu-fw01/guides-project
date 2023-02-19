@@ -10,14 +10,25 @@ jobs:
         working-directory: ./serverApp
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - uses: dorny/paths-filter@v2
+          with:
+            filters: |
+              Server:
+                - 'serverApp/**'
+
+      - name: Setup JDK 17
+        if: steps.filter.outputs.Server == 'true'
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+          
       - name: Maven Package
+        if: steps.filter.outputs.Server == 'true'
         run: mvn -B clean package
+
       - name: Maven test
+        if: steps.filter.outputs.Server == 'true'
         run: mvn -B clean test
 
   fultter_client_job:
@@ -56,7 +67,7 @@ jobs:
       - name: Analyze the Dart code for any errors.
         if: steps.filter.outputs.Client == 'true'
         run: flutter analyze .
-        
+
       - name: Run tests.
         if: steps.filter.outputs.Client == 'true'
         run: flutter test
