@@ -32,17 +32,31 @@ jobs:
           filters: |
             Client:
               - 'guide_app/**'
-      - if: steps.filter.outputs.Client == 'true'
-      - uses: actions/setup-java@v3
+
+      - name: Setup java.
+        if: steps.filter.outputs.Client == 'true'
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - uses: subosito/flutter-action@v1
-      - run: flutter pub get
+
+      - name: Setup flutter.
+        if: steps.filter.outputs.Client == 'true'
+        uses: subosito/flutter-action@v1
+
+      - name: Get flutter dependencies.
+        if: steps.filter.outputs.Client == 'true'
+        run: flutter pub get
+
       - name: Codestyle check.
+        if: steps.filter.outputs.Client == 'true'
         # TODO add later: --set-exit-if-changed
         run: dart format -o none .
+
       - name: Analyze the Dart code for any errors.
+        if: steps.filter.outputs.Client == 'true'
         run: flutter analyze .
+        
       - name: Run tests.
+        if: steps.filter.outputs.Client == 'true'
         run: flutter test
