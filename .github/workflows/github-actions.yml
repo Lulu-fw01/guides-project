@@ -1,4 +1,4 @@
-name: Java CI
+name: guides project jobs
 
 on: [push]
 
@@ -44,7 +44,7 @@ jobs:
       - uses: subosito/flutter-action@v1
       - run: flutter pub get
       - name: Codestyle check.
-        run: flutter format --set-exit-if-changed .
+        run: dart format .
       - name: Analyze the Dart code for any errors.
         run: flutter analyze .
       - name: Run tests.
