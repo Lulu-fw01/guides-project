@@ -32,7 +32,7 @@ jobs:
           filters: |
             Client:
               - 'guide_app/**'
-      if: steps.filter.outputs.Mobile == 'true'
+      - if: steps.filter.outputs.Client == 'true'
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
