@@ -17,6 +17,14 @@ import java.sql.Timestamp;
 @Table(name = "guides", schema = "public")
 public class Guide {
 
+    public Guide(User email, String title, String fileBytes, Timestamp editDate, Boolean isBlocked) {
+        this.creatorEmail = email;
+        this.title = title;
+        this.fileBytes = fileBytes;
+        this.editDate = editDate;
+        this.isBlocked = isBlocked;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,7 +39,7 @@ public class Guide {
     private String title;
 
     @Column(name = "file_bytes")
-    private byte[] fileBytes;
+    private String fileBytes;
 
     @Column(name = "edit_date")
     private Timestamp editDate;

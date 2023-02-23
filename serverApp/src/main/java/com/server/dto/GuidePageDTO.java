@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class GuidePageDTO {
 
-    private String email;
+    private Integer pageNumber;
+
+    private Integer pageSize;
 }

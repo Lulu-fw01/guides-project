@@ -16,6 +16,13 @@ import java.sql.Timestamp;
 @Table(name = "comments", schema = "public")
 public class Commentary {
 
+    public Commentary(User userEmail, Guide guide, Timestamp editDate, String contents) {
+        this.userEmail = userEmail;
+        this.guideId = guide;
+        this.editDate = editDate;
+        this.content = contents;
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

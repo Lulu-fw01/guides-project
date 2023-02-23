@@ -1,0 +1,73 @@
+name: guides project jobs
+
+on: [push]
+
+jobs:
+  server_job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./serverApp
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            Server:
+              - 'serverApp/**'
+
+      - name: Setup JDK 17
+        if: steps.filter.outputs.Server == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Maven Package
+        if: steps.filter.outputs.Server == 'true'
+        run: mvn -B clean package
+
+      - name: Maven test
+        if: steps.filter.outputs.Server == 'true'
+        run: mvn -B clean test
+
+  fultter_client_job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./guide_app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            Client:
+              - 'guide_app/**'
+
+      - name: Setup java.
+        if: steps.filter.outputs.Client == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup flutter.
+        if: steps.filter.outputs.Client == 'true'
+        uses: subosito/flutter-action@v1
+
+      - name: Get flutter dependencies.
+        if: steps.filter.outputs.Client == 'true'
+        run: flutter pub get
+
+      - name: Codestyle check.
+        if: steps.filter.outputs.Client == 'true'
+        # TODO add later: --set-exit-if-changed
+        run: dart format -o none .
+
+      - name: Analyze the Dart code for any errors.
+        if: steps.filter.outputs.Client == 'true'
+        run: flutter analyze .
+
+      - name: Run tests.
+        if: steps.filter.outputs.Client == 'true'
+        run: flutter test

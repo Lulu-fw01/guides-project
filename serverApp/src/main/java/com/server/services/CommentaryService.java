@@ -34,7 +34,6 @@ public class CommentaryService implements Validator<Commentary> {
 
     public void addCommentary(CommentaryDTO commentaryDTO) {
         var commentary = new Commentary(
-                commentaryDTO.getId(),
                 userRepository
                         .findByEmail(commentaryDTO.getUserEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("The user does not exist")),
