@@ -15,6 +15,14 @@ import javax.persistence.*;
 @Table(name = "guide_reports", schema = "public")
 public class GuideReport {
 
+    public GuideReport(User user, Guide guide, String comment, ReportCategory reportCategory, ReportStatus reportStatus) {
+        this.reporterEmail = user;
+        this.guideId = guide;
+        this.comment = comment;
+        this.category = reportCategory;
+        this.status = reportStatus;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

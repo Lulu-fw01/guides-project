@@ -15,6 +15,14 @@ import javax.persistence.*;
 @Table(name = "user_reports", schema = "public")
 public class UserReport {
 
+    public UserReport(User reporterEmail, User violatorEmail, String comment, ReportCategory reportCategory, ReportStatus reportStatus) {
+        this.reporterEmail = reporterEmail;
+        this.violatorEmail = violatorEmail;
+        this.comment = comment;
+        this.category = reportCategory;
+        this.status = reportStatus;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -17,7 +17,7 @@ public class GuideDTO {
 
     private String title;
 
-    private byte[] fileBytes;
+    private String fileBytes;
 
     private Timestamp editDate;
 

@@ -35,7 +35,6 @@ public class GuideReportService implements ReportService, Validator<GuideReport>
     public <T> void createReport(T reportDTOGen) {
         var reportDTO = (GuideReportDTO) reportDTOGen;
         var report = new GuideReport(
-                reportDTO.getId(),
                 userRepository
                         .findByEmail(reportDTO.getReporterEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),

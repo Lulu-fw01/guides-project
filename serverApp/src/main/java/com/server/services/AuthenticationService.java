@@ -48,24 +48,21 @@ public class AuthenticationService {
 
         if (Stream.of(registerRequestBody.getEmail(), registerRequestBody.getPassword())
                 .anyMatch(Objects::isNull)) {
-            // todo: edit message in the future
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "One of the transferred attributes is null." +
                             " Consider sending request in the following format:" +
-                            " email, password");
+                            " email, login, password, date");
         }
 
         if (userRepository.findByEmail(registerRequestBody.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user already exists");
         }
 
-        // TODO handle mocks
         var user = new User(
-               registerRequestBody.getEmail(),
-               "mockName",
-               "mockLogin",
+                registerRequestBody.getEmail(),
+                registerRequestBody.getLogin(),
                 passwordEncoder.encode(registerRequestBody.getPassword()),
-                Date.valueOf("2023-01-01"), // mock date
+                registerRequestBody.getDate(), // mock date
                 UserRoles.USER,
                 false
         );

@@ -30,7 +30,6 @@ public class UserReportService implements ReportService, Validator<UserReport> {
     public <T> void createReport(T reportDTOGen) {
         var reportDTO = (UserReportDTO) reportDTOGen;
         var report = new UserReport(
-                reportDTO.getId(),
                 userRepository
                         .findByEmail(reportDTO.getReporterEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User reporter does not exist")),

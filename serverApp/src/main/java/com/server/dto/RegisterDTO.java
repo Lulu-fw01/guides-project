@@ -4,14 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterDTO {
-
-    // TODO: extend register request body
-
     private String email;
 
+    private String login;
+
     private String password;
+
+    private Date date;
 }
