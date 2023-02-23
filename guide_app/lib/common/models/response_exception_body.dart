@@ -9,9 +9,11 @@ class ResponseExceptionBody {
   ResponseExceptionBody(
       this.timestamp, this.status, this.error, this.message, this.path);
   String timestamp;
+
   /// Error status.
   int status;
   String error;
+
   /// Error message
   String message;
   String path;
