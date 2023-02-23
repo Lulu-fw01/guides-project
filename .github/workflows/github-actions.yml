@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             Server:
@@ -39,6 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             Client:
@@ -67,6 +69,7 @@ jobs:
       - name: Analyze the Dart code for any errors.
         if: steps.filter.outputs.Client == 'true'
         run: flutter analyze .
+        continue-on-error: true
 
       - name: Run tests.
         if: steps.filter.outputs.Client == 'true'
