@@ -1,32 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:guide_app/common/dto/guide_card_dto.dart';
+import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:provider/provider.dart';
 
+/// Guide card widget.
+/// v1.
+/// Author: @Lulu-fw01
 class GuideCard extends StatelessWidget {
-  const GuideCard({super.key});
+  const GuideCard(this.guideCardDto, {super.key});
+  /// Guide card data.
+  final GuideCardDto guideCardDto;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<MainTheme>(context);
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [Text('author')],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        guideCardDto.author,
+                        style: theme.smallInfoTextAuthor,
+                      )
+                    ],
+                  ),
+                  Text(
+                    guideCardDto.guideName,
+                    style: theme.titleText,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        guideCardDto.editDate,
+                        style: theme.smallInfoText,
+                      )
+                    ],
+                  )
+                ],
               ),
-              Text('Guide name'),
-              Row(
-                children: [Text('10.02.2023')],
-              )
-            ],
+            ),
           ),
           Row(
-            children: [//Icon(Icons.bookmark)
+            children: [
+              //Icon(Icons.bookmark)
               IconButton(onPressed: () {}, icon: Icon(Icons.bookmark)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz),)
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.more_horiz),
+              )
             ],
           )
         ],
