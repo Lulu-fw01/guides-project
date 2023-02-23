@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             Server:
@@ -39,6 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             Client:
