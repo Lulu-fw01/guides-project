@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               if (state is InitAuthorized) {
                 return MainScreen(UserCredentials(state.email, state.token));
               }
-              return AuthScreen();
+              return const AuthScreen();
             }),
           ),
         ));

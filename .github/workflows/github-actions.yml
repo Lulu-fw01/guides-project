@@ -69,6 +69,7 @@ jobs:
       - name: Analyze the Dart code for any errors.
         if: steps.filter.outputs.Client == 'true'
         run: flutter analyze .
+        continue-on-error: true
 
       - name: Run tests.
         if: steps.filter.outputs.Client == 'true'

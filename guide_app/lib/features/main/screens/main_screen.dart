@@ -62,7 +62,7 @@ class MainScreenState extends State<MainScreen> {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) => Provider(
           create: (context) => theme,
-          builder: (context, child) => GuideEditScreen(),
+          builder: (context, child) => const GuideEditScreen(),
         ),    ));
   }
 
