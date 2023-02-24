@@ -10,21 +10,20 @@ mixin ExceptionResponseMixin {
   /// Throws [BadRequestException], [UnauthorizedException], [FetchDataException].
   /// @Lulu-fw01
   void throwError(http.Response response) {
+    ResponseExceptionBody body;
     try {
-      switch (response.statusCode) {
-        case 400:
-          final body =
-              ResponseExceptionBody.fromJson(jsonDecode(response.body));
-          throw BadRequestException(body);
-        case 401:
-        case 403:
-          final body =
-              ResponseExceptionBody.fromJson(jsonDecode(response.body));
-          throw UnauthorizedException(body);
-        case 500:
-      }
+      body = ResponseExceptionBody.fromJson(jsonDecode(response.body));
     } catch (e) {
-      // TODO maybe add something.
+      throw FetchDataException(
+          'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
+    switch (response.statusCode) {
+      case 400:
+        throw BadRequestException(body);
+      case 401:
+      case 403:
+        throw UnauthorizedException(body);
+      case 500:
     }
     throw FetchDataException(
         'Error occured while Communication with Server with StatusCode : ${response.statusCode}');

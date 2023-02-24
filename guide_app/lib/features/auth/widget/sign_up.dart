@@ -12,8 +12,7 @@ class SignUp extends StatefulWidget {
   const SignUp({super.key, this.onViewChange, this.onLoginClicked});
 
   final void Function(bool inputView)? onViewChange;
-    final void Function()? onLoginClicked;
-
+  final void Function()? onLoginClicked;
 
   @override
   SignUpState createState() => SignUpState();
@@ -32,6 +31,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
   final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
+  final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
   final _password2Controller = TextEditingController();
 
@@ -57,6 +57,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
             height: 8,
           ),
           _buildEmailInput(theme),
+          const SizedBox(
+            height: 8,
+          ),
+          _buildLoginInput(theme),
           const SizedBox(
             height: 8,
           ),
@@ -96,10 +100,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
     return buildInput(theme, _loginFocus, 'Логин',
         keyboardType: TextInputType.name, validator: (value) {
       if (value == null || value == "") {
-        return "Введите что-нибудь";
+        return "Введите что-нибудь.";
       }
       return null;
-    });
+    }, controller: _loginController);
   }
 
   Widget _buildEmailInput(MainTheme theme) {
@@ -107,7 +111,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
     return buildInput(theme, _emailFocus, 'Email',
         keyboardType: TextInputType.emailAddress, validator: (value) {
       if (value == null || value == "") {
-        return "Введите что-нибудь";
+        return "Введите что-нибудь.";
       }
       return null;
     }, controller: _emailController);
@@ -122,7 +126,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
         autoCorrect: false, validator: (value) {
       // TODO add more.
       if (value == null || value == "") {
-        return "Введите что-нибудь";
+        return "Введите что-нибудь.";
+      }
+      if (value.length < 8) {
+        return "Длина пароля должны быть не меньше 8 символов.";
       }
       return null;
     }, controller: _passwordController);
@@ -136,7 +143,10 @@ class SignUpState extends State<SignUp> with ViewDependency {
         autoCorrect: false, validator: (value) {
       // TODO add more.
       if (value == null || value == "") {
-        return "Введите что-нибудь";
+        return "Введите что-нибудь.";
+      }
+      if (value != _passwordController.text) {
+        return "Пароли не совпадают.";
       }
       return null;
     }, controller: _password2Controller);
@@ -170,7 +180,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
   void _onSignUpButtonClick(AuthCubit authCubit) {
     if (_formKey.currentState!.validate()) {
       debugPrint('signup clicked');
-      authCubit.signUp(_emailController.text, _passwordController.text);
+      authCubit.signUp(_loginController.text, _emailController.text,
+          _passwordController.text);
     }
   }
 }

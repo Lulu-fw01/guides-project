@@ -31,9 +31,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   /// Sign up function.
-  void signUp(String email, String password) {
+  void signUp(String login, String email, String password) {
     emit(AuthLoadingState());
-    authRepository.signUp(email, password).then((token) {
+    authRepository.signUp(login, email, password).then((token) {
       debugPrint("Got token.");
       onSuccessAuth(email, token);
     }).catchError((e) {
