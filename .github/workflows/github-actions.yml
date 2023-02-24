@@ -3,7 +3,7 @@ name: guides project jobs
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   server_job:
