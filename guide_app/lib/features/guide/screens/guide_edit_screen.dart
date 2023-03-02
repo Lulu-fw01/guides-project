@@ -60,6 +60,12 @@ class GuideEditScreenState extends State<GuideEditScreen> {
         ));
   }
 
+  void onNextButtonClick() {
+    final doc = _quillController.document.toDelta();
+    // TODO try to get name.
+    // then go to save.
+  }
+
   Widget _buildGuideInput() {
     return SingleChildScrollView(
       child: Column(
