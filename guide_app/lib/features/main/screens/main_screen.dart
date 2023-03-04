@@ -3,6 +3,7 @@ import 'package:guide_app/common/models/user_credentials.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
 import 'package:guide_app/features/guide/screens/guide_edit_screen.dart';
+import 'package:guide_app/features/guide/screens/guide_screen.dart';
 import 'package:guide_app/features/home/screens/home_screen.dart';
 import 'package:guide_app/features/main/widgets/favorites_app_bar.dart';
 import 'package:guide_app/features/profile/screens/profile_screen.dart';
@@ -62,7 +63,7 @@ class MainScreenState extends State<MainScreen> {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) => Provider(
           create: (context) => theme,
-          builder: (context, child) => const GuideEditScreen(),
+          builder: (context, child) => const GuideScreen(),
         ),    ));
   }
 
