@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:guide_app/common/themes/main_theme.dart';
@@ -40,18 +41,27 @@ class GuideEditScreenState extends State<GuideEditScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final guideCubit = Provider.of<GuideCubit>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.secondaryContainer,
-        actions: [_buildNextButton(guideCubit, theme)],
+    return BlocListener<GuideCubit, GuideState>(
+      listener: (context, state) {
+        if (state is GuideError) {
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: const Duration(seconds: 3),
+                        content: Text('Error')));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.secondaryContainer,
+          actions: [_buildNextButton(guideCubit, theme)],
+        ),
+        floatingActionButton: _buildToolbarV1(theme),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
+                child: quill.QuillEditor.basic(
+                    controller: _quillController, readOnly: false))),
       ),
-      floatingActionButton: _buildToolbarV1(theme),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
-              child: quill.QuillEditor.basic(
-                  controller: _quillController, readOnly: false))),
     );
   }
 

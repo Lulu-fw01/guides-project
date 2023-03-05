@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:guide_app/common/exceptions/app_exception.dart';
 import 'package:guide_app/common/repository/guide/i_guide_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -18,13 +19,22 @@ class GuideCubit extends Cubit<GuideState> {
     final operations = delta.toList();
     String title = "Без названия";
     for (var operation in operations) {
-      if (operation.isInsert && operation.data is String && operation.data.toString().length > 1) {
+      if (operation.isInsert &&
+          operation.data is String &&
+          operation.data.toString().length > 1) {
         title = operation.data.toString();
         break;
       }
     }
     log('New guide with title: $title');
     var jsonGuide = jsonEncode(delta.toJson());
-    // TODO add repository call.
+    // TODO catch errors.
+    guideRepository.addNewGuide(title, jsonGuide).catchError(
+      (e) {
+        emit(GuideError(
+            /*(e as FetchDataException).message != null ? e.message! : ''*/));
+      },
+      test: (error) => error is FetchDataException,
+    );
   }
 }
