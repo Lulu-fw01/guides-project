@@ -5,6 +5,9 @@ abstract class GuideState {}
 
 class GuideInitial extends GuideState {}
 
-class GuideLoading extends GuideState {}
+class GuideLoadingState extends GuideState {}
 
-class GuideError extends GuideState {}
+class GuideErrorState extends GuideState {
+  GuideErrorState(this.message);
+  final String message;
+}

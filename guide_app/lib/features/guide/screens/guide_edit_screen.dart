@@ -43,11 +43,12 @@ class GuideEditScreenState extends State<GuideEditScreen> {
     final guideCubit = Provider.of<GuideCubit>(context);
     return BlocListener<GuideCubit, GuideState>(
       listener: (context, state) {
-        if (state is GuideError) {
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        duration: const Duration(seconds: 3),
-                        content: Text('Error')));
+        if (state is GuideErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 3),
+              content: Text(state.message)));
         }
+        if (state is GuideLoadingState) {}
       },
       child: Scaffold(
         appBar: AppBar(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:guide_app/common/api/api_constants.dart';
 import 'package:guide_app/common/client/i_guide_client.dart';
@@ -17,7 +16,7 @@ class GuideClient implements IGuideClient {
     try {
       var response = await http.post(url,
           headers: {
-            "Authorization": token,
+            "Authorization": 'Bearer $token',
             "Content-Type": "application/json"
           },
           body: jsonEncode(dto));

@@ -14,7 +14,8 @@ class GuideCubit extends Cubit<GuideState> {
   final IGuideRepository guideRepository;
 
   void createNewGuide(Document quillDocument) {
-    emit(GuideLoading());
+    emit(GuideLoadingState());
+
     final delta = quillDocument.toDelta();
     final operations = delta.toList();
     String title = "Без названия";
@@ -26,15 +27,20 @@ class GuideCubit extends Cubit<GuideState> {
         break;
       }
     }
+
     log('New guide with title: $title');
     var jsonGuide = jsonEncode(delta.toJson());
-    // TODO catch errors.
-    guideRepository.addNewGuide(title, jsonGuide).catchError(
+
+    guideRepository.addNewGuide(title, jsonGuide).catchError((e) {
+      emit(GuideErrorState((e as ResponseException).responseBody != null
+          ? e.responseBody!.message
+          : ''));
+    }, test: (error) => error is ResponseException).catchError(
       (e) {
-        emit(GuideError(
-            /*(e as FetchDataException).message != null ? e.message! : ''*/));
+        emit(GuideErrorState(
+            (e as FetchDataException).message != null ? e.message! : ''));
       },
       test: (error) => error is FetchDataException,
-    );
+    ).then((value) => null);
   }
 }
