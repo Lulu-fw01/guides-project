@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.dto.CreateGuideDTO;
 import com.server.dto.GuideDTO;
 import com.server.dto.GuidePageDTO;
 import com.server.dto.UserDTO;
@@ -22,7 +23,7 @@ public class GuideHandleController {
     }
 
     @PostMapping
-    public void createGuide(@RequestBody GuideDTO guide) {
+    public void createGuide(@RequestBody CreateGuideDTO guide) {
         guideHandleService.createGuide(guide);
     }
 

@@ -1,5 +1,6 @@
 package com.server.services;
 
+import com.server.dto.CreateGuideDTO;
 import com.server.dto.GuideDTO;
 import com.server.dto.GuidePageDTO;
 import com.server.dto.UserDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.server.entities.Guide;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -31,15 +33,15 @@ public class GuideHandleService implements Validator<Guide> {
         this.userRepository = userRepository;
     }
 
-    public void createGuide(GuideDTO guideDTO) {
+    public void createGuide(CreateGuideDTO guideDTO) {
         var guide = new Guide(
                 userRepository
                         .findByEmail(guideDTO.getCreatorEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
                 guideDTO.getTitle(),
                 guideDTO.getFileBytes(),
-                guideDTO.getEditDate(),
-                guideDTO.getIsBlocked()
+                new Timestamp(System.currentTimeMillis()),
+                false
         );
         nullBodyRequestCheck(guide);
 
