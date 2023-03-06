@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -13,34 +12,25 @@ class GuideCubit extends Cubit<GuideState> {
   GuideCubit(this.guideRepository) : super(GuideInitial());
   final IGuideRepository guideRepository;
 
+  /// Create new guide.
+  ///
+  /// [quillDocument] - guide in flutter_quill library format.
   void createNewGuide(Document quillDocument) {
+    log("Starting guide creation.");
     emit(GuideLoadingState());
 
-    final delta = quillDocument.toDelta();
-    final operations = delta.toList();
-    String title = "Без названия";
-    for (var operation in operations) {
-      if (operation.isInsert &&
-          operation.data is String &&
-          operation.data.toString().length > 1) {
-        title = operation.data.toString();
-        break;
-      }
-    }
-
-    log('New guide with title: $title');
-    var jsonGuide = jsonEncode(delta.toJson());
-
-    guideRepository.addNewGuide(title, jsonGuide).catchError((e) {
+    guideRepository.addNewGuide(quillDocument).catchError((e) {
+      log('Caught error with creating guide', error: e);
       emit(GuideErrorState((e as ResponseException).responseBody != null
           ? e.responseBody!.message
           : ''));
     }, test: (error) => error is ResponseException).catchError(
       (e) {
+        log('Caught error with creating guide', error: e);
         emit(GuideErrorState(
             (e as FetchDataException).message != null ? e.message! : ''));
       },
       test: (error) => error is FetchDataException,
-    ).then((value) => null);
+    ).then((value) => emit(GuideSuccessState()));
   }
 }

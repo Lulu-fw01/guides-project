@@ -10,6 +10,15 @@ class GuideClient implements IGuideClient {
   GuideClient(this.token);
   final String token;
 
+  /// Create new guide.
+  /// <p>
+  /// dto - dto with new guide data.
+  /// <p>
+  /// Returns [http.Response].
+  /// <p>
+  /// Throws [FetchDataException].
+  /// <p>
+  /// Author - @Lulu-fw01.
   @override
   Future<http.Response> createGuide(NewGuideDto dto) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.guideHandling);

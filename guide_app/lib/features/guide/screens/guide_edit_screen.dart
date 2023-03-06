@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -48,7 +46,12 @@ class GuideEditScreenState extends State<GuideEditScreen> {
               duration: const Duration(seconds: 3),
               content: Text(state.message)));
         }
-        if (state is GuideLoadingState) {}
+        if (state is GuideLoadingState) {
+          // TODO implemet something for loading.
+        }
+        if (state is GuideSuccessState) {
+          Navigator.of(context).pop();
+        }
       },
       child: Scaffold(
         appBar: AppBar(

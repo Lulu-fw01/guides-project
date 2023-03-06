@@ -11,3 +11,5 @@ class GuideErrorState extends GuideState {
   GuideErrorState(this.message);
   final String message;
 }
+
+class GuideSuccessState extends GuideState {}
