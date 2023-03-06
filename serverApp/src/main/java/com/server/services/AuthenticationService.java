@@ -45,7 +45,8 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
-        if (Stream.of(registerRequestBody.getEmail(), registerRequestBody.getPassword())
+        if (Stream.of(registerRequestBody.getEmail(), registerRequestBody.getLogin(),
+                        registerRequestBody.getPassword(), registerRequestBody.getDate())
                 .anyMatch(Objects::isNull)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "One of the transferred attributes is null." +
@@ -88,8 +89,8 @@ public class AuthenticationService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                       loginRequestBody.getEmail(),
-                       loginRequestBody.getPassword()
+                        loginRequestBody.getEmail(),
+                        loginRequestBody.getPassword()
                 )
         );
 
