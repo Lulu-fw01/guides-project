@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/features/guide/cubit/guide_cubit.dart';
 import 'package:provider/provider.dart';
 
 /// Guide edit screen.
@@ -36,28 +38,48 @@ class GuideEditScreenState extends State<GuideEditScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.secondaryContainer,
-        actions: [_buildNextButton(theme)],
+    final guideCubit = Provider.of<GuideCubit>(context);
+    return BlocListener<GuideCubit, GuideState>(
+      listener: (context, state) {
+        if (state is GuideErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 3),
+              content: Text(state.message)));
+        }
+        if (state is GuideLoadingState) {
+          // TODO implemet something for loading.
+        }
+        if (state is GuideSuccessState) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.secondaryContainer,
+          actions: [_buildNextButton(guideCubit, theme)],
+        ),
+        floatingActionButton: _buildToolbarV1(theme),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
+                child: quill.QuillEditor.basic(
+                    controller: _quillController, readOnly: false))),
       ),
-      floatingActionButton: _buildToolbarV1(theme),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
-              child: quill.QuillEditor.basic(
-                  controller: _quillController, readOnly: false))),
     );
   }
 
-  Widget _buildNextButton(MainTheme theme) {
+  Widget _buildNextButton(GuideCubit guideCubit, MainTheme theme) {
     return TextButton(
-        onPressed: () {},
+        onPressed: () => onNextButtonClick(guideCubit),
         child: Text(
           'Дальше',
           style: TextStyle(color: theme.onSurface),
         ));
+  }
+
+  void onNextButtonClick(GuideCubit guideCubit) {
+    guideCubit.createNewGuide(_quillController.document);
   }
 
   Widget _buildGuideInput() {
@@ -119,13 +141,13 @@ class GuideEditScreenState extends State<GuideEditScreen> {
   }
 
   /// First variant of guide edit screen.
-  Widget _buildMarkDownPage(MainTheme theme) {
+  Widget _buildMarkDownPage(GuideCubit guideCubit, MainTheme theme) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: theme.secondaryContainer,
-          actions: [_buildNextButton(theme)],
+          actions: [_buildNextButton(guideCubit, theme)],
           bottom: TabBar(
             labelColor: theme.onSurface,
             indicatorColor: theme.onSurface,

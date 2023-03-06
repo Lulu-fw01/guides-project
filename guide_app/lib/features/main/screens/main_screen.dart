@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/models/user_credentials.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
+import 'package:guide_app/common/widgets/user_credentials.dart';
 import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
-import 'package:guide_app/features/guide/screens/guide_edit_screen.dart';
+import 'package:guide_app/features/guide/screens/guide_screen.dart';
 import 'package:guide_app/features/home/screens/home_screen.dart';
 import 'package:guide_app/features/main/widgets/favorites_app_bar.dart';
 import 'package:guide_app/features/profile/screens/profile_screen.dart';
@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 
 /// Main component of the app with navigation bottom bar.
 class MainScreen extends StatefulWidget {
-  const MainScreen(this.userCredentials, {super.key});
-  final UserCredentials userCredentials;
+  const MainScreen({super.key});
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -59,11 +58,14 @@ class MainScreenState extends State<MainScreen> {
 
   void _onCreateNewGuidePressed(BuildContext context) {
     final theme = Provider.of<MainTheme>(context, listen: false);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) => Provider(
-          create: (context) => theme,
-          builder: (context, child) => const GuideEditScreen(),
-        ),    ));
+    final credentials = UserCredentials.of(context);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) => Provider(
+        create: (context) => theme,
+        builder: (context, child) =>
+            GuideScreen(email: credentials.email, token: credentials.token),
+      ),
+    ));
   }
 
   PreferredSizeWidget? _buildAppBar(BuildContext context) {

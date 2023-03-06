@@ -46,7 +46,7 @@ public class AuthenticationService {
         }
 
         if (Stream.of(registerRequestBody.getEmail(), registerRequestBody.getLogin(),
-                        registerRequestBody.getPassword(), registerRequestBody.getDate())
+                        registerRequestBody.getPassword())
                 .anyMatch(Objects::isNull)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "One of the transferred attributes is null." +
