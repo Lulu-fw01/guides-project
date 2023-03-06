@@ -14,7 +14,6 @@ import com.server.entities.User;
 import com.server.enums.UserRoles;
 import com.server.repository.UserRepository;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Stream;
