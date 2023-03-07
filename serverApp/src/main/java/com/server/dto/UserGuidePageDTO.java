@@ -1,0 +1,17 @@
+package com.server.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserGuidePageDTO {
+
+    private String email;
+
+    private Integer pageNumber;
+
+    private Integer pageSize;
+}
