@@ -1,9 +1,6 @@
 package com.server.services;
 
-import com.server.dto.CreateGuideDTO;
-import com.server.dto.GuideDTO;
-import com.server.dto.GuidePageDTO;
-import com.server.dto.UserDTO;
+import com.server.dto.*;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
 import com.server.utils.Validator;
@@ -62,9 +59,9 @@ public class GuideHandleService implements Validator<Guide> {
         }
     }
 
-    public List<GuideDTO> getListOfAllGuides(GuidePageDTO guidePageDTO) {
+    public List<GuideDTO> getListOfAllGuides(PageRequestDTO pageRequestDTO) {
         var guides = guideHandleRepository
-                .findAll(PageRequest.of(guidePageDTO.getPageNumber(), guidePageDTO.getPageSize(), Sort.by("id")));
+                .findAll(PageRequest.of(pageRequestDTO.getPageNumber(), pageRequestDTO.getPageSize(), Sort.by("id")));
 
         return guides.stream()
                 .map(guide -> new GuideDTO(
@@ -135,9 +132,12 @@ public class GuideHandleService implements Validator<Guide> {
         }
     }
 
-    public List<GuideDTO> getListOfGuidesByUser(UserDTO userDTO) {
+    public List<GuideDTO> getListOfGuidesByUser(UserGuidePageDTO userPagingDTO) {
+        var pageable =
+                PageRequest.of(userPagingDTO.getPageNumber(), userPagingDTO.getPageSize(), Sort.by("id"));
+
         return guideHandleRepository
-                .findByUser(userDTO.getEmail())
+                .findByUser(userPagingDTO.getEmail(), pageable)
                 .stream()
                 .map(guide -> new GuideDTO(
                         guide.getId(),

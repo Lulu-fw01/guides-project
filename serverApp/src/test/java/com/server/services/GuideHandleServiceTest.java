@@ -47,4 +47,6 @@ class GuideHandleServiceTest {
         assertThrows(UsernameNotFoundException.class,
                 () -> guideHandleService.createGuide(new CreateGuideDTO()));
     }
+
+    // TODO: add more tests
 }

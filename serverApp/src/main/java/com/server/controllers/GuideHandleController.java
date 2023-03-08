@@ -1,12 +1,8 @@
 package com.server.controllers;
 
-import com.server.dto.CreateGuideDTO;
-import com.server.dto.GuideDTO;
-import com.server.dto.GuidePageDTO;
-import com.server.dto.UserDTO;
+import com.server.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.server.entities.Guide;
 import com.server.services.GuideHandleService;
 
 import java.util.List;
@@ -33,12 +29,12 @@ public class GuideHandleController {
     }
 
     @PostMapping("/get-page")
-    public List<GuideDTO> getListOfAllGuides(@RequestBody GuidePageDTO guidePageDTO) {
-        return guideHandleService.getListOfAllGuides(guidePageDTO);
+    public List<GuideDTO> getListOfAllGuides(@RequestBody PageRequestDTO pageRequestDTO) {
+        return guideHandleService.getListOfAllGuides(pageRequestDTO);
     }
 
     @PostMapping("/get-by-user")
-    public List<GuideDTO> getListOfGuidesByUser(@RequestBody UserDTO userDTO) {
+    public List<GuideDTO> getListOfGuidesByUser(@RequestBody UserGuidePageDTO userDTO) {
         return guideHandleService.getListOfGuidesByUser(userDTO);
     }
 
