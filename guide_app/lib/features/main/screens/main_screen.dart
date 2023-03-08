@@ -6,6 +6,7 @@ import 'package:guide_app/features/guide/screens/guide_screen.dart';
 import 'package:guide_app/features/home/screens/home_screen.dart';
 import 'package:guide_app/features/main/widgets/favorites_app_bar.dart';
 import 'package:guide_app/features/profile/screens/profile_screen.dart';
+import 'package:guide_app/features/profile/widgets/profile_app_bar.dart';
 import 'package:guide_app/features/search/screens/search_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -72,6 +73,8 @@ class MainScreenState extends State<MainScreen> {
     switch (selectedPageIndex) {
       case 2:
         return favoritesAppBar(context);
+      case 3:
+        return profileAppBar(context, () {});
       default:
         return null;
     }
