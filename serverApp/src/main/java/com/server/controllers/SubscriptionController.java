@@ -27,13 +27,13 @@ public class SubscriptionController {
         subscriptionService.unsubscribe(subscription);
     }
 
-    @GetMapping("/subscribers")
-    public List<UserDTO> getSubscribers(@RequestBody String userEmail) {
+    @GetMapping("subscribers/{userEmail}")
+    public List<UserDTO> getSubscribers(@PathVariable String userEmail) {
         return subscriptionService.getSubscribers(userEmail);
     }
 
-    @GetMapping()
-    public List<UserDTO> getSubscriptions(@RequestBody String userEmail) {
+    @GetMapping("{userEmail}")
+    public List<UserDTO> getSubscriptions(@PathVariable String userEmail) {
         return subscriptionService.getSubscriptions(userEmail);
     }
 }

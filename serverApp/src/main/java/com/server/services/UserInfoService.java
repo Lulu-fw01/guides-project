@@ -1,7 +1,6 @@
 package com.server.services;
 
 import com.server.dto.PageRequestDTO;
-import com.server.dto.UserDTO;
 import com.server.dto.UserInfoDTO;
 import com.server.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -22,13 +21,13 @@ public class UserInfoService {
         this.userRepository = userRepository;
     }
 
-    public UserInfoDTO getUserInfoByEmail(UserDTO userDTO) {
-        if (userDTO == null) {
+    public UserInfoDTO getUserInfoByEmail(String email) {
+        if (email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
         var user = userRepository
-                .findByEmail(userDTO.getEmail())
+                .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("The user does not exist"));
 
         return new UserInfoDTO(
