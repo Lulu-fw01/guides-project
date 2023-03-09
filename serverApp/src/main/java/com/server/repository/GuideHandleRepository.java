@@ -26,4 +26,7 @@ public interface GuideHandleRepository extends PagingAndSortingRepository<Guide,
 
     @Query(value = "SELECT * FROM guides WHERE creator_email IN (SELECT email FROM users WHERE login ILIKE CONCAT('%',:author,'%'))", nativeQuery = true)
     List<Guide> searchByAuthor(@Param("author") String category, Pageable pageable);
+
+    @Query(value = "SELECT COUNT(*) FROM guides WHERE creator_email = :email", nativeQuery = true)
+    Integer getCountOfGuidesByUser(@Param("email") String email);
 }
