@@ -5,7 +5,7 @@ class MainTheme {
   Color surface = const Color(0xFFF1F1F1);
   Color onSurface = const Color(0xFF2E1A7E);
   Color secondaryContainer = const Color(0xFFBDBDBD).withOpacity(0.35);
-  Color readableText = Colors.black;
+  static const Color readableText = Colors.black;
   Color onSurfaceVariant = const Color(0xFF2E1A7E).withOpacity(0.4);
   TextStyle smallInfoTextAuthor =
       GoogleFonts.lato(fontSize: 12, fontWeight: FontWeight.w400);
@@ -17,6 +17,10 @@ class MainTheme {
       fontSize: 24,
       fontWeight: FontWeight.w400,
       color: const Color(0xFF2E1A7E));
+  TextStyle informationText = GoogleFonts.lato(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      color: readableText);
 
   ThemeData get lightTheme {
     return ThemeData(
