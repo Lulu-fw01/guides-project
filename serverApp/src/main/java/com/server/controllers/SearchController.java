@@ -1,6 +1,6 @@
 package com.server.controllers;
 
-import com.server.dto.GuideDTO;
+import com.server.dto.GuideInfoDTO;
 import com.server.services.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,23 +22,23 @@ public class SearchController {
     }
 
     @GetMapping("title/{title}/{pageNumber}/{pageSize}")
-    public List<GuideDTO> getGuidesByTitle(@PathVariable("title") String title,
+    public List<GuideInfoDTO> getGuidesByTitle(@PathVariable("title") String title,
                                            @PathVariable("pageNumber") String pageNumber,
                                            @PathVariable("pageSize") String pageSize) {
         return searchService.getGuidesByTitle(title, pageNumber, pageSize);
     }
 
     @GetMapping("category/{category}/{pageNumber}/{pageSize}")
-    public List<GuideDTO> getGuidesByCategory(@PathVariable("category") String category,
+    public List<GuideInfoDTO> getGuidesByCategory(@PathVariable("category") String category,
                                               @PathVariable("pageNumber") String pageNumber,
                                               @PathVariable("pageSize") String pageSize) {
         return searchService.getGuidesByCategory(category, pageNumber, pageSize);
     }
 
     @GetMapping("username/{username}/{pageNumber}/{pageSize}")
-    public List<GuideDTO> getGuidesByAuthor(@PathVariable("username") String username,
-                                            @PathVariable("pageNumber") String pageNumber,
-                                            @PathVariable("pageSize") String pageSize) {
+    public List<GuideInfoDTO> getGuidesByAuthor(@PathVariable("username") String username,
+                                                @PathVariable("pageNumber") String pageNumber,
+                                                @PathVariable("pageSize") String pageSize) {
         return searchService.getGuidesByAuthor(username, pageNumber, pageSize);
     }
 }

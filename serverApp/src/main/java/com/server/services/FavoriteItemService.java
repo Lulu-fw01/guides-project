@@ -3,6 +3,7 @@ package com.server.services;
 import com.server.compositeId.FavoriteId;
 import com.server.dto.FavoriteItemDTO;
 import com.server.dto.GuideDTO;
+import com.server.dto.GuideInfoDTO;
 import com.server.repository.FavoriteItemRepository;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
@@ -68,7 +69,7 @@ public class FavoriteItemService {
         favoriteItemRepository.deleteById(id);
     }
 
-    public List<GuideDTO> getFavorites(String email) {
+    public List<GuideInfoDTO> getFavorites(String email) {
         if (email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
@@ -79,11 +80,10 @@ public class FavoriteItemService {
         return guideHandleRepository
                 .findByIds(guideIds)
                 .stream()
-                .map(guide -> new GuideDTO(
+                .map(guide -> new GuideInfoDTO(
                         guide.getId(),
-                        guide.getCreatorEmail().getEmail(),
+                        guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
-                        guide.getFileBytes(),
                         guide.getEditDate(),
                         guide.getIsBlocked()
                 ))

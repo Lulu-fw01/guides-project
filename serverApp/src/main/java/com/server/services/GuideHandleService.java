@@ -66,7 +66,7 @@ public class GuideHandleService implements Validator<Guide> {
         return guides.stream()
                 .map(guide -> new GuideDTO(
                         guide.getId(),
-                        guide.getCreatorEmail().getEmail(),
+                        guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
                         guide.getFileBytes(),
                         guide.getEditDate(),
@@ -79,7 +79,7 @@ public class GuideHandleService implements Validator<Guide> {
         var guide = new Guide(
                 guideDTO.getId(),
                 userRepository
-                        .findByEmail(guideDTO.getCreatorEmail())
+                        .findByEmail(guideDTO.getCreatorLogin())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
                 guideDTO.getTitle(),
                 guideDTO.getFileBytes(),
@@ -141,9 +141,44 @@ public class GuideHandleService implements Validator<Guide> {
                 .stream()
                 .map(guide -> new GuideDTO(
                         guide.getId(),
-                        guide.getCreatorEmail().getEmail(),
+                        guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
                         guide.getFileBytes(),
+                        guide.getEditDate(),
+                        guide.getIsBlocked()
+                ))
+                .toList();
+    }
+
+    public GuideDTO getGuideById(Long id) {
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+        var guide = guideHandleRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("The guide does not exist by given ID"));
+
+        return new GuideDTO(
+                guide.getId(),
+                guide.getCreatorEmail().getLogin(),
+                guide.getTitle(),
+                guide.getFileBytes(),
+                guide.getEditDate(),
+                guide.getIsBlocked()
+        );
+    }
+
+    public List<GuideInfoDTO> getListOfGuideInfoByUser(UserGuidePageDTO userPagingDTO) {
+        var pageable =
+                PageRequest.of(userPagingDTO.getPageNumber(), userPagingDTO.getPageSize(), Sort.by("id"));
+
+        return guideHandleRepository
+                .findByUser(userPagingDTO.getEmail(), pageable)
+                .stream()
+                .map(guide -> new GuideInfoDTO(
+                        guide.getId(),
+                        guide.getCreatorEmail().getLogin(),
+                        guide.getTitle(),
                         guide.getEditDate(),
                         guide.getIsBlocked()
                 ))

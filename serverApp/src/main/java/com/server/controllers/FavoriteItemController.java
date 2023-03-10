@@ -2,6 +2,7 @@ package com.server.controllers;
 
 import com.server.dto.FavoriteItemDTO;
 import com.server.dto.GuideDTO;
+import com.server.dto.GuideInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.entities.FavoriteItem;
@@ -26,8 +27,8 @@ public class FavoriteItemController {
         favoriteItemService.addToFavorites(favoriteItem);
     }
 
-    @GetMapping
-    public List<GuideDTO> getFavorites(@RequestBody String email) {
+    @GetMapping("{email}")
+    public List<GuideInfoDTO> getFavorites(@PathVariable String email) {
         return favoriteItemService.getFavorites(email);
     }
 
