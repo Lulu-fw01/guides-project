@@ -13,7 +13,7 @@ class ProfileContent extends StatelessWidget {
     final theme = Provider.of<MainTheme>(context);
     final profileCubit = Provider.of<ProfileCubit>(context);
 
-    return BlocConsumer(
+    return BlocConsumer<ProfileCubit, ProfileState>(
         listener: ((context, state) {}),
         builder: (context, state) {
           return Container();
