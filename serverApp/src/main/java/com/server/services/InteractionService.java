@@ -42,9 +42,9 @@ public class InteractionService {
         this.guideHandleRepository = guideHandleRepository;
     }
 
-    public List<InteractionDTO> getPostsUserInteractedWith(UserDTO userDTO) {
+    public List<InteractionDTO> getPostsUserInteractedWith(String email) {
         return interactionRepository
-                .getPostsUserInteractedWith(userDTO.getEmail())
+                .getPostsUserInteractedWith(email)
                 .stream()
                 .map(interaction -> new InteractionDTO(
                         interaction.getInteractionId().getEmail().getEmail(),
@@ -131,7 +131,7 @@ public class InteractionService {
         return result;
     }
 
-    public List<GuideDTO> getRecentlyViewed(UserDTO user) {
+    public List<GuideDTO> getRecentlyViewed(String email) {
 
         List<InteractionDTO> interactionDTOS = new ArrayList<>();
 
@@ -142,7 +142,7 @@ public class InteractionService {
             NativeQuery<Object[]> query = session.createNativeQuery(
                             "SELECT user_email, guide_id, users_mark, view_date FROM interactions i " +
                                     "JOIN guides ON guide_id = guides.id " +
-                                    "WHERE i.user_email = " + "'" + user.getEmail() + "'" +
+                                    "WHERE i.user_email = " + "'" + email + "'" +
                                     " ORDER BY i.view_date DESC " +
                                     "LIMIT 10"
                     )

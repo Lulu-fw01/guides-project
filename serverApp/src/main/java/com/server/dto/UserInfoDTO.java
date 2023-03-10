@@ -20,4 +20,6 @@ public class UserInfoDTO {
     private UserRoles role;
 
     private Boolean isBlocked;
+
+    private Integer numberOfCreatedGuides;
 }

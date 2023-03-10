@@ -1,8 +1,8 @@
 package com.server.services;
 
 import com.server.dto.PageRequestDTO;
-import com.server.dto.UserDTO;
 import com.server.dto.UserInfoDTO;
+import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,21 +18,30 @@ public class UserInfoService {
 
     private final UserRepository userRepository;
 
-    public UserInfoService(UserRepository userRepository) {
+    private final GuideHandleRepository guideHandleRepository;
+
+    public UserInfoService(UserRepository userRepository,
+                           GuideHandleRepository guideHandleRepository) {
         this.userRepository = userRepository;
+        this.guideHandleRepository = guideHandleRepository;
     }
 
-    public UserInfoDTO getUserInfoByEmail(UserDTO userDTO) {
-        if (userDTO == null) {
+    public UserInfoDTO getUserInfoByEmail(String email) {
+        if (email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
         var user = userRepository
-                .findByEmail(userDTO.getEmail())
+                .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("The user does not exist"));
 
         return new UserInfoDTO(
-                user.getEmail(), user.getLogin(), user.getBirthday(), user.getRole(), user.getIsBlocked()
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday(),
+                user.getRole(),
+                user.getIsBlocked(),
+                guideHandleRepository.getCountOfGuidesByUser(email)
         );
     }
 
@@ -52,7 +61,8 @@ public class UserInfoService {
                         user.getLogin(),
                         user.getBirthday(),
                         user.getRole(),
-                        user.getIsBlocked()
+                        user.getIsBlocked(),
+                        guideHandleRepository.getCountOfGuidesByUser(user.getEmail())
                 ))
                 .toList();
     }

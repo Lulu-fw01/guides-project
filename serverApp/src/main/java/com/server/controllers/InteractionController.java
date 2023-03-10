@@ -22,9 +22,9 @@ public class InteractionController {
         this.interactionService = interactionService;
     }
 
-    @GetMapping
-    public List<InteractionDTO> getPostsUserInteractedWith(@RequestBody UserDTO user) {
-        return interactionService.getPostsUserInteractedWith(user);
+    @GetMapping("{email}")
+    public List<InteractionDTO> getPostsUserInteractedWith(@PathVariable String email) {
+        return interactionService.getPostsUserInteractedWith(email);
     }
 
     @PostMapping("/reaction")
@@ -37,9 +37,9 @@ public class InteractionController {
         interactionService.deleteReaction(interactionDTO);
     }
 
-    @GetMapping("/recently-viewed")
-    public List<GuideDTO> getRecentlyViewed(@RequestBody UserDTO user) {
-        return interactionService.getRecentlyViewed(user);
+    @GetMapping("/recently-viewed/{email}")
+    public List<GuideDTO> getRecentlyViewed(@PathVariable String email) {
+        return interactionService.getRecentlyViewed(email);
     }
 
     @GetMapping("/top")

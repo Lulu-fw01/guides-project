@@ -1,6 +1,5 @@
 package com.server.services;
 
-import com.server.dto.UserDTO;
 import com.server.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,7 @@ class UserInfoServiceTest {
     public void getNonExistingUser() {
         assertThrows(
                 UsernameNotFoundException.class,
-                () -> userInfoService.getUserInfoByEmail(new UserDTO("hm"))
+                () -> userInfoService.getUserInfoByEmail("email")
         );
     }
 }

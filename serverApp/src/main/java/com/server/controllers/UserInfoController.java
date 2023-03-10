@@ -1,7 +1,6 @@
 package com.server.controllers;
 
 import com.server.dto.PageRequestDTO;
-import com.server.dto.UserDTO;
 import com.server.dto.UserInfoDTO;
 import com.server.services.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class UserInfoController {
         return userInfoService.getAllUsers(userPagingDTO);
     }
 
-    @PostMapping
-    public UserInfoDTO getUserByEmail(@RequestBody UserDTO userDTO) {
-        return userInfoService.getUserInfoByEmail(userDTO);
+    @GetMapping("{email}")
+    public UserInfoDTO getUserByEmail(@PathVariable String email) {
+        return userInfoService.getUserInfoByEmail(email);
     }
 }
