@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/dto/guide_card_dto.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/features/profile/cubit/profile_cubit.dart';
 import 'package:provider/provider.dart';
 
 class ProfileContent extends StatelessWidget {
-  const ProfileContent({super.key});
+  ProfileContent({super.key});
+  final List<GuideCardDto> guideCardDtos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +16,11 @@ class ProfileContent extends StatelessWidget {
     final profileCubit = Provider.of<ProfileCubit>(context);
 
     return BlocConsumer<ProfileCubit, ProfileState>(
-        listener: ((context, state) {}),
-        builder: (context, state) {
-          return Container();
-        });
+        listener: ((context, state) {
+      if (state is ProfileErrorState) {}
+    }), builder: (context, state) {
+      return Container();
+    });
 
     //   ListView.separated(
     //       itemBuilder: (BuildContext context, int index) {},

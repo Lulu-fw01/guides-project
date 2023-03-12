@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit(this.guideRepository) : super(ProfileInitial());
+  ProfileCubit({required this.guideRepository}) : super(ProfileInitial());
   final IGuideRepository guideRepository;
 
   void getNextPage(String email, int pageNum) {
