@@ -1,6 +1,7 @@
 package com.server.services;
 
 import com.server.dto.GuideDTO;
+import com.server.dto.GuideInfoDTO;
 import com.server.repository.GuideHandleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +22,7 @@ public class SearchService {
         this.guideHandleRepository = guideHandleRepository;
     }
 
-    public List<GuideDTO> getGuidesByTitle(String title, String pageNumber, String pageSize) {
+    public List<GuideInfoDTO> getGuidesByTitle(String title, String pageNumber, String pageSize) {
         if (title == null || pageNumber == null || pageSize == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
@@ -30,11 +31,10 @@ public class SearchService {
             return guideHandleRepository
                     .searchByTitle(title, PageRequest.of(Integer.parseInt(pageNumber), Integer.parseInt(pageSize), Sort.by("id")))
                     .stream()
-                    .map(guide -> new GuideDTO(
+                    .map(guide -> new GuideInfoDTO(
                             guide.getId(),
-                            guide.getCreatorEmail().getEmail(),
+                            guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
-                            guide.getFileBytes(),
                             guide.getEditDate(),
                             guide.getIsBlocked()
                     ))
@@ -44,7 +44,7 @@ public class SearchService {
         }
     }
 
-    public List<GuideDTO> getGuidesByCategory(String category, String pageNumber, String pageSize) {
+    public List<GuideInfoDTO> getGuidesByCategory(String category, String pageNumber, String pageSize) {
         if (category == null || pageNumber == null || pageSize == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
@@ -53,11 +53,10 @@ public class SearchService {
             return guideHandleRepository
                     .searchByCategory(category, PageRequest.of(Integer.parseInt(pageNumber), Integer.parseInt(pageSize), Sort.by("id")))
                     .stream()
-                    .map(guide -> new GuideDTO(
+                    .map(guide -> new GuideInfoDTO(
                             guide.getId(),
-                            guide.getCreatorEmail().getEmail(),
+                            guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
-                            guide.getFileBytes(),
                             guide.getEditDate(),
                             guide.getIsBlocked()
                     ))
@@ -67,7 +66,7 @@ public class SearchService {
         }
     }
 
-    public List<GuideDTO> getGuidesByAuthor(String author, String pageNumber, String pageSize) {
+    public List<GuideInfoDTO> getGuidesByAuthor(String author, String pageNumber, String pageSize) {
         if (author == null || pageNumber == null || pageSize == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
@@ -76,11 +75,10 @@ public class SearchService {
             return guideHandleRepository
                     .searchByAuthor(author, PageRequest.of(Integer.parseInt(pageNumber), Integer.parseInt(pageSize), Sort.by("id")))
                     .stream()
-                    .map(guide -> new GuideDTO(
+                    .map(guide -> new GuideInfoDTO(
                             guide.getId(),
-                            guide.getCreatorEmail().getEmail(),
+                            guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
-                            guide.getFileBytes(),
                             guide.getEditDate(),
                             guide.getIsBlocked()
                     ))

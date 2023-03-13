@@ -118,7 +118,7 @@ public class InteractionService {
                             .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")))
                     .map(guide -> new GuideDTO(
                             guide.getId(),
-                            guide.getCreatorEmail().getEmail(),
+                            guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
                             guide.getFileBytes(),
                             guide.getEditDate(),
@@ -176,7 +176,7 @@ public class InteractionService {
                 .stream()
                 .map(guide -> new GuideDTO(
                         guide.getId(),
-                        guide.getCreatorEmail().getEmail(),
+                        guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
                         guide.getFileBytes(),
                         guide.getEditDate(),

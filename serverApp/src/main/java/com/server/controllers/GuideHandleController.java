@@ -38,6 +38,16 @@ public class GuideHandleController {
         return guideHandleService.getListOfGuidesByUser(userDTO);
     }
 
+    @GetMapping("{id}")
+    public GuideDTO getGuideById(@PathVariable Long id) {
+        return guideHandleService.getGuideById(id);
+    }
+
+    @PostMapping("/get-by-user/info")
+    public List<GuideInfoDTO> getListOfGuideInfoByUser(@RequestBody UserGuidePageDTO userDTO) {
+        return guideHandleService.getListOfGuideInfoByUser(userDTO);
+    }
+
     @PutMapping
     public void editGuide(@RequestBody GuideDTO guide) {
         guideHandleService.editGuide(guide);

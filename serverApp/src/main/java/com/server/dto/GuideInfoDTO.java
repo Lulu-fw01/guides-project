@@ -9,15 +9,13 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GuideDTO {
+public class GuideInfoDTO {
 
     private Long id;
 
     private String creatorLogin;
 
     private String title;
-
-    private String fileBytes;
 
     private Timestamp editDate;
 
