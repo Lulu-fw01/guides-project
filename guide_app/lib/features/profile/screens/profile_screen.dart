@@ -14,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
     final initCubit = Provider.of<InitCubit>(context);
     final guideRepo = Provider.of<GuideRepository>(context);
     return BlocProvider(
-        create: (context) => ProfileCubit(guideRepository: guideRepo),
+        create: (context) => ProfileCubit(guideRepository: guideRepo)..getNextPage(0),
         child: ProfileContent());
   }
 }

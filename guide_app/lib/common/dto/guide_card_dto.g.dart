@@ -7,7 +7,7 @@ part of 'guide_card_dto.dart';
 // **************************************************************************
 
 GuideCardDto _$GuideCardDtoFromJson(Map<String, dynamic> json) => GuideCardDto(
-      json['guideId'] as int,
+      json['id'] as int,
       json['creatorLogin'] as String,
       json['title'] as String,
       json['editDate'] as String,
@@ -15,7 +15,7 @@ GuideCardDto _$GuideCardDtoFromJson(Map<String, dynamic> json) => GuideCardDto(
 
 Map<String, dynamic> _$GuideCardDtoToJson(GuideCardDto instance) =>
     <String, dynamic>{
-      'guideId': instance.guideId,
+      'id': instance.id,
       'creatorLogin': instance.author,
       'title': instance.guideName,
       'editDate': instance.editDate,

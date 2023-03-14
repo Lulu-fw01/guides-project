@@ -4,6 +4,7 @@ import 'package:guide_app/common/client/guide_client.dart';
 import 'package:guide_app/common/repository/guide/guide_repository.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:guide_app/common/widgets/user_credentials.dart';
+import 'package:guide_app/cubit/init_cubit.dart';
 import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
 import 'package:guide_app/features/guide/screens/guide_screen.dart';
 import 'package:guide_app/features/home/screens/home_screen.dart';
@@ -11,7 +12,6 @@ import 'package:guide_app/features/main/widgets/favorites_app_bar.dart';
 import 'package:guide_app/features/profile/screens/profile_screen.dart';
 import 'package:guide_app/features/profile/widgets/profile_app_bar.dart';
 import 'package:guide_app/features/search/screens/search_screen.dart';
-import 'package:guide_app/main.dart';
 import 'package:provider/provider.dart';
 
 /// Main component of the app with navigation bottom bar.
@@ -24,7 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int selectedPageIndex = 0;
-  static const _pages = [
+  final List<Widget>_pages = const [
     HomeScreen(),
     SearchScreen(),
     FavoritesScreen(),
@@ -79,11 +79,14 @@ class MainScreenState extends State<MainScreen> {
   }
 
   PreferredSizeWidget? _buildAppBar(BuildContext context) {
+    final initCubit = Provider.of<InitCubit>(context);
     switch (selectedPageIndex) {
       case 2:
         return favoritesAppBar(context);
       case 3:
-        return profileAppBar(context, () {});
+        return profileAppBar(context, () {
+          initCubit.logout();
+        });
       default:
         return null;
     }

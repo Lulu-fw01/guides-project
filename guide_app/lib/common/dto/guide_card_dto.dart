@@ -3,10 +3,12 @@ import 'package:json_annotation/json_annotation.dart';
 part 'guide_card_dto.g.dart';
 
 /// Guide card dto.
+/// For code generation run  flutter pub run build_runner build --delete-conflicting-outputs.
 @JsonSerializable()
 class GuideCardDto {
-  GuideCardDto(this.guideId, this.author, this.guideName, this.editDate);
-  final int guideId;
+  GuideCardDto(this.id, this.author, this.guideName, this.editDate);
+
+  final int id;
 
   /// Guide author login.
   @JsonKey(name: 'creatorLogin')

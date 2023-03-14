@@ -47,8 +47,7 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   /// Get list of guides by user.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
-  Future<List<GuideCardDto>> getGuideCardsByUser(
-      String email, int pageNumber) async {
+  Future<List<GuideCardDto>> getGuideCardsByUser(int pageNumber) async {
     if (pageNumber < 0) {
       // TODO throw exception.
     }

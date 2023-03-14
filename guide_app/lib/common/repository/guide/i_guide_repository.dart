@@ -4,5 +4,5 @@ import 'package:guide_app/common/dto/guide_card_dto.dart';
 /// Guide repository interface.
 abstract class IGuideRepository {
   Future<void> addNewGuide(Document quillDocument);
-  Future<List<GuideCardDto>> getGuideCardsByUser(String email, int pageNumber);
+  Future<List<GuideCardDto>> getGuideCardsByUser(int pageNumber);
 }
