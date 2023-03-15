@@ -18,14 +18,26 @@ public interface GuideHandleRepository extends PagingAndSortingRepository<Guide,
     @Query(value = "SELECT * FROM guides WHERE creator_email = :email", nativeQuery = true)
     List<Guide> findByUser(@Param("email") String email, Pageable pageable);
 
+    @Query(value = "SELECT * FROM guides WHERE creator_email = :email", nativeQuery = true)
+    List<Guide> findByUser(@Param("email") String email);
+
     @Query(value = "SELECT * FROM guides WHERE title ILIKE CONCAT('%',:title,'%') ", nativeQuery = true)
     List<Guide> searchByTitle(@Param("title") String title, Pageable pageable);
+
+    @Query(value = "SELECT * FROM guides WHERE title ILIKE CONCAT('%',:title,'%') ", nativeQuery = true)
+    List<Guide> searchByTitle(@Param("title") String title);
 
     @Query(value = "SELECT * FROM guides WHERE id IN (SELECT guide_id FROM tags WHERE category_name = :category)", nativeQuery = true)
     List<Guide> searchByCategory(@Param("category") String category, Pageable pageable);
 
+    @Query(value = "SELECT * FROM guides WHERE id IN (SELECT guide_id FROM tags WHERE category_name = :category)", nativeQuery = true)
+    List<Guide> searchByCategory(@Param("category") String category);
+
     @Query(value = "SELECT * FROM guides WHERE creator_email IN (SELECT email FROM users WHERE login ILIKE CONCAT('%',:author,'%'))", nativeQuery = true)
     List<Guide> searchByAuthor(@Param("author") String category, Pageable pageable);
+
+    @Query(value = "SELECT * FROM guides WHERE creator_email IN (SELECT email FROM users WHERE login ILIKE CONCAT('%',:author,'%'))", nativeQuery = true)
+    List<Guide> searchByAuthor(@Param("author") String category);
 
     @Query(value = "SELECT COUNT(*) FROM guides WHERE creator_email = :email", nativeQuery = true)
     Integer getCountOfGuidesByUser(@Param("email") String email);

@@ -29,12 +29,12 @@ public class GuideHandleController {
     }
 
     @PostMapping("/get-page")
-    public List<GuideDTO> getListOfAllGuides(@RequestBody PageRequestDTO pageRequestDTO) {
+    public GuidePageResponse getListOfAllGuides(@RequestBody PageRequestDTO pageRequestDTO) {
         return guideHandleService.getListOfAllGuides(pageRequestDTO);
     }
 
     @PostMapping("/get-by-user")
-    public List<GuideDTO> getListOfGuidesByUser(@RequestBody UserGuidePageDTO userDTO) {
+    public GuidePageResponse getListOfGuidesByUser(@RequestBody UserGuidePageDTO userDTO) {
         return guideHandleService.getListOfGuidesByUser(userDTO);
     }
 
@@ -44,7 +44,7 @@ public class GuideHandleController {
     }
 
     @PostMapping("/get-by-user/info")
-    public List<GuideInfoDTO> getListOfGuideInfoByUser(@RequestBody UserGuidePageDTO userDTO) {
+    public GuideInfoPageResponse getListOfGuideInfoByUser(@RequestBody UserGuidePageDTO userDTO) {
         return guideHandleService.getListOfGuideInfoByUser(userDTO);
     }
 
