@@ -31,9 +31,11 @@ class ProfileContent extends StatelessWidget {
           color: theme.onSurface,
         ));
       } else if (state is ProfileSuccessState) {
-        if (state.guideCards.isNotEmpty) {
-          profileProvider.guideCardDtos.addAll(state.guideCards);
+        // TODO maybe check page number.
+        if (state.nextPage.guideCardDtos.isNotEmpty) {
+          profileProvider.guideCardDtos.addAll(state.nextPage.guideCardDtos);
           profileProvider.pageNum++;
+          profileCubit.isLoadingPage = false;
         }
       } else if (state is ProfileErrorState &&
           profileProvider.guideCardDtos.isEmpty) {
@@ -43,6 +45,7 @@ class ProfileContent extends StatelessWidget {
     });
   }
 
+  // TODO move to different widget.
   Widget _buildErrorWithEmptyCards(ProfileCubit profileCubit, MainTheme theme,
       ProfileErrorState errorState) {
     return Column(

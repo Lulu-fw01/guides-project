@@ -13,8 +13,8 @@ class ProfileErrorState extends ProfileState {
 }
 
 class ProfileSuccessState extends ProfileState {
-  ProfileSuccessState(this.guideCards);
-  final List<GuideCardDto> guideCards;
+  ProfileSuccessState(this.nextPage);
+  final GuideCardsPage nextPage;
 }
 
 class ProfileHeadIsReadyState extends ProfileState {}

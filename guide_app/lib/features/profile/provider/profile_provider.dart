@@ -5,4 +5,11 @@ import 'package:guide_app/common/dto/guide_card_dto.dart';
 class ProfileProvider extends ChangeNotifier {
   final List<GuideCardDto> guideCardDtos = [];
   int pageNum = 0;
+  int pagesAmount = 0;
+
+  void reset() {
+    guideCardDtos.clear();
+    pageNum = 0;
+    pagesAmount = 0;
+  }
 }
