@@ -24,7 +24,6 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     String title = "Без названия";
     // Trying to get title from document.
     // TODO make more interesting.
-    // TODO название не может быть более 50 символов.
     for (var operation in operations) {
       if (operation.isInsert &&
           operation.data is String &&
@@ -32,6 +31,9 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
         title = operation.data.toString().replaceAll('\n', "");
         break;
       }
+    }
+    if (title.length > 84) {
+      title = "${title.substring(0, 81)}...";
     }
 
     log('New guide with title: $title');

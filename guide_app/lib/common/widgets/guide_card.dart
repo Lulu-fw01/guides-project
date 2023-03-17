@@ -45,9 +45,24 @@ class GuideCard extends StatelessWidget {
                       guideCardDto.guideName,
                       style: theme.guideCardTitle,
                     ),
-                    Text(
-                      "${guideCardDto.editDate} • ",
-                      style: theme.smallInfoText,
+                    Row(
+                      children: [
+                        Text(
+                          guideCardDto.getEditDateAsText(),
+                          style: theme.smallInfoText,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8,
+                            right: 8,
+                          ),
+                          child: Icon(
+                            Icons.circle,
+                            size: 6,
+                            color: theme.infoColor,
+                          ),
+                        )
+                      ],
                     )
                   ],
                 ),

@@ -42,9 +42,12 @@ class CardsList extends StatelessWidget {
           controller: _scrollController
             ..addListener(() {
               // TODO check last page.
+              // If we at the end of the list we will upload
+              // next page if it is not last.
               if (_scrollController.offset ==
                       _scrollController.position.maxScrollExtent &&
-                  !profileCubit.isLoadingPage) {
+                  !profileCubit.isLoadingPage &&
+                  !profileProvider.isLastPage()) {
                 profileCubit.isLoadingPage = true;
                 profileCubit.getNextPage(profileProvider.pageNum);
               }
@@ -85,6 +88,7 @@ class CardsList extends StatelessWidget {
 }
 
 
+// TODO remove later
 // return RefreshIndicator(
 //       color: theme.onSurface,
 //       onRefresh: () => onRefresh(profileProvider, profileCubit),

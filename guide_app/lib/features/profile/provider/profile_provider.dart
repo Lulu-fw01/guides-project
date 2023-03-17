@@ -14,4 +14,8 @@ class ProfileProvider extends ChangeNotifier {
     pageNum = 0;
     pagesAmount = 0;
   }
+
+  bool isLastPage() {
+    return pageNum == pagesAmount;
+  }
 }

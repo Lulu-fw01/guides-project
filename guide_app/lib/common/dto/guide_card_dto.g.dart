@@ -10,7 +10,7 @@ GuideCardDto _$GuideCardDtoFromJson(Map<String, dynamic> json) => GuideCardDto(
       json['id'] as int,
       json['creatorLogin'] as String,
       json['title'] as String,
-      json['editDate'] as String,
+      DateTime.parse(json['editDate'] as String),
     );
 
 Map<String, dynamic> _$GuideCardDtoToJson(GuideCardDto instance) =>
@@ -18,5 +18,5 @@ Map<String, dynamic> _$GuideCardDtoToJson(GuideCardDto instance) =>
       'id': instance.id,
       'creatorLogin': instance.author,
       'title': instance.guideName,
-      'editDate': instance.editDate,
+      'editDate': instance.editDate.toIso8601String(),
     };

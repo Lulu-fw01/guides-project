@@ -24,6 +24,7 @@ mixin ExceptionResponseMixin {
       case 403:
         throw UnauthorizedException(body);
       case 500:
+        throw ServerErrorException(body);
     }
     throw FetchDataException(
         'Error occured while Communication with Server with StatusCode : ${response.statusCode}');

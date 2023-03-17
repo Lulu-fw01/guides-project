@@ -17,14 +17,14 @@ class FavoritesScreenState extends State<FavoritesScreen> {
     final theme = Provider.of<MainTheme>(context);
 
     final guideCards = [
-      GuideCardDto(1, 'Lulu-fw01', 'My first guide kkkkkkk kkkkkkk kkkkkkkkk',
-          '01.02.2023'),
-      GuideCardDto(1, 'Lulu-fw01', 'My second guide', '01.02.2023'),
-      GuideCardDto(2, 'Lulu-fw01', 'My fucking third guide', '01.02.2023'),
-      GuideCardDto(3, 'Lulu-fw01', 'My fourth guide', '01.02.2023'),
-      GuideCardDto(4, 'Lulu-fw01', 'My fifth guide', '01.02.2023'),
-      GuideCardDto(5, 'Lulu-fw01', 'My whatever guide', '01.02.2023'),
-      GuideCardDto(6, 'Lulu-fw01', 'Another one guide by me', '01.02.2023')
+      // GuideCardDto(1, 'Lulu-fw01', 'My first guide kkkkkkk kkkkkkk kkkkkkkkk',
+      //     '01.02.2023'),
+      // GuideCardDto(1, 'Lulu-fw01', 'My second guide', '01.02.2023'),
+      // GuideCardDto(2, 'Lulu-fw01', 'My fucking third guide', '01.02.2023'),
+      // GuideCardDto(3, 'Lulu-fw01', 'My fourth guide', '01.02.2023'),
+      // GuideCardDto(4, 'Lulu-fw01', 'My fifth guide', '01.02.2023'),
+      // GuideCardDto(5, 'Lulu-fw01', 'My whatever guide', '01.02.2023'),
+      // GuideCardDto(6, 'Lulu-fw01', 'Another one guide by me', '01.02.2023')
     ];
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) =>

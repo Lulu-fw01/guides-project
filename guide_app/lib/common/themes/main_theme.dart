@@ -9,6 +9,7 @@ class MainTheme {
   Color onSurfaceVariant = const Color(0xFF2E1A7E).withOpacity(0.4);
   TextStyle smallInfoTextAuthor =
       GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w400);
+  Color infoColor = const Color(0xFF2E1A7E).withOpacity(0.4);
   TextStyle smallInfoText = GoogleFonts.lato(
       fontSize: 12,
       fontWeight: FontWeight.w400,
@@ -22,9 +23,7 @@ class MainTheme {
       fontWeight: FontWeight.bold,
       color: const Color(0xFF2E1A7E));
   TextStyle informationText = GoogleFonts.lato(
-      fontSize: 16,
-      fontWeight: FontWeight.w400,
-      color: readableText);
+      fontSize: 16, fontWeight: FontWeight.w400, color: readableText);
 
   ThemeData get lightTheme {
     return ThemeData(

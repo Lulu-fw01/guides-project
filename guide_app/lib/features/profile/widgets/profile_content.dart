@@ -33,18 +33,28 @@ class ProfileContent extends StatelessWidget {
       } else if (state is ProfileSuccessState) {
         // TODO maybe check page number.
         if (state.nextPage.guideCardDtos.isNotEmpty) {
-          profileProvider.guideCardDtos.addAll(state.nextPage.guideCardDtos);
+          final page = state.nextPage;
+          profileProvider.guideCardDtos.addAll(page.guideCardDtos);
           profileProvider.pageNum++;
           profileCubit.isLoadingPage = false;
+          // If it is first page we set pagesAmount
+          // because we should not upload more pages than we have.
+          if (page.pageNum == 0) {
+            profileProvider.pagesAmount = page.pageAmount;
+          }
         }
       } else if (state is ProfileErrorState &&
           profileProvider.guideCardDtos.isEmpty) {
         return _buildErrorWithEmptyCards(profileCubit, theme, state);
       } else if (state is ProfileRefreshSuccessState) {
+        final page = state.nextPage;
         profileProvider.reset();
-        profileProvider.guideCardDtos.addAll(state.nextPage.guideCardDtos);
+        profileProvider.guideCardDtos.addAll(page.guideCardDtos);
         profileProvider.pageNum++;
         profileCubit.isLoadingPage = false;
+        if (page.pageNum == 0) {
+          profileProvider.pagesAmount = page.pageAmount;
+        }
       }
       return CardsList();
     });
@@ -53,19 +63,21 @@ class ProfileContent extends StatelessWidget {
   // TODO move to different widget.
   Widget _buildErrorWithEmptyCards(ProfileCubit profileCubit, MainTheme theme,
       ProfileErrorState errorState) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        IconButton(
-          onPressed: () {
-            profileCubit.getNextPage(0);
-          },
-          icon: const Icon(Icons.refresh),
-        ),
-        const SizedBox(height: 15),
-        Text(errorState.message, textAlign: TextAlign.center),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              profileCubit.getNextPage(0);
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+          const SizedBox(height: 15),
+          Text(errorState.message, textAlign: TextAlign.center),
+        ],
+      ),
     );
   }
 }
