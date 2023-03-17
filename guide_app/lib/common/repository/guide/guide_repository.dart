@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:guide_app/common/client/i_guide_client.dart';
+import 'package:guide_app/common/dto/guide_cards_page.dart';
 import 'package:guide_app/common/dto/new_guide_dto.dart';
+import 'package:guide_app/common/dto/user_guide_page_dto.dart';
 import 'package:guide_app/common/mixin/exception_response_mixin.dart';
 import 'package:guide_app/common/repository/guide/i_guide_repository.dart';
 
@@ -26,9 +28,12 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
       if (operation.isInsert &&
           operation.data is String &&
           operation.data.toString().length > 1) {
-        title = operation.data.toString();
+        title = operation.data.toString().replaceAll('\n', "");
         break;
       }
+    }
+    if (title.length > 84) {
+      title = "${title.substring(0, 81)}...";
     }
 
     log('New guide with title: $title');
@@ -39,5 +44,23 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     if (response.statusCode != 200) {
       throwError(response);
     }
+  }
+
+  /// Get list of guides by user.
+  /// * Throws: see [ExceptionResponseMixin.throwError].
+  @override
+  Future<GuideCardsPage> getGuideCardsByUser(int pageNumber) async {
+    // TODO remove later this delay only for testing.
+    await Future.delayed(Duration(seconds: 2));
+    if (pageNumber < 0) {
+      // TODO throw exception.
+    }
+    final dto = UserGuidePageDto.standardPage(email, pageNumber);
+    final response = await guideClient.getGuideCardsByUser(dto);
+    if (response.statusCode != 200) {
+      throwError(response);
+    }
+    final dynamic data = jsonDecode(response.body);
+    return GuideCardsPage.fromJson(data);
   }
 }

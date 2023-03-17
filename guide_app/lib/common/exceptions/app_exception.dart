@@ -29,3 +29,8 @@ class InvalidInputException extends ResponseException {
   InvalidInputException([ResponseExceptionBody? responseBody])
       : super(responseBody);
 }
+
+class ServerErrorException extends ResponseException {
+  ServerErrorException([ResponseExceptionBody? responseBody])
+      : super(responseBody);
+}

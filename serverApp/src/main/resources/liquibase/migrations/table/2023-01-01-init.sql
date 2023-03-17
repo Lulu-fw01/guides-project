@@ -18,17 +18,17 @@ create table if not exists public.users
 alter table public.users
     owner to postgres;
 
---changeset Luka:guides
+--changeset Luka:guides-title_length_update
 create table if not exists public.guides
 (
     id            bigserial
         primary key,
     creator_email text                  not null
         references public.users,
-    title         varchar(50)           not null
+    title         varchar(84)           not null
         constraint title_check
             check (char_length((title)::text) >= 1),
-    file_bytes    text                 not null,
+    file_bytes    text                  not null,
     edit_date     timestamp,
     is_blocked    boolean default false not null
 );
