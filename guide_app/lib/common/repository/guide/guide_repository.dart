@@ -26,12 +26,12 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     String title = "Без названия";
     // Trying to get title from document.
     // TODO make more interesting.
-    // TODO название не может быть более 50 сиволов.
+    // TODO название не может быть более 50 символов.
     for (var operation in operations) {
       if (operation.isInsert &&
           operation.data is String &&
           operation.data.toString().length > 1) {
-        title = operation.data.toString();
+        title = operation.data.toString().replaceAll('\n', "");
         break;
       }
     }
