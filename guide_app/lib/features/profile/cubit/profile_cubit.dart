@@ -31,7 +31,21 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  void refresh() {
-    getNextPage(0);
+  Future<void> refresh() async {
+    emit(ProfileRefreshLoadingState());
+    guideRepository.getGuideCardsByUser(0).then((nextPage) {
+      debugPrint("Got cards.");
+      emit(ProfileRefreshSuccessState(nextPage));
+    }).catchError((e) {
+      emit(ProfileErrorState((e as ResponseException).responseBody != null
+          ? e.responseBody!.message
+          : ''));
+    }, test: (error) => error is ResponseException).catchError(
+      (e) {
+        emit(ProfileErrorState(
+            (e as AppException).message != null ? e.message! : ''));
+      },
+      test: (error) => error is AppException,
+    );
   }
 }

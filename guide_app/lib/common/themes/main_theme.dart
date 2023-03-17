@@ -8,7 +8,7 @@ class MainTheme {
   static const Color readableText = Colors.black;
   Color onSurfaceVariant = const Color(0xFF2E1A7E).withOpacity(0.4);
   TextStyle smallInfoTextAuthor =
-      GoogleFonts.lato(fontSize: 12, fontWeight: FontWeight.w400);
+      GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w400);
   TextStyle smallInfoText = GoogleFonts.lato(
       fontSize: 12,
       fontWeight: FontWeight.w400,
@@ -16,6 +16,10 @@ class MainTheme {
   TextStyle titleText = GoogleFonts.lato(
       fontSize: 24,
       fontWeight: FontWeight.w400,
+      color: const Color(0xFF2E1A7E));
+  TextStyle guideCardTitle = GoogleFonts.lato(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
       color: const Color(0xFF2E1A7E));
   TextStyle informationText = GoogleFonts.lato(
       fontSize: 16,

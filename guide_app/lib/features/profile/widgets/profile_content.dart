@@ -40,6 +40,11 @@ class ProfileContent extends StatelessWidget {
       } else if (state is ProfileErrorState &&
           profileProvider.guideCardDtos.isEmpty) {
         return _buildErrorWithEmptyCards(profileCubit, theme, state);
+      } else if (state is ProfileRefreshSuccessState) {
+        profileProvider.reset();
+        profileProvider.guideCardDtos.addAll(state.nextPage.guideCardDtos);
+        profileProvider.pageNum++;
+        profileCubit.isLoadingPage = false;
       }
       return CardsList();
     });
