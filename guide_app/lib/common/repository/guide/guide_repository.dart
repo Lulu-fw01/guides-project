@@ -3,13 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:guide_app/common/client/i_guide_client.dart';
-import 'package:guide_app/common/dto/guide_card_dto.dart';
 import 'package:guide_app/common/dto/guide_cards_page.dart';
 import 'package:guide_app/common/dto/new_guide_dto.dart';
 import 'package:guide_app/common/dto/user_guide_page_dto.dart';
 import 'package:guide_app/common/mixin/exception_response_mixin.dart';
 import 'package:guide_app/common/repository/guide/i_guide_repository.dart';
-import 'package:http/http.dart';
 
 class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   GuideRepository(this.email, this.guideClient);
