@@ -8,6 +8,7 @@ import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
 import 'profile_content.dart';
 
+/// Core of  profile screen.
 class ProfileCore extends StatelessWidget {
   const ProfileCore({super.key});
 
@@ -64,26 +65,5 @@ class ProfileCore extends StatelessWidget {
       }
       return ProfileContent();
     });
-  }
-
-  // TODO remove.
-  Widget _buildErrorWithEmptyCards(ProfileCubit profileCubit, MainTheme theme,
-      ProfileErrorState errorState) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () {
-              profileCubit.getNextPage(0);
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          const SizedBox(height: 15),
-          Text(errorState.message, textAlign: TextAlign.center),
-        ],
-      ),
-    );
   }
 }

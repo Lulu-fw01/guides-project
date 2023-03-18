@@ -30,7 +30,7 @@ class ProfileContent extends StatelessWidget {
     list.add(_loadingRefreshProgress(theme));
     list.addAll(profileProvider.guideCardDtos
         .map(
-          (e) => GuideCard(e),
+          (e) => GuideCard(e, onClick: () {},),
         )
         .toList());
     list.add(_loadingProgress(theme));
