@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:guide_app/common/client/i_guide_client.dart';
-import 'package:guide_app/common/dto/guide_cards_page.dart';
-import 'package:guide_app/common/dto/new_guide_dto.dart';
-import 'package:guide_app/common/dto/user_guide_page_dto.dart';
-import 'package:guide_app/common/mixin/exception_response_mixin.dart';
-import 'package:guide_app/common/repository/guide/i_guide_repository.dart';
+
+import '../../client/i_guide_client.dart';
+import '../../dto/guide_cards_page.dart';
+import '../../dto/guide_dto.dart';
+import '../../dto/new_guide_dto.dart';
+import '../../dto/user_guide_page_dto.dart';
+import '../../mixin/exception_response_mixin.dart';
+import 'i_guide_repository.dart';
 
 class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   GuideRepository(this.email, this.guideClient);
@@ -62,5 +64,19 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     }
     final dynamic data = jsonDecode(response.body);
     return GuideCardsPage.fromJson(data);
+  }
+
+  /// Get guide by id.
+  /// [if] guide id.
+  /// * Throws: see [ExceptionResponseMixin.throwError].
+  @override
+  Future<GuideDto> getGuideById(int guideId) async {
+    // TODO remove later this delay only for testing.
+    await Future.delayed(Duration(seconds: 2));
+    final response = await guideClient.getGuideById(guideId);
+    if (response.statusCode != 200) {
+      throwError(response);
+    }
+    return GuideDto.fromJson(jsonDecode(response.body));
   }
 }

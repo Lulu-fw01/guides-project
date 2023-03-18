@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:guide_app/common/api/api_constants.dart';
-import 'package:guide_app/common/client/i_guide_client.dart';
-import 'package:guide_app/common/dto/new_guide_dto.dart';
-import 'package:guide_app/common/dto/user_guide_page_dto.dart';
-import 'package:guide_app/common/exceptions/app_exception.dart';
 import 'package:http/http.dart' as http;
+
+import '../api/api_constants.dart';
+import '../dto/new_guide_dto.dart';
+import '../dto/user_guide_page_dto.dart';
+import '../exceptions/app_exception.dart';
+import 'i_guide_client.dart';
 
 class GuideClient implements IGuideClient {
   GuideClient(this.token);
@@ -13,7 +14,7 @@ class GuideClient implements IGuideClient {
 
   /// Create new guide.
   /// <p>
-  /// dto - dto with new guide data.
+  /// [dto] - dto with new guide data.
   /// <p>
   /// Returns [http.Response].
   /// <p>
@@ -38,7 +39,7 @@ class GuideClient implements IGuideClient {
 
   /// Get guides by user. Pageable request.
   /// <p>
-  /// dto - dto with request.
+  /// [dto] - dto with request.
   /// <p>
   /// Returns [http.Response].
   /// <p>
@@ -55,6 +56,29 @@ class GuideClient implements IGuideClient {
             "Content-Type": "application/json"
           },
           body: jsonEncode(dto));
+      return response;
+    } catch (e) {
+      throw FetchDataException(e.toString());
+    }
+  }
+
+  /// Get guide by id.
+  /// <p>
+  /// [guideId] - guide id.
+  /// <p>
+  /// Returns [http.Response].
+  /// <p>
+  /// Throws [FetchDataException].
+  /// <p>
+  /// Author - @Lulu-fw01.
+  @override
+  Future<http.Response> getGuideById(int guideId) {
+    final url = Uri.parse("${ApiConstants.guideHandling}/$guideId");
+    try {
+      var response = http.get(url, headers: {
+        "Authorization": 'Bearer $token',
+        "Content-Type": "application/json"
+      });
       return response;
     } catch (e) {
       throw FetchDataException(e.toString());

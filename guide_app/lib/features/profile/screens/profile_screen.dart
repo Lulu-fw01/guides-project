@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/repository/guide/guide_repository.dart';
-import 'package:guide_app/features/profile/cubit/profile_cubit.dart';
-import 'package:guide_app/features/profile/provider/profile_provider.dart';
-import 'package:guide_app/features/profile/widgets/profile_content.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/repository/guide/guide_repository.dart';
+import '../cubit/profile_cubit.dart';
+import '../provider/profile_provider.dart';
+import '../widgets/profile_core.dart';
 
 /// PRofile screen.
 class ProfileScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
               Provider.of<ProfileCubit>(context).state is ProfileInitialState) {
             Provider.of<ProfileCubit>(context).getNextPage(0);
           }
-          return const ProfileContent();
+          return const ProfileCore();
         }));
   }
 }

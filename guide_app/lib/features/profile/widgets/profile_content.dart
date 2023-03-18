@@ -1,83 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/features/profile/cubit/profile_cubit.dart';
-import 'package:guide_app/features/profile/provider/profile_provider.dart';
-import 'package:guide_app/features/profile/widgets/cards_list.dart';
+
 import 'package:provider/provider.dart';
 
+import '../../../common/themes/main_theme.dart';
+import '../../../common/widgets/guide_card.dart';
+import '../cubit/profile_cubit.dart';
+import '../provider/profile_provider.dart';
+
+/// Part of [ProfileContent] where we draw guide cards.
 class ProfileContent extends StatelessWidget {
-  const ProfileContent({super.key});
+  ProfileContent({super.key});
+
+  final ScrollController _scrollController = ScrollController();
+
+  Future<void> onRefresh(
+      ProfileProvider profileProvider, ProfileCubit profileCubit) async {
+    profileCubit.isLoadingPage = true;
+    await profileCubit.refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<MainTheme>(context);
     final profileCubit = Provider.of<ProfileCubit>(context);
+    final profileProvider = Provider.of<ProfileProvider>(context);
+    final theme = Provider.of<MainTheme>(context);
 
-    return BlocConsumer<ProfileCubit, ProfileState>(
-        listener: ((context, state) {
-      if (state is ProfileErrorState) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            duration: const Duration(seconds: 3),
-            content: Text(state.message)));
-      }
-    }), builder: (context, state) {
-      final profileProvider = Provider.of<ProfileProvider>(context);
+    List<Widget> list = [];
+    list.add(_loadingRefreshProgress(theme));
+    list.addAll(profileProvider.guideCardDtos
+        .map(
+          (e) => GuideCard(e),
+        )
+        .toList());
+    list.add(_loadingProgress(theme));
 
-      if (state is ProfileLoadingState &&
-          profileProvider.guideCardDtos.isEmpty) {
-        return Center(
-            child: CircularProgressIndicator(
-          color: theme.onSurface,
+    return RefreshIndicator(
+        color: theme.onSurface,
+        onRefresh: () => onRefresh(profileProvider, profileCubit),
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          key: const PageStorageKey('profile_page_cards'),
+          controller: _scrollController
+            ..addListener(() {
+              // TODO check last page.
+              // If we at the end of the list we will upload
+              // next page if it is not last.
+              if (_scrollController.offset ==
+                      _scrollController.position.maxScrollExtent &&
+                  !profileCubit.isLoadingPage &&
+                  !profileProvider.isLastPage()) {
+                profileCubit.isLoadingPage = true;
+                profileCubit.getNextPage(profileProvider.pageNum);
+              }
+            }),
+          children: list,
         ));
-      } else if (state is ProfileSuccessState) {
-        // TODO maybe check page number.
-        if (state.nextPage.guideCardDtos.isNotEmpty) {
-          final page = state.nextPage;
-          profileProvider.guideCardDtos.addAll(page.guideCardDtos);
-          profileProvider.pageNum++;
-          profileCubit.isLoadingPage = false;
-          // If it is first page we set pagesAmount
-          // because we should not upload more pages than we have.
-          if (page.pageNum == 0) {
-            profileProvider.pagesAmount = page.pageAmount;
-          }
-        }
-      } else if (state is ProfileErrorState &&
-          profileProvider.guideCardDtos.isEmpty) {
-        return _buildErrorWithEmptyCards(profileCubit, theme, state);
-      } else if (state is ProfileRefreshSuccessState) {
-        final page = state.nextPage;
-        profileProvider.reset();
-        profileProvider.guideCardDtos.addAll(page.guideCardDtos);
-        profileProvider.pageNum++;
-        profileCubit.isLoadingPage = false;
-        if (page.pageNum == 0) {
-          profileProvider.pagesAmount = page.pageAmount;
-        }
-      }
-      return CardsList();
-    });
   }
 
-  // TODO move to different widget.
-  Widget _buildErrorWithEmptyCards(ProfileCubit profileCubit, MainTheme theme,
-      ProfileErrorState errorState) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () {
-              profileCubit.getNextPage(0);
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-          const SizedBox(height: 15),
-          Text(errorState.message, textAlign: TextAlign.center),
-        ],
-      ),
-    );
+  Widget _loadingProgress(MainTheme theme) {
+    return BlocSelector<ProfileCubit, ProfileState, bool>(
+        selector: (state) => state is ProfileLoadingState,
+        builder: (context, isLoading) => isLoading
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  child: CircularProgressIndicator(
+                    color: theme.onSurface,
+                  ),
+                ),
+              )
+            : Container());
+  }
+
+  Widget _loadingRefreshProgress(MainTheme theme) {
+    return BlocSelector<ProfileCubit, ProfileState, bool>(
+        selector: (state) => state is ProfileRefreshLoadingState,
+        builder: (context, isLoading) => isLoading
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  child: CircularProgressIndicator(
+                    color: theme.onSurface,
+                  ),
+                ),
+              )
+            : Container());
   }
 }
+
+
+// TODO remove later
+// return RefreshIndicator(
+//       color: theme.onSurface,
+//       onRefresh: () => onRefresh(profileProvider, profileCubit),
+//       child: ListView.separated(
+//           physics: const AlwaysScrollableScrollPhysics(),
+//           key: const PageStorageKey('profile_page_cards'),
+//           controller: _scrollController
+//             ..addListener(() {
+//               // TODO check last page.
+//               if (_scrollController.offset ==
+//                       _scrollController.position.maxScrollExtent &&
+//                   !profileCubit.isLoadingPage) {
+//                 profileCubit.isLoadingPage = true;
+//                 profileCubit.getNextPage(profileProvider.pageNum);
+//               }
+//             }),
+//           itemBuilder: (BuildContext context, int index) {
+//             if (index == totalLength - 1) {
+//               return BlocSelector<ProfileCubit, ProfileState, bool>(
+//                   selector: (state) => state is ProfileLoadingState,
+//                   builder: (context, isLoading) => isLoading
+//                       ? Center(
+//                           child: Padding(
+//                             padding: const EdgeInsets.only(top: 8, bottom: 8),
+//                             child: CircularProgressIndicator(
+//                               color: theme.onSurface,
+//                             ),
+//                           ),
+//                         )
+//                       : Container());
+//             }
+//             if (index == 0) {
+//               return profileProvider.userInfoDto != null
+//                   ? UserInfo(userInfoDto: profileProvider.userInfoDto!)
+//                   : Container(height: 30,);
+//             }
+//             return GuideCard(profileProvider.guideCardDtos[index - 1]);
+//           },
+//           separatorBuilder: (BuildContext context, int index) => Divider(
+//                 height: 3,
+//                 color: theme.onSurface,
+//               ),
+//           itemCount: totalLength),
+//     );

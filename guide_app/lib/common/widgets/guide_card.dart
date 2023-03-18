@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/dto/guide_card_dto.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:provider/provider.dart';
+
+import '../dto/guide_card_dto.dart';
+import '../themes/main_theme.dart';
 
 /// Guide card widget.
 /// v1.
