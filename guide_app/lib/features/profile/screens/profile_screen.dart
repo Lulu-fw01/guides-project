@@ -14,15 +14,26 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final guideRepo = Provider.of<GuideRepository>(context);
-    return BlocProvider(
-        create: (context) => ProfileCubit(guideRepository: guideRepo),
-        child: Builder(builder: (context) {
-          // Call getNextPage only if there were no calls before.
-          if (Provider.of<ProfileProvider>(context).pageNum == 0 &&
-              Provider.of<ProfileCubit>(context).state is ProfileInitialState) {
-            Provider.of<ProfileCubit>(context).getNextPage(0);
-          }
-          return const ProfileCore();
-        }));
+    final profileProvider = Provider.of<ProfileProvider>(context);
+    return Builder(builder: (context) {
+      switch (profileProvider.profileScreenState) {
+        case ProfileScreenMode.profileInfo:
+          // Show profile info and user's guides.
+          return BlocProvider(
+              create: (context) => ProfileCubit(guideRepository: guideRepo),
+              child: Builder(builder: (context) {
+                // Call getNextPage only if there were no calls before.
+                if (profileProvider.pageNum == 0 &&
+                    Provider.of<ProfileCubit>(context).state
+                        is ProfileInitialState) {
+                  Provider.of<ProfileCubit>(context).getNextPage(0);
+                }
+                return const ProfileCore();
+              }));
+        case ProfileScreenMode.viewGuide:
+          // Show chosen guide from profile screen.
+          return Container(height: 40, width: 40, color: Colors.amber,);
+      }
+    });
   }
 }

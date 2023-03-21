@@ -30,7 +30,12 @@ class ProfileContent extends StatelessWidget {
     list.add(_loadingRefreshProgress(theme));
     list.addAll(profileProvider.guideCardDtos
         .map(
-          (e) => GuideCard(e, onClick: () {},),
+          (dto) => GuideCard(
+            dto,
+            onClick: () {
+              profileProvider.showGuide(dto.id);
+            },
+          ),
         )
         .toList());
     list.add(_loadingProgress(theme));
@@ -43,7 +48,6 @@ class ProfileContent extends StatelessWidget {
           key: const PageStorageKey('profile_page_cards'),
           controller: _scrollController
             ..addListener(() {
-              // TODO check last page.
               // If we at the end of the list we will upload
               // next page if it is not last.
               if (_scrollController.offset ==
