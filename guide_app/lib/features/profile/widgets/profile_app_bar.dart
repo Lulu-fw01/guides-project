@@ -9,8 +9,6 @@ PreferredSizeWidget profileAppBar(
   final theme = Provider.of<MainTheme>(context);
   final profileProvider = Provider.of<ProfileProvider>(context);
 
-
-
   switch (profileProvider.profileScreenState) {
     case ProfileScreenMode.profileInfo:
       return AppBar(
@@ -25,11 +23,14 @@ PreferredSizeWidget profileAppBar(
         ],
       );
     case ProfileScreenMode.viewGuide:
-      return AppBar(backgroundColor: theme.surface, actions: [
-        IconButton(
-          onPressed: () {},
+      return AppBar(
+        backgroundColor: theme.surface,
+        leading: IconButton(
+          onPressed: () {
+            profileProvider.showProfileInfo();
+          },
           icon: Icon(Icons.arrow_back, color: theme.onSurface),
-        )
-      ]);
+        ),
+      );
   }
 }

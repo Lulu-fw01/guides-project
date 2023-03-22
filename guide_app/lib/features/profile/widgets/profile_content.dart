@@ -23,7 +23,7 @@ class ProfileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileCubit = Provider.of<ProfileCubit>(context);
-    final profileProvider = Provider.of<ProfileProvider>(context);
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
     final theme = Provider.of<MainTheme>(context);
 
     List<Widget> list = [];

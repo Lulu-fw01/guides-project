@@ -37,7 +37,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final credentials = UserCredentials.of(context);
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<ProfileProvider>(
       create: (BuildContext context) => ProfileProvider(),
       child: RepositoryProvider(
         create: (context) =>

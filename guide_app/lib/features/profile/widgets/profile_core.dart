@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/features/profile/widgets/full_screen_error.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
+import 'full_screen_error.dart';
 import 'profile_content.dart';
 
 /// Core of  profile screen.
@@ -25,7 +25,8 @@ class ProfileCore extends StatelessWidget {
             content: Text(state.message)));
       }
     }), builder: (context, state) {
-      final profileProvider = Provider.of<ProfileProvider>(context);
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
 
       if (state is ProfileLoadingState &&
           profileProvider.guideCardDtos.isEmpty) {

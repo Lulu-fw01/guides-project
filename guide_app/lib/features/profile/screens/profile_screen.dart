@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/features/guide/screens/guide_view_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/repository/guide/guide_repository.dart';
+import '../../guide/cubit/guide_view/guide_view_cubit.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
 import '../widgets/profile_core.dart';
 
-/// PRofile screen.
+/// Profile screen.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final guideRepo = Provider.of<GuideRepository>(context);
-    final profileProvider = Provider.of<ProfileProvider>(context);
-    return Builder(builder: (context) {
+
+    return Consumer<ProfileProvider>(
+        builder: (context, profileProvider, child) {
       switch (profileProvider.profileScreenState) {
         case ProfileScreenMode.profileInfo:
           // Show profile info and user's guides.
@@ -32,7 +35,18 @@ class ProfileScreen extends StatelessWidget {
               }));
         case ProfileScreenMode.viewGuide:
           // Show chosen guide from profile screen.
-          return Container(height: 40, width: 40, color: Colors.amber,);
+          return BlocProvider(
+              create: (context) => GuideViewCubit(guideRepository: guideRepo),
+              child: Builder(
+                builder: (context) {
+                  if (profileProvider.viewedGuideId != null) {
+                    Provider.of<GuideViewCubit>(context, listen: false)
+                        .showGuide(profileProvider.viewedGuideId!);
+                    return GuideViewScreen();
+                  }
+                  return Container();
+                },
+              ));
       }
     });
   }

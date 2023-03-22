@@ -73,7 +73,8 @@ class GuideClient implements IGuideClient {
   /// Author - @Lulu-fw01.
   @override
   Future<http.Response> getGuideById(int guideId) {
-    final url = Uri.parse("${ApiConstants.guideHandling}/$guideId");
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl}${ApiConstants.guideHandling}/$guideId");
     try {
       var response = http.get(url, headers: {
         "Authorization": 'Bearer $token',
