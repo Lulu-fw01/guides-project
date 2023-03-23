@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/features/profile/widgets/profile_fab.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
@@ -51,16 +52,7 @@ class MainScreenState extends State<MainScreen> {
                     color: Colors.white, child: _pages[selectedPageIndex])),
             bottomNavigationBar: _buildBottomNavigationBar(theme),
             floatingActionButton: selectedPageIndex == 3
-                ? FloatingActionButton(
-                    backgroundColor: theme.onSurfaceVariant,
-                    onPressed: () {
-                      _onCreateNewGuidePressed(context);
-                    },
-                    child: Icon(
-                      Icons.add,
-                      color: theme.onSurface,
-                    ),
-                  )
+                ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
                 : null,
           );
         }),

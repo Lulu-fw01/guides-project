@@ -13,9 +13,11 @@ class GuideViewCubit extends Cubit<GuideViewState> {
 
   final IGuideRepository guideRepository;
 
+  /// Show guide guide.
+  /// Download guide from server by it's ID.
   Future<void> showGuide(int guideId) async {
     emit(GuideViewLoadingState());
-    
+
     try {
       final guide = await guideRepository.getGuideById(guideId);
       debugPrint("Guide ${guide.id} loaded");

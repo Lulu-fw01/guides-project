@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/features/guide/screens/guide_view_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../guide/cubit/guide_view/guide_view_cubit.dart';
+import '../../guide/screens/guide_view_screen.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
 import '../widgets/profile_core.dart';
@@ -40,9 +40,10 @@ class ProfileScreen extends StatelessWidget {
               child: Builder(
                 builder: (context) {
                   if (profileProvider.viewedGuideId != null) {
+                    // TODO fix: if guide have been already loaded we should not reload it again.
                     Provider.of<GuideViewCubit>(context, listen: false)
                         .showGuide(profileProvider.viewedGuideId!);
-                    return GuideViewScreen();
+                    return const GuideViewScreen();
                   }
                   return Container();
                 },

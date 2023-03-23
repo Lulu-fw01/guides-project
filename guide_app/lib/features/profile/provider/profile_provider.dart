@@ -6,12 +6,17 @@ import '../dto/user_info_dto.dart';
 /// Provider which contains data of profile screen.
 class ProfileProvider extends ChangeNotifier {
   final List<GuideCardDto> guideCardDtos = [];
+
+  /// Number of current page.
   int pageNum = 0;
+
+  /// Total number of pages.
   int pagesAmount = 0;
   UserInfoDto? userInfoDto;
 
   ProfileScreenMode _profileScreenState = ProfileScreenMode.profileInfo;
 
+  /// Id of the guide user currently viewing.
   int? viewedGuideId;
 
   ProfileScreenMode get profileScreenState => _profileScreenState;

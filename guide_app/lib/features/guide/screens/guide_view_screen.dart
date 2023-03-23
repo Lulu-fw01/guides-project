@@ -11,46 +11,62 @@ import '../cubit/guide_view/guide_view_cubit.dart';
 
 /// Screen for reading guide.
 class GuideViewScreen extends StatelessWidget {
-  GuideViewScreen({super.key});
+  const GuideViewScreen({super.key});
 
-  // TODO refactoring.
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GuideViewCubit, GuideViewState>(
-        listener: ((context, state) {
-      if (state is GuideViewErrorState) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            duration: const Duration(seconds: 3),
-            content: Text(state.message)));
-      }
-    }), builder: (context, state) {
+    return BlocBuilder<GuideViewCubit, GuideViewState>(
+        builder: (context, state) {
       final theme = Provider.of<MainTheme>(context);
 
       if (state is GuideViewLoadingState) {
+        // Loading state.
         return Center(
             child: CircularProgressIndicator(
           color: theme.onSurface,
         ));
-      } else if (state is GuideViewSuccessState) {
-        final jsonDoc = jsonDecode(state.guide.content);
-        final quillController = quill.QuillController(
-          document: quill.Document.fromJson(jsonDoc),
-          selection: const TextSelection.collapsed(offset: 0),
-        );
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 56),
-          // TODO remove cursor.
-          child: quill.QuillEditor.basic(
-              controller: quillController, readOnly: true),
-        );
       } else if (state is GuideViewErrorState) {
         return FullScreenError(
+          // Error state.
           // TODO add refresh.
           onPressed: () => {},
           message: state.message,
         );
       }
-      return Container();
+
+      final guide = (state as GuideViewSuccessState).guide;
+      final jsonDoc = jsonDecode(guide.content);
+      final quillController = quill.QuillController(
+        document: quill.Document.fromJson(jsonDoc),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+      return Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: 8,
+                ),
+                quill.QuillEditor(
+                  controller: quillController,
+                  readOnly: true,
+                  scrollController: ScrollController(),
+                  scrollable: false,
+                  focusNode: FocusNode(),
+                  autoFocus: true,
+                  expands: false,
+                  padding: EdgeInsets.zero,
+                  showCursor: false,
+                  enableInteractiveSelection: false,
+                  enableSelectionToolbar: false,
+                ),
+                Container(
+                  height: 8,
+                )
+              ],
+            ),
+          ));
     });
   }
 }
