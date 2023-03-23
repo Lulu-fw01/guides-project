@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/themes/main_theme.dart';
 
 PreferredSizeWidget favoritesAppBar(BuildContext context) {
   final theme = Provider.of<MainTheme>(context);

@@ -7,4 +7,6 @@ abstract class IGuideClient {
   Future<http.Response> createGuide(NewGuideDto newGuide);
 
   Future<http.Response> getGuideCardsByUser(UserGuidePageDto userGuidePageDto);
+
+  Future<http.Response> getGuideById(int guideId);
 }

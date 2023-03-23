@@ -38,7 +38,7 @@ public class GuideHandleController {
         return guideHandleService.getListOfGuidesByUser(userDTO);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public GuideDTO getGuideById(@PathVariable Long id) {
         return guideHandleService.getGuideById(id);
     }

@@ -28,7 +28,7 @@ class FavoritesScreenState extends State<FavoritesScreen> {
     ];
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) =>
-            GuideCard(guideCards[index]),
+            GuideCard(guideCards[index], onClick: () {},),
         separatorBuilder: (BuildContext context, int index) => Divider(
               height: 3,
               color: theme.onSurface,

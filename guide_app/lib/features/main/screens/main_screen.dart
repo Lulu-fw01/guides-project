@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/client/guide_client.dart';
-import 'package:guide_app/common/repository/guide/guide_repository.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/common/widgets/user_credentials.dart';
-import 'package:guide_app/cubit/init_cubit.dart';
-import 'package:guide_app/features/favorites/screens/favorites_screen.dart';
-import 'package:guide_app/features/guide/screens/guide_screen.dart';
-import 'package:guide_app/features/home/screens/home_screen.dart';
-import 'package:guide_app/features/main/widgets/favorites_app_bar.dart';
-import 'package:guide_app/features/profile/provider/profile_provider.dart';
-import 'package:guide_app/features/profile/screens/profile_screen.dart';
-import 'package:guide_app/features/profile/widgets/profile_app_bar.dart';
-import 'package:guide_app/features/search/screens/search_screen.dart';
+import 'package:guide_app/features/profile/widgets/profile_fab.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/client/guide_client.dart';
+import '../../../common/repository/guide/guide_repository.dart';
+import '../../../common/themes/main_theme.dart';
+import '../../../common/widgets/user_credentials.dart';
+import '../../../cubit/init_cubit.dart';
+import '../../favorites/screens/favorites_screen.dart';
+import '../../guide/screens/guide_screen.dart';
+import '../../home/screens/home_screen.dart';
+import '../../profile/provider/profile_provider.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../profile/widgets/profile_app_bar.dart';
+import '../../search/screens/search_screen.dart';
+import '../widgets/favorites_app_bar.dart';
 
 /// Main component of the app with navigation bottom bar.
 class MainScreen extends StatefulWidget {
@@ -36,31 +38,24 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final credentials = UserCredentials.of(context);
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<ProfileProvider>(
       create: (BuildContext context) => ProfileProvider(),
       child: RepositoryProvider(
         create: (context) =>
             GuideRepository(credentials.email, GuideClient(credentials.token)),
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: _buildAppBar(context),
-          body: SafeArea(
-              child: Container(
-                  color: Colors.white, child: _pages[selectedPageIndex])),
-          bottomNavigationBar: _buildBottomNavigationBar(theme),
-          floatingActionButton: selectedPageIndex == 3
-              ? FloatingActionButton(
-                  backgroundColor: theme.onSurfaceVariant,
-                  onPressed: () {
-                    _onCreateNewGuidePressed(context);
-                  },
-                  child: Icon(
-                    Icons.add,
-                    color: theme.onSurface,
-                  ),
-                )
-              : null,
-        ),
+        child: Builder(builder: (context) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: _buildAppBar(context),
+            body: SafeArea(
+                child: Container(
+                    color: Colors.white, child: _pages[selectedPageIndex])),
+            bottomNavigationBar: _buildBottomNavigationBar(theme),
+            floatingActionButton: selectedPageIndex == 3
+                ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
+                : null,
+          );
+        }),
       ),
     );
   }
