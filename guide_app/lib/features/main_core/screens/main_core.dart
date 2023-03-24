@@ -12,6 +12,8 @@ import '../../home/screens/home_screen.dart';
 import '../../profile/provider/profile_provider.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../profile/widgets/profile_fab.dart';
+import '../../search/client/search_client.dart';
+import '../../search/repository/search_repository.dart';
 import '../../search/screens/search_screen.dart';
 import '../widgets/core_app_bar.dart';
 
@@ -39,9 +41,16 @@ class MainCoreState extends State<MainCore> {
     final credentials = UserCredentials.of(context);
     return ChangeNotifierProvider<ProfileProvider>(
       create: (BuildContext context) => ProfileProvider(),
-      child: RepositoryProvider(
-        create: (context) =>
-            GuideRepository(credentials.email, GuideClient(credentials.token)),
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<GuideRepository>(
+            create: (context) => GuideRepository(
+                credentials.email, GuideClient(credentials.token)),
+          ),
+          RepositoryProvider<SearchRepository>(
+              create: (context) => SearchRepository(
+                  searchClient: SearchClient(credentials.token))),
+        ],
         child: Builder(builder: (context) {
           return Scaffold(
             backgroundColor: Colors.white,

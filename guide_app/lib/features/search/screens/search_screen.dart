@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/features/search/widgets/search_input_decoration.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/themes/main_theme.dart';
+import '../widgets/search_input_decoration.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
