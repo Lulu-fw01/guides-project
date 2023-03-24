@@ -9,7 +9,7 @@ import 'i_search_repository.dart';
 class SearchRepository
     with ExceptionResponseMixin
     implements ISearchRepository {
-  SearchRepository(this.searchClient);
+  SearchRepository({required this.searchClient});
   final ISearchClient searchClient;
 
   /// Find guides by name.

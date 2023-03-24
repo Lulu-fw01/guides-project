@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/features/profile/widgets/profile_fab.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/user_credentials.dart';
-import '../../../cubit/init_cubit.dart';
 import '../../favorites/screens/favorites_screen.dart';
 import '../../guide/screens/guide_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../profile/provider/profile_provider.dart';
 import '../../profile/screens/profile_screen.dart';
-import '../../profile/widgets/profile_app_bar.dart';
+import '../../profile/widgets/profile_fab.dart';
 import '../../search/screens/search_screen.dart';
-import '../widgets/favorites_app_bar.dart';
+import '../widgets/core_app_bar.dart';
 
 /// Main component of the app with navigation bottom bar.
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+/// TODO later try to use stateleess widget.
+class MainCore extends StatefulWidget {
+  const MainCore({super.key});
 
   @override
-  MainScreenState createState() => MainScreenState();
+  MainCoreState createState() => MainCoreState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainCoreState extends State<MainCore> {
   int selectedPageIndex = 0;
   final List<Widget> _pages = const [
     HomeScreen(),
@@ -46,7 +45,7 @@ class MainScreenState extends State<MainScreen> {
         child: Builder(builder: (context) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: _buildAppBar(context),
+            appBar: buildCoreAppBar(context, selectedPageIndex),
             body: SafeArea(
                 child: Container(
                     color: Colors.white, child: _pages[selectedPageIndex])),
@@ -72,20 +71,22 @@ class MainScreenState extends State<MainScreen> {
     ));
   }
 
-  PreferredSizeWidget? _buildAppBar(BuildContext context) {
-    final initCubit = Provider.of<InitCubit>(context);
-    switch (selectedPageIndex) {
-      case 2:
-        return favoritesAppBar(context);
-      case 3:
-        return profileAppBar(context, () {
-          initCubit.logout();
-        });
-      default:
-        return null;
-    }
-  }
+  // TODO remove later.
+  // PreferredSizeWidget? _buildAppBar(BuildContext context) {
+  //   final initCubit = Provider.of<InitCubit>(context);
+  //   switch (selectedPageIndex) {
+  //     case 2:
+  //       return favoritesAppBar(context);
+  //     case 3:
+  //       return profileAppBar(context, () {
+  //         initCubit.logout();
+  //       });
+  //     default:
+  //       return null;
+  //   }
+  // }
 
+  // TODO later use widget from core_navigation_bar.
   Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(
           height: 80,
           selectedIndex: selectedPageIndex,
