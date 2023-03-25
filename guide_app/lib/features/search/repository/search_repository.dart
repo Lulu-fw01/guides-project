@@ -13,14 +13,14 @@ class SearchRepository
   final ISearchClient searchClient;
 
   /// Find guides by name.
-  /// [guideName] - search phrase.
+  /// [guideTitle] - search phrase.
   /// [pageNum] - page number.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideCardsPage> searchGuidesByTitle(
-      String guideName, int pageNum) async {
+      String guideTitle, int pageNum) async {
     final response =
-        await searchClient.searchByGuideName(guideName, pageNum, 8);
+        await searchClient.searchByGuideTitle(guideTitle, pageNum, 8);
     if (response.statusCode != 200) {
       throwError(response);
     }

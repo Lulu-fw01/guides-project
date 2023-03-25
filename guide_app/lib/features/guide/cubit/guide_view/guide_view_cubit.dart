@@ -1,13 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
-import 'package:guide_app/common/dto/guide_dto.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../common/dto/guide_dto.dart';
 import '../../../../common/exceptions/app_exception.dart';
 import '../../../../common/repository/guide/i_guide_repository.dart';
 
 part 'guide_view_state.dart';
 
+/// Cubit for controlling process of
+/// getting guide from server.
 class GuideViewCubit extends Cubit<GuideViewState> {
   GuideViewCubit({required this.guideRepository}) : super(GuideViewInitial());
 

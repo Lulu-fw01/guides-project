@@ -5,8 +5,16 @@ abstract class SearchState {}
 
 class SearchInitial extends SearchState {}
 
-class SearchSuccessState extends SearchState {}
+class SearchByTitleSuccessState extends SearchState {
+  SearchByTitleSuccessState(this.nextPage);
+  final GuideCardsPage nextPage;
+}
 
-class SearchErrorState extends SearchState {}
+class SearchErrorState extends SearchState {
+  SearchErrorState(this.message);
+  final String message;
+}
 
 class SearchLoadingState extends SearchState {}
+
+class SearchByAuthorSuccessState extends SearchState {}

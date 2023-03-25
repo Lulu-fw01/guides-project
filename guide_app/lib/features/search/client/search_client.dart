@@ -33,10 +33,10 @@ class SearchClient implements ISearchClient {
   /// <p>
   /// Author - @Lulu-fw01.
   @override
-  Future<http.Response> searchByGuideName(
-      String guideName, int pageNum, int pageSize) {
+  Future<http.Response> searchByGuideTitle(
+      String title, int pageNum, int pageSize) {
     final url = Uri.parse(
-        "${ApiConstants.searchByTitleUri}/$guideName/$pageNum/$pageSize");
+        "${ApiConstants.searchByTitleUri}/$title/$pageNum/$pageSize");
     try {
       var response = http.get(url, headers: {
         "Authorization": 'Bearer $token',
