@@ -12,9 +12,6 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required this.searchRepository}) : super(SearchInitial()) {
-    on<SearchEvent>((event, emit) {
-      // TODO: implement event handler
-    });
     on<SearchGuidesByTitleEvent>((event, emit) => _onSearchGuidesByTitle);
   }
 

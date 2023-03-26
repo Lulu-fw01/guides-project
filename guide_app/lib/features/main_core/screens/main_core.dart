@@ -12,7 +12,9 @@ import '../../home/screens/home_screen.dart';
 import '../../profile/provider/profile_provider.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../profile/widgets/profile_fab.dart';
+import '../../search/bloc/search_bloc.dart';
 import '../../search/client/search_client.dart';
+import '../../search/provider/search_provider.dart';
 import '../../search/repository/search_repository.dart';
 import '../../search/screens/search_screen.dart';
 import '../widgets/core_app_bar.dart';
@@ -39,29 +41,47 @@ class MainCoreState extends State<MainCore> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final credentials = UserCredentials.of(context);
-    return ChangeNotifierProvider<ProfileProvider>(
-      create: (BuildContext context) => ProfileProvider(),
-      child: MultiRepositoryProvider(
+    return MultiRepositoryProvider(
+      // All repositories of app initialized here.
+      providers: [
+        RepositoryProvider<GuideRepository>(
+          create: (context) => GuideRepository(
+              credentials.email, GuideClient(credentials.token)),
+        ),
+        RepositoryProvider<SearchRepository>(
+            create: (context) => SearchRepository(
+                searchClient: SearchClient(credentials.token))),
+      ],
+      // All providers of app initialized here.
+      child: MultiProvider(
         providers: [
-          RepositoryProvider<GuideRepository>(
-            create: (context) => GuideRepository(
-                credentials.email, GuideClient(credentials.token)),
-          ),
-          RepositoryProvider<SearchRepository>(
-              create: (context) => SearchRepository(
-                  searchClient: SearchClient(credentials.token))),
+          ChangeNotifierProvider<ProfileProvider>(
+              create: (context) => ProfileProvider()),
+          ChangeNotifierProvider<SearchProvider>(
+            create: (context) => SearchProvider(),
+          )
         ],
         child: Builder(builder: (context) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: buildCoreAppBar(context, selectedPageIndex),
-            body: SafeArea(
-                child: Container(
-                    color: Colors.white, child: _pages[selectedPageIndex])),
-            bottomNavigationBar: _buildBottomNavigationBar(theme),
-            floatingActionButton: selectedPageIndex == 3
-                ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
-                : null,
+          // All Blocs of the app initialized here.
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<SearchBloc>(
+                create: (context) => SearchBloc(
+                    searchRepository: Provider.of<SearchRepository>(context)),
+              )
+            ],
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildCoreAppBar(context, selectedPageIndex),
+              body: SafeArea(
+                  child: Container(
+                      color: Colors.white, child: _pages[selectedPageIndex])),
+              bottomNavigationBar: _buildBottomNavigationBar(theme),
+              floatingActionButton: selectedPageIndex == 3
+                  ? ProfileFab(
+                      onPressed: () => _onCreateNewGuidePressed(context))
+                  : null,
+            ),
           );
         }),
       ),
