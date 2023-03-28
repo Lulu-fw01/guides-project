@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
-import '../bloc/search_bloc.dart';
-import '../provider/search_provider.dart';
 import 'search_input_decoration.dart';
 
+/// Search input.
 class SearchInput extends StatefulWidget {
-  const SearchInput({super.key});
+  const SearchInput({required this.onTextChanged, super.key});
+  final void Function(String) onTextChanged;
 
   @override
   SearchInputState createState() => SearchInputState();
@@ -26,31 +26,16 @@ class SearchInputState extends State<SearchInput> {
   @override
   Widget build(BuildContext context) {
     var theme = Provider.of<MainTheme>(context);
-    var searchProvider = Provider.of<SearchProvider>(context, listen: false);
 
-    return Focus(
-      onFocusChange: (value) {
-        if (value) {
-          searchProvider.searchStarted();
-        } else {
-          // TODO no search but check that search result is clear.
-        }
+    return TextField(
+      onChanged: (text) {
+        widget.onTextChanged(text);
       },
-      child: TextField(
-        onChanged: (text) {
-          setState(() {
-            // TODO uncomment.
-            // TODO check if input is clear.
-            // Provider.of<SearchBloc>(context)
-            //     .add(SearchGuidesByTitleEvent(searchPhrase: text, pageNum: 0));
-          });
-        },
-        controller: _searchTextController,
-        cursorColor: theme.onSurface,
-        style: TextStyle(color: theme.onSurface),
-        decoration: searchInputDecoration(
-            theme, _searchTextController, _clearSearchInput),
-      ),
+      controller: _searchTextController,
+      cursorColor: theme.onSurface,
+      style: TextStyle(color: theme.onSurface),
+      decoration: searchInputDecoration(
+          theme, _searchTextController, _clearSearchInput),
     );
   }
 

@@ -36,7 +36,8 @@ class ProfileScreen extends StatelessWidget {
               }));
         case ProfileScreenMode.viewGuide:
           // Show chosen guide from profile screen.
-          // TODO Move BLOC to main core.
+          // TODO Move BLOC somewhere.
+          // Нельзя перенести блок в main, но можно попробовать в провайдер.
           return BlocProvider(
               create: (context) => GuideViewCubit(guideRepository: guideRepo),
               child: Builder(

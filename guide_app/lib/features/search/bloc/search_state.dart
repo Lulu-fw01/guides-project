@@ -6,7 +6,8 @@ abstract class SearchState {}
 class SearchInitial extends SearchState {}
 
 class SearchByTitleSuccessState extends SearchState {
-  SearchByTitleSuccessState(this.nextPage);
+  SearchByTitleSuccessState(this.searchPhrase, this.nextPage);
+  final String searchPhrase;
   final GuideCardsPage nextPage;
 }
 

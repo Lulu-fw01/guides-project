@@ -14,6 +14,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required this.searchRepository}) : super(SearchInitial()) {
     on<SearchGuidesByTitleEvent>((event, emit) => _onSearchGuidesByTitle);
   }
+  bool isLoadingPage = false;
 
   final ISearchRepository searchRepository;
   final log = Logger('SearchBloc');
@@ -27,7 +28,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final page = await searchRepository.searchGuidesByTitle(
           event.searchPhrase, event.pageNum);
       log.fine('Search by title page ${event.pageNum} was loaded.');
-      emit(SearchByTitleSuccessState(page));
+      emit(SearchByTitleSuccessState(event.searchPhrase, page));
     } on ResponseException catch (e) {
       // Got error http response.
       String message = e.responseBody != null ? e.responseBody!.message : '';

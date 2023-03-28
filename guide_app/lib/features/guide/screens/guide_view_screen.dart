@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 import '../../../common/themes/main_theme.dart';
-import '../../profile/widgets/full_screen_error.dart';
+import '../../../common/widgets/full_screen_error.dart';
 import '../cubit/guide_view/guide_view_cubit.dart';
 
 /// Screen for reading guide.

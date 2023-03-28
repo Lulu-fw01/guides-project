@@ -14,7 +14,8 @@ import '../../profile/screens/profile_screen.dart';
 import '../../profile/widgets/profile_fab.dart';
 import '../../search/bloc/search_bloc.dart';
 import '../../search/client/search_client.dart';
-import '../../search/provider/search_provider.dart';
+import '../../search/provider/search_page_provider.dart';
+import '../../search/provider/search_screen_provider.dart';
 import '../../search/repository/search_repository.dart';
 import '../../search/screens/search_screen.dart';
 import '../widgets/core_app_bar.dart';
@@ -57,9 +58,11 @@ class MainCoreState extends State<MainCore> {
         providers: [
           ChangeNotifierProvider<ProfileProvider>(
               create: (context) => ProfileProvider()),
-          ChangeNotifierProvider<SearchProvider>(
-            create: (context) => SearchProvider(),
-          )
+          ChangeNotifierProvider<SearchScreenProvider>(
+            create: (context) => SearchScreenProvider(),
+          ),
+          ChangeNotifierProvider<SearchPageProvider>(
+              create: (context) => SearchPageProvider())
         ],
         child: Builder(builder: (context) {
           // All Blocs of the app initialized here.
