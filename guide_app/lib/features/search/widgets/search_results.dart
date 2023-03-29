@@ -8,13 +8,14 @@ import '../bloc/search_bloc.dart';
 import '../provider/search_page_provider.dart';
 import '../provider/search_screen_provider.dart';
 
+/// Widget which show guide cards from search results.
 class SearchResults extends StatelessWidget {
   SearchResults({super.key});
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = Provider.of<SearchBloc>(context);
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
     final searchScreenProvider =
         Provider.of<SearchScreenProvider>(context, listen: false);
     final searchPageProvider =
@@ -22,41 +23,45 @@ class SearchResults extends StatelessWidget {
     final theme = Provider.of<MainTheme>(context);
 
     List<Widget> list = [];
+    // Guide cards.
     list.addAll(searchPageProvider.guideCardDtos
         .map(
           (dto) => GuideCard(
             dto,
             onClick: () {
-              // TODO searchScreenProvider.showGuide(dto.id);
-              // profileProvider.showGuide(dto.id);
+              searchScreenProvider.showGuide(dto.id);
             },
           ),
         )
         .toList());
+    // Loading progress circle while loading next page.
     list.add(_loadingProgress(theme));
 
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      key: const PageStorageKey('search_page_cards'),
-      controller: _scrollController
-        ..addListener(() {
-          // If we at the end of the list we will upload
-          // next page if it is not last.
-          if (_scrollController.offset ==
-                  _scrollController.position.maxScrollExtent &&
-              !searchBloc.isLoadingPage &&
-              !searchPageProvider.isLastPage()) {
-            searchBloc.isLoadingPage = true;
-            // Load next page.
-            searchBloc.add(SearchGuidesByTitleEvent(
-                searchPhrase: searchPageProvider.searchPhrase,
-                pageNum: searchPageProvider.pageNum));
-          }
-        }),
-      children: list,
+    return Expanded(
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        key: const PageStorageKey('search_page_cards'),
+        controller: _scrollController
+          ..addListener(() {
+            // If we at the end of the list we will upload
+            // next page if it is not last.
+            if (_scrollController.offset ==
+                    _scrollController.position.maxScrollExtent &&
+                !searchBloc.isLoadingPage &&
+                !searchPageProvider.isLastPage()) {
+              searchBloc.isLoadingPage = true;
+              // Load next page.
+              searchBloc.add(SearchGuidesByTitleEvent(
+                  searchPhrase: searchPageProvider.searchPhrase,
+                  pageNum: searchPageProvider.pageNum));
+            }
+          }),
+        children: list,
+      ),
     );
   }
 
+  /// TODO move to common later.
   Widget _loadingProgress(MainTheme theme) {
     return BlocSelector<SearchBloc, SearchState, bool>(
         selector: (state) => state is SearchLoadingState,

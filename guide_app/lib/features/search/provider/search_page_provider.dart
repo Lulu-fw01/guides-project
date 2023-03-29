@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import '../../../common/dto/guide_card_dto.dart';
 
 class SearchPageProvider extends ChangeNotifier {
-  final searchTextController = TextEditingController();
   SearchPageMode _searchPageState = SearchPageMode.noSearch;
 
   final List<GuideCardDto> guideCardDtos = [];
@@ -18,6 +17,10 @@ class SearchPageProvider extends ChangeNotifier {
   String searchPhrase = '';
 
   SearchPageMode get searchPageState => _searchPageState;
+
+  bool isSearching() {
+    return _searchPageState == SearchPageMode.searching;
+  }
 
   late int _viewedGuideId;
   set viewedGuideId(int value) {

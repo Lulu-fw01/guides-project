@@ -10,18 +10,23 @@ import '../repository/i_search_repository.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 
+/// BLoC that controls guides searching.
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required this.searchRepository}) : super(SearchInitial()) {
-    on<SearchGuidesByTitleEvent>((event, emit) => _onSearchGuidesByTitle);
+    on<SearchGuidesByTitleEvent>((event, emit) async {
+      await _onSearchGuidesByTitle(event, emit);
+    });
   }
   bool isLoadingPage = false;
+  String lastSearchPhrase = '';
 
   final ISearchRepository searchRepository;
   final log = Logger('SearchBloc');
 
-  /// Search guides by title
-  _onSearchGuidesByTitle(
+  /// Search guides by title.
+  Future<void> _onSearchGuidesByTitle(
       SearchGuidesByTitleEvent event, Emitter<SearchState> emit) async {
+    lastSearchPhrase = event.searchPhrase;
     emit(SearchLoadingState());
     try {
       // Try to get next search page.

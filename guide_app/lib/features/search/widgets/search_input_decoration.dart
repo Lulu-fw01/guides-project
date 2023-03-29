@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
 
-InputDecoration searchInputDecoration(MainTheme theme,
-        TextEditingController controller, void Function() onClearClick) =>
+import '../../../common/themes/main_theme.dart';
+
+InputDecoration searchInputDecoration(
+        MainTheme theme, bool isEmpty, void Function() onClearClick) =>
     InputDecoration(
         hintText: 'Поиск',
         hintStyle: TextStyle(color: theme.onSurfaceVariant),
@@ -16,7 +17,7 @@ InputDecoration searchInputDecoration(MainTheme theme,
           Icons.search,
           color: theme.onSurfaceVariant,
         ),
-        suffixIcon: controller.text.isEmpty
+        suffixIcon: isEmpty
             ? null
             : IconButton(
                 icon: Icon(
@@ -27,3 +28,19 @@ InputDecoration searchInputDecoration(MainTheme theme,
               ),
         filled: true,
         fillColor: theme.surface);
+
+InputDecoration simpleSearchInputDecoration(MainTheme theme) => InputDecoration(
+    hintText: 'Поиск',
+    hintStyle: TextStyle(color: theme.onSurfaceVariant),
+    enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: theme.surface),
+        borderRadius: BorderRadius.circular(16)),
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: theme.surface),
+        borderRadius: BorderRadius.circular(16)),
+    prefixIcon: Icon(
+      Icons.search,
+      color: theme.onSurfaceVariant,
+    ),
+    filled: true,
+    fillColor: theme.surface);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainTheme {
+  Color readableBackColor = Colors.white;
   Color surface = const Color(0xFFF1F1F1);
   Color onSurface = const Color(0xFF2E1A7E);
   Color secondaryContainer = const Color(0xFFBDBDBD).withOpacity(0.35);

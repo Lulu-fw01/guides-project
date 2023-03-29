@@ -21,6 +21,7 @@ import '../../search/screens/search_screen.dart';
 import '../widgets/core_app_bar.dart';
 
 /// Main component of the app with navigation bottom bar.
+/// This widget contains all main repositories, provider, BLoCs.
 /// TODO later try to use stateleess widget.
 class MainCore extends StatefulWidget {
   const MainCore({super.key});
@@ -62,7 +63,12 @@ class MainCoreState extends State<MainCore> {
             create: (context) => SearchScreenProvider(),
           ),
           ChangeNotifierProvider<SearchPageProvider>(
-              create: (context) => SearchPageProvider())
+              create: (context) => SearchPageProvider()),
+          // TODO add later maybe.
+          // ChangeNotifierProvider<SearchInputProvider>(
+          //     create: (context) => SearchInputProvider()
+          //       ..addSearchListener(Provider.of<SearchPageProvider>(context),
+          //           Provider.of<SearchBloc>(context))),
         ],
         child: Builder(builder: (context) {
           // All Blocs of the app initialized here.
@@ -70,9 +76,11 @@ class MainCoreState extends State<MainCore> {
             providers: [
               BlocProvider<SearchBloc>(
                 create: (context) => SearchBloc(
-                    searchRepository: Provider.of<SearchRepository>(context)),
+                    searchRepository:
+                        Provider.of<SearchRepository>(context, listen: false)),
               )
             ],
+            // TODO move scaffold inside another widget.
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: buildCoreAppBar(context, selectedPageIndex),
@@ -102,21 +110,6 @@ class MainCoreState extends State<MainCore> {
       ),
     ));
   }
-
-  // TODO remove later.
-  // PreferredSizeWidget? _buildAppBar(BuildContext context) {
-  //   final initCubit = Provider.of<InitCubit>(context);
-  //   switch (selectedPageIndex) {
-  //     case 2:
-  //       return favoritesAppBar(context);
-  //     case 3:
-  //       return profileAppBar(context, () {
-  //         initCubit.logout();
-  //       });
-  //     default:
-  //       return null;
-  //   }
-  // }
 
   // TODO later use widget from core_navigation_bar.
   Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(

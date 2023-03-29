@@ -9,6 +9,7 @@ import '../provider/search_page_provider.dart';
 import 'search_results.dart';
 
 /// Core of search results.
+/// This core contains BLoC consumer for controlling search content states.
 class SearchResultsCore extends StatelessWidget {
   const SearchResultsCore({super.key});
 
@@ -39,6 +40,7 @@ class SearchResultsCore extends StatelessWidget {
           final page = state.nextPage;
           if (page.pageNum == 0) {
             // New search request result.
+            // Clear previous search result and set new.
             searchPageProvider.guideCardDtos.clear();
             searchPageProvider.guideCardDtos.addAll(page.guideCardDtos);
             searchPageProvider.pageNum = 1;

@@ -40,33 +40,40 @@ class GuideViewScreen extends StatelessWidget {
         document: quill.Document.fromJson(jsonDoc),
         selection: const TextSelection.collapsed(offset: 0),
       );
-      return Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 8,
-                ),
-                quill.QuillEditor(
-                  controller: quillController,
-                  readOnly: true,
-                  scrollController: ScrollController(),
-                  scrollable: false,
-                  focusNode: FocusNode(),
-                  autoFocus: true,
-                  expands: false,
-                  padding: EdgeInsets.zero,
-                  showCursor: false,
-                  enableInteractiveSelection: false,
-                  enableSelectionToolbar: false,
-                ),
-                Container(
-                  height: 8,
-                )
-              ],
-            ),
-          ));
+      return Container(
+        decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  width: 1, color: theme.onSurface.withOpacity(0.4))),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: 8,
+                  ),
+                  quill.QuillEditor(
+                    controller: quillController,
+                    readOnly: true,
+                    scrollController: ScrollController(),
+                    scrollable: false,
+                    focusNode: FocusNode(),
+                    autoFocus: true,
+                    expands: false,
+                    padding: EdgeInsets.zero,
+                    showCursor: false,
+                    enableInteractiveSelection: false,
+                    enableSelectionToolbar: false,
+                  ),
+                  Container(
+                    height: 8,
+                  )
+                ],
+              ),
+            )),
+      );
     });
   }
 }

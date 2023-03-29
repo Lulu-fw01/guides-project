@@ -5,6 +5,7 @@ import '../provider/search_page_provider.dart';
 import 'search_results_core.dart';
 
 /// Search content.
+/// This widget contains guide cards from search result or...
 class SearchPageContent extends StatelessWidget {
   const SearchPageContent({super.key});
 
