@@ -75,7 +75,10 @@ class GuideCard extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.bookmark)),
+                      onPressed: () {},
+                      icon: guideCardDto.addedToFavorites
+                          ? const Icon(Icons.bookmark)
+                          : const Icon(Icons.bookmark_add_outlined)),
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.more_horiz),

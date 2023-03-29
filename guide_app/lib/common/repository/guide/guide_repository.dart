@@ -12,7 +12,7 @@ import '../../mixin/exception_response_mixin.dart';
 import 'i_guide_repository.dart';
 
 class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
-  GuideRepository(this.email, this.guideClient);
+  GuideRepository({required this.email, required this.guideClient});
   final IGuideClient guideClient;
   final String email;
 

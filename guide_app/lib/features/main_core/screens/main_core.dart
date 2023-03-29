@@ -6,6 +6,9 @@ import '../../../common/client/guide_client.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/user_credentials.dart';
+import '../../favorites/client/favorites_client.dart';
+import '../../favorites/provider/favorites_provider.dart';
+import '../../favorites/repository/favorites_repository.dart';
 import '../../favorites/screens/favorites_screen.dart';
 import '../../guide/screens/guide_screen.dart';
 import '../../home/screens/home_screen.dart';
@@ -48,11 +51,17 @@ class MainCoreState extends State<MainCore> {
       providers: [
         RepositoryProvider<GuideRepository>(
           create: (context) => GuideRepository(
-              credentials.email, GuideClient(credentials.token)),
+              email: credentials.email,
+              guideClient: GuideClient(credentials.token)),
         ),
         RepositoryProvider<SearchRepository>(
             create: (context) => SearchRepository(
                 searchClient: SearchClient(credentials.token))),
+        RepositoryProvider<FavoritesRepository>(
+            create: (context) => FavoritesRepository(
+                  email: credentials.email,
+                  favoritesClient: FavoritesClient(credentials.token),
+                ))
       ],
       // All providers of app initialized here.
       child: MultiProvider(
@@ -64,6 +73,9 @@ class MainCoreState extends State<MainCore> {
           ),
           ChangeNotifierProvider<SearchPageProvider>(
               create: (context) => SearchPageProvider()),
+          ChangeNotifierProvider<FavoritesProvider>(
+              create: (context) => FavoritesProvider()),
+
           // TODO add later maybe.
           // ChangeNotifierProvider<SearchInputProvider>(
           //     create: (context) => SearchInputProvider()

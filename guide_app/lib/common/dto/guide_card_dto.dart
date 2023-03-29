@@ -7,7 +7,8 @@ part 'guide_card_dto.g.dart';
 /// For code generation run  flutter pub run build_runner build --delete-conflicting-outputs.
 @JsonSerializable()
 class GuideCardDto {
-  GuideCardDto(this.id, this.author, this.guideName, this.editDate);
+  GuideCardDto(this.id, this.author, this.guideName, this.editDate,
+      this.addedToFavorites);
 
   final int id;
 
@@ -21,6 +22,8 @@ class GuideCardDto {
 
   /// Edit date of the guide.
   final DateTime editDate;
+
+  bool addedToFavorites;
 
   factory GuideCardDto.fromJson(Map<String, dynamic> json) =>
       _$GuideCardDtoFromJson(json);
