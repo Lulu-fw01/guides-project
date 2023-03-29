@@ -22,4 +22,6 @@ public class GuideDTO {
     private Timestamp editDate;
 
     private Boolean isBlocked;
+
+    private Boolean addedToFavorites;
 }

@@ -20,4 +20,6 @@ public class GuideInfoDTO {
     private Timestamp editDate;
 
     private Boolean isBlocked;
+
+    private Boolean addedToFavorites;
 }

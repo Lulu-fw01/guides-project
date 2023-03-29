@@ -3,6 +3,7 @@ package com.server.services;
 import com.server.dto.GuideInfoDTO;
 import com.server.dto.GuideInfoPageResponse;
 import com.server.repository.GuideHandleRepository;
+import com.server.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,15 +17,20 @@ public class SearchService {
 
     private final GuideHandleRepository guideHandleRepository;
 
+    private final FavoriteItemService favoriteItemService;
+
     @Autowired
-    public SearchService(GuideHandleRepository guideHandleRepository) {
+    public SearchService(GuideHandleRepository guideHandleRepository, FavoriteItemService favoriteItemService) {
         this.guideHandleRepository = guideHandleRepository;
+        this.favoriteItemService = favoriteItemService;
     }
 
     public GuideInfoPageResponse getGuidesByTitle(String title, String pageNumber, String pageSize) {
         if (title == null || pageNumber == null || pageSize == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
+
+        System.out.println(AuthUtil.getAuthenticatedUser());
 
         try {
             var numOfAllGuidesByTitle = guideHandleRepository.searchByTitle(title).size();
@@ -39,7 +45,8 @@ public class SearchService {
                             guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
                             guide.getEditDate(),
-                            guide.getIsBlocked()
+                            guide.getIsBlocked(),
+                            favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                     ))
                     .toList();
 
@@ -71,7 +78,8 @@ public class SearchService {
                             guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
                             guide.getEditDate(),
-                            guide.getIsBlocked()
+                            guide.getIsBlocked(),
+                            favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                     ))
                     .toList();
 
@@ -103,7 +111,8 @@ public class SearchService {
                             guide.getCreatorEmail().getLogin(),
                             guide.getTitle(),
                             guide.getEditDate(),
-                            guide.getIsBlocked()
+                            guide.getIsBlocked(),
+                            favoriteItemService.checkIfAddedToFavorites(guide.getId(), author)
                     ))
                     .toList();
 

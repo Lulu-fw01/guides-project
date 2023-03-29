@@ -9,6 +9,7 @@ import com.server.entities.Interaction;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.InteractionRepository;
 import com.server.repository.UserRepository;
+import com.server.utils.AuthUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,6 +20,9 @@ import org.hibernate.type.StringType;
 import org.hibernate.type.TimestampType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,14 +36,17 @@ public class InteractionService {
     private final InteractionRepository interactionRepository;
     private final UserRepository userRepository;
     private final GuideHandleRepository guideHandleRepository;
+    private final FavoriteItemService favoriteItemService;
 
     @Autowired
     public InteractionService(InteractionRepository interactionRepository,
                               UserRepository userRepository,
-                              GuideHandleRepository guideHandleRepository) {
+                              GuideHandleRepository guideHandleRepository,
+                              FavoriteItemService favoriteItemService) {
         this.interactionRepository = interactionRepository;
         this.userRepository = userRepository;
         this.guideHandleRepository = guideHandleRepository;
+        this.favoriteItemService = favoriteItemService;
     }
 
     public List<InteractionDTO> getPostsUserInteractedWith(String email) {
@@ -122,7 +129,8 @@ public class InteractionService {
                             guide.getTitle(),
                             guide.getFileBytes(),
                             guide.getEditDate(),
-                            guide.getIsBlocked()
+                            guide.getIsBlocked(),
+                            favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                     ))
                     .toList();
 
@@ -180,7 +188,8 @@ public class InteractionService {
                         guide.getTitle(),
                         guide.getFileBytes(),
                         guide.getEditDate(),
-                        guide.getIsBlocked()
+                        guide.getIsBlocked(),
+                        favoriteItemService.checkIfAddedToFavorites(guide.getId(), email)
                 ))
                 .toList();
     }
