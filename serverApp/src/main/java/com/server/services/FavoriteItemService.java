@@ -85,8 +85,22 @@ public class FavoriteItemService {
                         guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
                         guide.getEditDate(),
-                        guide.getIsBlocked()
+                        guide.getIsBlocked(),
+                        checkIfAddedToFavorites(guide.getId(), email)
                 ))
                 .toList();
+    }
+
+    public Boolean checkIfAddedToFavorites(Long guideId, String email) {
+        var id = new FavoriteId(
+                guideHandleRepository
+                        .findById(guideId)
+                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User does not exist"))
+        );
+
+        return favoriteItemRepository.existsById(id);
     }
 }
