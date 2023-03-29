@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/features/profile/widgets/profile_fab.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/user_credentials.dart';
-import '../../../cubit/init_cubit.dart';
 import '../../favorites/screens/favorites_screen.dart';
 import '../../guide/screens/guide_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../profile/provider/profile_provider.dart';
 import '../../profile/screens/profile_screen.dart';
-import '../../profile/widgets/profile_app_bar.dart';
+import '../../profile/widgets/profile_fab.dart';
+import '../../search/bloc/search_bloc.dart';
+import '../../search/client/search_client.dart';
+import '../../search/provider/search_page_provider.dart';
+import '../../search/provider/search_screen_provider.dart';
+import '../../search/repository/search_repository.dart';
 import '../../search/screens/search_screen.dart';
-import '../widgets/favorites_app_bar.dart';
+import '../widgets/core_app_bar.dart';
 
 /// Main component of the app with navigation bottom bar.
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+/// This widget contains all main repositories, provider, BLoCs.
+/// TODO later try to use stateleess widget.
+class MainCore extends StatefulWidget {
+  const MainCore({super.key});
 
   @override
-  MainScreenState createState() => MainScreenState();
+  MainCoreState createState() => MainCoreState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainCoreState extends State<MainCore> {
   int selectedPageIndex = 0;
   final List<Widget> _pages = const [
     HomeScreen(),
@@ -38,22 +43,56 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final credentials = UserCredentials.of(context);
-    return ChangeNotifierProvider<ProfileProvider>(
-      create: (BuildContext context) => ProfileProvider(),
-      child: RepositoryProvider(
-        create: (context) =>
-            GuideRepository(credentials.email, GuideClient(credentials.token)),
+    return MultiRepositoryProvider(
+      // All repositories of app initialized here.
+      providers: [
+        RepositoryProvider<GuideRepository>(
+          create: (context) => GuideRepository(
+              credentials.email, GuideClient(credentials.token)),
+        ),
+        RepositoryProvider<SearchRepository>(
+            create: (context) => SearchRepository(
+                searchClient: SearchClient(credentials.token))),
+      ],
+      // All providers of app initialized here.
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ProfileProvider>(
+              create: (context) => ProfileProvider()),
+          ChangeNotifierProvider<SearchScreenProvider>(
+            create: (context) => SearchScreenProvider(),
+          ),
+          ChangeNotifierProvider<SearchPageProvider>(
+              create: (context) => SearchPageProvider()),
+          // TODO add later maybe.
+          // ChangeNotifierProvider<SearchInputProvider>(
+          //     create: (context) => SearchInputProvider()
+          //       ..addSearchListener(Provider.of<SearchPageProvider>(context),
+          //           Provider.of<SearchBloc>(context))),
+        ],
         child: Builder(builder: (context) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: _buildAppBar(context),
-            body: SafeArea(
-                child: Container(
-                    color: Colors.white, child: _pages[selectedPageIndex])),
-            bottomNavigationBar: _buildBottomNavigationBar(theme),
-            floatingActionButton: selectedPageIndex == 3
-                ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
-                : null,
+          // All Blocs of the app initialized here.
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<SearchBloc>(
+                create: (context) => SearchBloc(
+                    searchRepository:
+                        Provider.of<SearchRepository>(context, listen: false)),
+              )
+            ],
+            // TODO move scaffold inside another widget.
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildCoreAppBar(context, selectedPageIndex),
+              body: SafeArea(
+                  child: Container(
+                      color: Colors.white, child: _pages[selectedPageIndex])),
+              bottomNavigationBar: _buildBottomNavigationBar(theme),
+              floatingActionButton: selectedPageIndex == 3
+                  ? ProfileFab(
+                      onPressed: () => _onCreateNewGuidePressed(context))
+                  : null,
+            ),
           );
         }),
       ),
@@ -72,20 +111,7 @@ class MainScreenState extends State<MainScreen> {
     ));
   }
 
-  PreferredSizeWidget? _buildAppBar(BuildContext context) {
-    final initCubit = Provider.of<InitCubit>(context);
-    switch (selectedPageIndex) {
-      case 2:
-        return favoritesAppBar(context);
-      case 3:
-        return profileAppBar(context, () {
-          initCubit.logout();
-        });
-      default:
-        return null;
-    }
-  }
-
+  // TODO later use widget from core_navigation_bar.
   Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(
           height: 80,
           selectedIndex: selectedPageIndex,

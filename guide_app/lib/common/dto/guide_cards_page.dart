@@ -1,5 +1,6 @@
-import 'package:guide_app/common/dto/guide_card_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'guide_card_dto.dart';
 
 part 'guide_cards_page.g.dart';
 

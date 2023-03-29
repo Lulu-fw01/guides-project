@@ -19,21 +19,21 @@ public class SearchController {
         this.searchService = searchService;
     }
 
-    @GetMapping("title/{title}/{pageNumber}/{pageSize}")
+    @GetMapping("/title/{title}/{pageNumber}/{pageSize}")
     public GuideInfoPageResponse getGuidesByTitle(@PathVariable("title") String title,
                                                   @PathVariable("pageNumber") String pageNumber,
                                                   @PathVariable("pageSize") String pageSize) {
         return searchService.getGuidesByTitle(title, pageNumber, pageSize);
     }
 
-    @GetMapping("category/{category}/{pageNumber}/{pageSize}")
+    @GetMapping("/category/{category}/{pageNumber}/{pageSize}")
     public GuideInfoPageResponse getGuidesByCategory(@PathVariable("category") String category,
                                               @PathVariable("pageNumber") String pageNumber,
                                               @PathVariable("pageSize") String pageSize) {
         return searchService.getGuidesByCategory(category, pageNumber, pageSize);
     }
 
-    @GetMapping("username/{username}/{pageNumber}/{pageSize}")
+    @GetMapping("/username/{username}/{pageNumber}/{pageSize}")
     public GuideInfoPageResponse getGuidesByAuthor(@PathVariable("username") String username,
                                                 @PathVariable("pageNumber") String pageNumber,
                                                 @PathVariable("pageSize") String pageSize) {

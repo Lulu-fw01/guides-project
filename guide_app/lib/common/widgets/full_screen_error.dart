@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../common/themes/main_theme.dart';
+import '../themes/main_theme.dart';
 
 /// Widget that display error message
 /// with try again button.
-/// TODO maybe move to common later.
 class FullScreenError extends StatelessWidget {
   const FullScreenError(
       {super.key, required this.onPressed, this.message = ""});

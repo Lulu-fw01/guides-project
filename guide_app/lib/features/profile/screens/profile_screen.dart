@@ -15,13 +15,14 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final guideRepo = Provider.of<GuideRepository>(context);
+    final guideRepo = Provider.of<GuideRepository>(context, listen: false);
 
     return Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
       switch (profileProvider.profileScreenState) {
         case ProfileScreenMode.profileInfo:
           // Show profile info and user's guides.
+          // TODO Move BLOC to main core.
           return BlocProvider(
               create: (context) => ProfileCubit(guideRepository: guideRepo),
               child: Builder(builder: (context) {
@@ -35,6 +36,8 @@ class ProfileScreen extends StatelessWidget {
               }));
         case ProfileScreenMode.viewGuide:
           // Show chosen guide from profile screen.
+          // TODO Move BLOC somewhere.
+          // Нельзя перенести блок в main, но можно попробовать в провайдер.
           return BlocProvider(
               create: (context) => GuideViewCubit(guideRepository: guideRepo),
               child: Builder(

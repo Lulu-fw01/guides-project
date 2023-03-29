@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../common/themes/main_theme.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
-import 'full_screen_error.dart';
+import '../../../common/widgets/full_screen_error.dart';
 import 'profile_content.dart';
 
 /// Core of  profile screen.
