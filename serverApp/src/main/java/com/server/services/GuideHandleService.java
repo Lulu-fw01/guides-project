@@ -3,6 +3,7 @@ package com.server.services;
 import com.server.dto.*;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
+import com.server.utils.AuthUtil;
 import com.server.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,11 +23,15 @@ public class GuideHandleService implements Validator<Guide> {
 
     private final GuideHandleRepository guideHandleRepository;
     private final UserRepository userRepository;
+    private final FavoriteItemService favoriteItemService;
 
     @Autowired
-    public GuideHandleService(GuideHandleRepository guideHandleRepository, UserRepository userRepository) {
+    public GuideHandleService(GuideHandleRepository guideHandleRepository,
+                              UserRepository userRepository,
+                              FavoriteItemService favoriteItemService) {
         this.guideHandleRepository = guideHandleRepository;
         this.userRepository = userRepository;
+        this.favoriteItemService = favoriteItemService;
     }
 
     public void createGuide(CreateGuideDTO guideDTO) {
@@ -70,7 +75,8 @@ public class GuideHandleService implements Validator<Guide> {
                         guide.getTitle(),
                         guide.getFileBytes(),
                         guide.getEditDate(),
-                        guide.getIsBlocked()
+                        guide.getIsBlocked(),
+                        favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                 ))
                 .toList();
 
@@ -156,7 +162,8 @@ public class GuideHandleService implements Validator<Guide> {
                         guide.getTitle(),
                         guide.getFileBytes(),
                         guide.getEditDate(),
-                        guide.getIsBlocked()
+                        guide.getIsBlocked(),
+                        favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                 ))
                 .toList();
 
@@ -191,7 +198,8 @@ public class GuideHandleService implements Validator<Guide> {
                 guide.getTitle(),
                 guide.getFileBytes(),
                 guide.getEditDate(),
-                guide.getIsBlocked()
+                guide.getIsBlocked(),
+                favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
         );
     }
 
@@ -212,7 +220,8 @@ public class GuideHandleService implements Validator<Guide> {
                         guide.getCreatorEmail().getLogin(),
                         guide.getTitle(),
                         guide.getEditDate(),
-                        guide.getIsBlocked()
+                        guide.getIsBlocked(),
+                        favoriteItemService.checkIfAddedToFavorites(guide.getId(), AuthUtil.getAuthenticatedUser())
                 ))
                 .toList();
 
