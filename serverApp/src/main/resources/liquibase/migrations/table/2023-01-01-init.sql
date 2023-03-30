@@ -94,8 +94,8 @@ create table if not exists public.comments
 alter table public.comments
     owner to postgres;
 
---changeset Luka:favourites
-create table if not exists public.favourites
+--changeset Luka:favorites
+create table if not exists public.favorites
 (
     guide_id   bigint not null
         references public.guides,
@@ -104,7 +104,7 @@ create table if not exists public.favourites
     primary key (guide_id, user_email)
 );
 
-alter table public.favourites
+alter table public.favorites
     owner to postgres;
 
 --changeset Luka:subscriptions
