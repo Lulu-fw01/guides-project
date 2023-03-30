@@ -14,7 +14,7 @@ import java.util.List;
 public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, FavoriteId> {
 
     @Query(value =
-            "SELECT guide_id FROM favourites f WHERE f.user_email IN " +
+            "SELECT guide_id FROM favorites f WHERE f.user_email IN " +
             "(SELECT email FROM users u WHERE u.email = :email)", nativeQuery = true)
     List<Long> findFavoritesByConcreteUser(@Param("email") String email);
 }

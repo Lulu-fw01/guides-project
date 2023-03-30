@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "favourites", schema = "public")
+@Table(name = "favorites", schema = "public")
 public class FavoriteItem {
 
     @EmbeddedId
