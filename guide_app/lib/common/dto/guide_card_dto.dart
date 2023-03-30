@@ -25,6 +25,14 @@ class GuideCardDto {
 
   bool addedToFavorites;
 
+  @override
+  bool operator ==(Object other) {
+    return other is GuideCardDto && id == other.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
   factory GuideCardDto.fromJson(Map<String, dynamic> json) =>
       _$GuideCardDtoFromJson(json);
 
