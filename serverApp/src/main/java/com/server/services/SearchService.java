@@ -30,8 +30,6 @@ public class SearchService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
 
-        System.out.println(AuthUtil.getAuthenticatedUser());
-
         try {
             var numOfAllGuidesByTitle = guideHandleRepository.searchByTitle(title).size();
 

@@ -60,7 +60,7 @@ class FavoriteItemServiceTest {
     @Test
     public void getFavoritesForNullEmail() {
         assertThrows(ResponseStatusException.class,
-                () -> favoriteItemService.getFavorites(null),
-                "The request body is null");
+                () -> favoriteItemService.getFavorites(null, "pn", "ps"),
+                "One of the parameters is null");
     }
 }
