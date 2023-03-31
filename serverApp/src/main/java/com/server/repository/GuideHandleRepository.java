@@ -15,6 +15,9 @@ public interface GuideHandleRepository extends PagingAndSortingRepository<Guide,
     @Query(value = "SELECT * FROM guides WHERE id IN :ids", nativeQuery = true)
     List<Guide> findByIds(@Param("ids") List<Long> ids);
 
+    @Query(value = "SELECT * FROM guides WHERE id IN :ids", nativeQuery = true)
+    List<Guide> findByIds(@Param("ids") List<Long> ids, Pageable pageable);
+
     @Query(value = "SELECT * FROM guides WHERE creator_email = :email", nativeQuery = true)
     List<Guide> findByUser(@Param("email") String email, Pageable pageable);
 

@@ -4,16 +4,19 @@ import com.server.compositeId.FavoriteId;
 import com.server.dto.FavoriteItemDTO;
 import com.server.dto.GuideDTO;
 import com.server.dto.GuideInfoDTO;
+import com.server.dto.GuideInfoPageResponse;
 import com.server.repository.FavoriteItemRepository;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.server.entities.FavoriteItem;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -46,7 +49,8 @@ public class FavoriteItemService {
                         userRepository
                                 .findByEmail(favoriteItemDTO.getUserEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException("User does not exist"))
-                )
+                ),
+                new Timestamp(System.currentTimeMillis())
         );
 
         favoriteItemRepository.save(favoriteItem);
@@ -69,26 +73,41 @@ public class FavoriteItemService {
         favoriteItemRepository.deleteById(id);
     }
 
-    public List<GuideInfoDTO> getFavorites(String email) {
-        if (email == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+    public GuideInfoPageResponse getFavorites(String email, String pageNumber, String pageSize) {
+        if (email == null || pageNumber == null || pageSize == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
 
         var guideIds = favoriteItemRepository
                 .findFavoritesByConcreteUser(email);
 
-        return guideHandleRepository
-                .findByIds(guideIds)
-                .stream()
-                .map(guide -> new GuideInfoDTO(
-                        guide.getId(),
-                        guide.getCreatorEmail().getLogin(),
-                        guide.getTitle(),
-                        guide.getEditDate(),
-                        guide.getIsBlocked(),
-                        checkIfAddedToFavorites(guide.getId(), email)
-                ))
-                .toList();
+        try {
+            var pageNumberInt = Integer.parseInt(pageNumber);
+            var pageSizeInt = Integer.parseInt(pageSize);
+
+            var pageAmount = getTotalPages(pageSizeInt, guideHandleRepository.findByIds(guideIds).size());
+
+            var guideInfoList = guideHandleRepository
+                    .findByIds(guideIds, PageRequest.of(pageNumberInt, pageSizeInt))
+                    .stream()
+                    .map(guide -> new GuideInfoDTO(
+                            guide.getId(),
+                            guide.getCreatorEmail().getLogin(),
+                            guide.getTitle(),
+                            guide.getEditDate(),
+                            guide.getIsBlocked(),
+                            checkIfAddedToFavorites(guide.getId(), email)
+                    ))
+                    .toList();
+
+            return new GuideInfoPageResponse(
+                    pageAmount,
+                    guideInfoList,
+                    pageNumberInt
+            );
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot parse Integer from Path variable");
+        }
     }
 
     public Boolean checkIfAddedToFavorites(Long guideId, String email) {
@@ -102,5 +121,15 @@ public class FavoriteItemService {
         );
 
         return favoriteItemRepository.existsById(id);
+    }
+
+    private int getTotalPages(int pageSize, int numOfAllGuidesByUser) {
+        int totalPages;
+        if (numOfAllGuidesByUser % pageSize == 0) {
+            totalPages = numOfAllGuidesByUser / pageSize;
+        } else {
+            totalPages = numOfAllGuidesByUser / pageSize + 1;
+        }
+        return totalPages;
     }
 }

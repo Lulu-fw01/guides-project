@@ -15,6 +15,8 @@ public interface FavoriteItemRepository extends JpaRepository<FavoriteItem, Favo
 
     @Query(value =
             "SELECT guide_id FROM favorites f WHERE f.user_email IN " +
-            "(SELECT email FROM users u WHERE u.email = :email)", nativeQuery = true)
+            "(SELECT email FROM users u WHERE u.email = :email) ORDER BY add_date_time DESC",
+            nativeQuery = true
+    )
     List<Long> findFavoritesByConcreteUser(@Param("email") String email);
 }

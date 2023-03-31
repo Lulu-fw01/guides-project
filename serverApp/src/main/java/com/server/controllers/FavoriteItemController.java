@@ -3,6 +3,8 @@ package com.server.controllers;
 import com.server.dto.FavoriteItemDTO;
 import com.server.dto.GuideDTO;
 import com.server.dto.GuideInfoDTO;
+import com.server.dto.GuideInfoPageResponse;
+import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.entities.FavoriteItem;
@@ -27,9 +29,11 @@ public class FavoriteItemController {
         favoriteItemService.addToFavorites(favoriteItem);
     }
 
-    @GetMapping("{email}")
-    public List<GuideInfoDTO> getFavorites(@PathVariable String email) {
-        return favoriteItemService.getFavorites(email);
+    @GetMapping("{email}/{pageNumber}/{pageSize}")
+    public GuideInfoPageResponse getFavorites(@PathVariable String email,
+                                              @PathVariable String pageNumber,
+                                              @PathVariable String pageSize) {
+        return favoriteItemService.getFavorites(email, pageNumber, pageSize);
     }
 
     @DeleteMapping
