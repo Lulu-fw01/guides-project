@@ -7,6 +7,8 @@ import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/client/favorites_client.dart';
+import '../../favorites/cubit/favorites_cubit.dart';
+import '../../favorites/cubit/favorites_page_cubit.dart';
 import '../../favorites/provider/favorites_provider.dart';
 import '../../favorites/repository/favorites_repository.dart';
 import '../../favorites/screens/favorites_screen.dart';
@@ -87,10 +89,20 @@ class MainCoreState extends State<MainCore> {
           return MultiBlocProvider(
             providers: [
               BlocProvider<SearchBloc>(
-                create: (context) => SearchBloc(
-                    searchRepository:
-                        Provider.of<SearchRepository>(context, listen: false)),
-              )
+                  create: (context) => SearchBloc(
+                      searchRepository: RepositoryProvider.of<SearchRepository>(
+                          context,
+                          listen: false))),
+              BlocProvider<FavoritesCubit>(
+                  create: (context) => FavoritesCubit(
+                      favoritesRepository:
+                          RepositoryProvider.of<FavoritesRepository>(context,
+                              listen: false))),
+              BlocProvider<FavoritesPageCubit>(
+                  create: (context) => FavoritesPageCubit(
+                      favoritesRepository:
+                          RepositoryProvider.of<FavoritesRepository>(context,
+                              listen: false))),
             ],
             // TODO move scaffold inside another widget.
             child: Scaffold(

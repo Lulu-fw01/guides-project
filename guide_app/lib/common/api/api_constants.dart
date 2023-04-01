@@ -7,6 +7,5 @@ class ApiConstants {
   static String searchByTitleUri = '$baseUrl/search/title';
   static String searchByAuthorLoginUri = '$baseUrl/search/username';
   static String searchByCategoryNameUri = '$baseUrl/search/category';
+  static String favoritesUri = '$baseUrl/favorites';
 }
-  //http://localhost:8080/api/v1
-  //https://10.0.2.2:8080/api/v1

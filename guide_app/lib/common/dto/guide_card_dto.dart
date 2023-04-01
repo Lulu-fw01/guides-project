@@ -23,6 +23,8 @@ class GuideCardDto {
   /// Edit date of the guide.
   final DateTime editDate;
 
+  // TODO: later make final and use another
+  // class for adding (removing) to favorites.
   bool addedToFavorites;
 
   @override
