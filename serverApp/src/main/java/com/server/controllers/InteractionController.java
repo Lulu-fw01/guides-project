@@ -2,7 +2,6 @@ package com.server.controllers;
 
 import com.server.dto.GuideDTO;
 import com.server.dto.InteractionDTO;
-import com.server.dto.UserDTO;
 import com.server.services.InteractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,6 @@
 package com.server.controllers;
 
 import com.server.dto.GuideReportDTO;
-import com.server.entities.GuideReport;
 import com.server.services.GuideReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

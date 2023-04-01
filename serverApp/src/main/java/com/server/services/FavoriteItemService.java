@@ -2,7 +2,6 @@ package com.server.services;
 
 import com.server.compositeId.FavoriteId;
 import com.server.dto.FavoriteItemDTO;
-import com.server.dto.GuideDTO;
 import com.server.dto.GuideInfoDTO;
 import com.server.dto.GuideInfoPageResponse;
 import com.server.repository.FavoriteItemRepository;
@@ -17,8 +16,6 @@ import com.server.entities.FavoriteItem;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
-import java.util.List;
-
 
 @Service
 public class FavoriteItemService {

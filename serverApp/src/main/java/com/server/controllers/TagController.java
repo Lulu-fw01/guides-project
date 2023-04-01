@@ -2,7 +2,6 @@ package com.server.controllers;
 
 import com.server.dto.TagDTO;
 import org.springframework.web.bind.annotation.*;
-import com.server.entities.Tag;
 import com.server.services.TagService;
 
 import java.util.List;
