@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.config.JwtPropertiesConfig;
 import com.server.dto.FavoriteItemDTO;
 import com.server.dto.GuideInfoPageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,12 @@ import com.server.services.FavoriteItemService;
 public class FavoriteItemController {
 
     private final FavoriteItemService favoriteItemService;
+    private final JwtPropertiesConfig jwtPropertiesConfig;
 
     @Autowired
-    public FavoriteItemController(FavoriteItemService favoriteItemService) {
+    public FavoriteItemController(FavoriteItemService favoriteItemService, JwtPropertiesConfig jwtPropertiesConfig) {
         this.favoriteItemService = favoriteItemService;
+        this.jwtPropertiesConfig = jwtPropertiesConfig;
     }
 
     @PostMapping
