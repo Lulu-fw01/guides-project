@@ -8,6 +8,7 @@ import '../repository/i_favorites_repository.dart';
 
 part 'favorites_page_state.dart';
 
+/// Cubit for controlling page which contains favorites guides
 class FavoritesPageCubit extends Cubit<FavoritesPageState> {
   FavoritesPageCubit({required this.favoritesRepository})
       : super(FavoritesPageInitial());

@@ -8,11 +8,13 @@ import '../themes/main_theme.dart';
 /// v1.
 /// Author: @Lulu-fw01
 class GuideCard extends StatelessWidget {
-  const GuideCard(this.guideCardDto, {required this.onClick, super.key});
+  const GuideCard(this.guideCardDto,
+      {required this.onClick, required this.onFavoritesButtonClick, super.key});
 
   /// Guide card data.
   final GuideCardDto guideCardDto;
   final void Function() onClick;
+  final void Function() onFavoritesButtonClick;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class GuideCard extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                      onPressed: () {},
+                      onPressed: onFavoritesButtonClick,
                       icon: guideCardDto.addedToFavorites
                           ? const Icon(Icons.bookmark)
                           : const Icon(Icons.bookmark_add_outlined)),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../../favorites/provider/favorites_provider.dart';
 import '../bloc/search_bloc.dart';
 import '../provider/search_page_provider.dart';
 import '../provider/search_screen_provider.dart';
@@ -21,6 +22,8 @@ class SearchResults extends StatelessWidget {
     final searchPageProvider =
         Provider.of<SearchPageProvider>(context, listen: false);
     final theme = Provider.of<MainTheme>(context);
+    final favoritesProvider =
+        Provider.of<FavoritesProvider>(context, listen: false);
 
     List<Widget> list = [];
     // Guide cards.
@@ -30,6 +33,9 @@ class SearchResults extends StatelessWidget {
             dto,
             onClick: () {
               searchScreenProvider.showGuide(dto.id);
+            },
+            onFavoritesButtonClick: () {
+              favoritesProvider.toggleFavorite(dto);
             },
           ),
         )

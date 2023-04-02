@@ -14,8 +14,8 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       : super(FavoritesInitial());
   final IFavoritesRepository favoritesRepository;
 
-  List<void Function(GuideCardDto)> _onAddedToFavorites = [];
-  List<void Function(GuideCardDto)> _onRemovedFromFavorites = [];
+  final List<void Function(GuideCardDto)> _onAddedToFavorites = [];
+  final List<void Function(GuideCardDto)> _onRemovedFromFavorites = [];
 
   void addOnAddedListener(void Function(GuideCardDto) newListener) {
     _onAddedToFavorites.add(newListener);
@@ -26,6 +26,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   /// Add guide to favorites or remove.
+  /// TODO later use only id and bool!
   void toggleFavorite(GuideCardDto guideCardDto) {
     if (guideCardDto.addedToFavorites) {
       _removeGuideFromFavorites(guideCardDto);
@@ -37,6 +38,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   void _addGuideToFavorites(GuideCardDto guideCardDto) async {
     try {
       await favoritesRepository.addToFavorites(guideCardDto.id);
+      guideCardDto.addedToFavorites = true;
       for (var func in _onAddedToFavorites) {
         func(guideCardDto);
       }
@@ -55,6 +57,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   void _removeGuideFromFavorites(GuideCardDto guideCardDto) async {
     try {
       await favoritesRepository.removeFromFavorites(guideCardDto.id);
+      guideCardDto.addedToFavorites = false;
       for (var func in _onRemovedFromFavorites) {
         func(guideCardDto);
       }

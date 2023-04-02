@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../../common/dto/guide_card_dto.dart';
 
+/// This provider work with Search page provider data.
 class SearchPageProvider extends ChangeNotifier {
   SearchPageMode _searchPageState = SearchPageMode.noSearch;
 
@@ -41,6 +42,14 @@ class SearchPageProvider extends ChangeNotifier {
 
   bool isLastPage() {
     return pageNum == pagesAmount;
+  }
+
+  /// Try to find special guide
+  /// card and change it favorites state.
+  void toggleFavorites(GuideCardDto dto) {
+    guideCardDtos.firstWhere((element) => element == dto).addedToFavorites =
+        dto.addedToFavorites;
+    notifyListeners();
   }
 }
 

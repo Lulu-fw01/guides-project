@@ -19,3 +19,8 @@ class SuccessFavoritesPageState extends FavoritesPageState {
   SuccessFavoritesPageState(this.nextPage);
   final GuideCardsPage nextPage;
 }
+
+class RefreshSuccessFavoritesPageState extends FavoritesPageState {
+  RefreshSuccessFavoritesPageState(this.nextPage);
+  final GuideCardsPage nextPage;
+}

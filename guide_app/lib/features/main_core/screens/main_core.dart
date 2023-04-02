@@ -97,7 +97,27 @@ class MainCoreState extends State<MainCore> {
                   create: (context) => FavoritesCubit(
                       favoritesRepository:
                           RepositoryProvider.of<FavoritesRepository>(context,
-                              listen: false))),
+                              listen: false))
+                    // Adding on guide added to favorites listeners.
+                    ..addOnAddedListener(
+                        Provider.of<SearchPageProvider>(context, listen: false)
+                            .toggleFavorites)
+                    ..addOnAddedListener(
+                        Provider.of<ProfileProvider>(context, listen: false)
+                            .toggleFavorites)
+                    ..addOnAddedListener(
+                        Provider.of<FavoritesProvider>(context, listen: false)
+                            .addToFavorites)
+                    // Adding on guide removed from favorites listeners.
+                    ..addOnRemovedListener(
+                        Provider.of<SearchPageProvider>(context, listen: false)
+                            .toggleFavorites)
+                    ..addOnRemovedListener(
+                        Provider.of<ProfileProvider>(context, listen: false)
+                            .toggleFavorites)
+                    ..addOnRemovedListener(
+                        Provider.of<FavoritesProvider>(context, listen: false)
+                            .removeFromFavorites)),
               BlocProvider<FavoritesPageCubit>(
                   create: (context) => FavoritesPageCubit(
                       favoritesRepository:
