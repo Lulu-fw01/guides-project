@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
-import '../../favorites/provider/favorites_provider.dart';
+import '../../favorites/cubit/favorites_cubit.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
 
@@ -23,12 +23,10 @@ class ProfileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileCubit = Provider.of<ProfileCubit>(context);
-    final profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
+    final profileCubit = Provider.of<ProfileCubit>(context, listen: false);
+    final profileProvider = Provider.of<ProfileProvider>(context);
     final theme = Provider.of<MainTheme>(context);
-    final favoritesProvider =
-        Provider.of<FavoritesProvider>(context, listen: false);
+    final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
 
     List<Widget> list = [];
     list.add(_loadingRefreshProgress(theme));
@@ -40,7 +38,7 @@ class ProfileContent extends StatelessWidget {
               profileProvider.showGuide(dto.id);
             },
             onFavoritesButtonClick: () {
-              favoritesProvider.toggleFavorite(dto);
+              favoritesCubit.toggleFavorite(dto);
             },
           ),
         )

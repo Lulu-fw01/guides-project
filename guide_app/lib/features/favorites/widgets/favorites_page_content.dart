@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../cubit/favorites_cubit.dart';
 import '../cubit/favorites_page_cubit.dart';
 import '../provider/favorites_provider.dart';
 
@@ -21,10 +22,11 @@ class FavoritesPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesPageCubit = Provider.of<FavoritesPageCubit>(context);
-    final favoritesProvider =
-        Provider.of<FavoritesProvider>(context, listen: false);
+    final favoritesPageCubit =
+        Provider.of<FavoritesPageCubit>(context, listen: false);
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
     final theme = Provider.of<MainTheme>(context);
+    final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
 
     List<Widget> list = [];
     list.add(_loadingRefreshProgress(theme));
@@ -36,7 +38,7 @@ class FavoritesPageContent extends StatelessWidget {
               favoritesProvider.showGuide(dto.id);
             },
             onFavoritesButtonClick: () {
-              favoritesProvider.toggleFavorite(dto);
+              favoritesCubit.toggleFavorite(dto);
             },
           ),
         )
@@ -83,6 +85,7 @@ class FavoritesPageContent extends StatelessWidget {
                 favoritesPageCubit.getNextPage(favoritesProvider.pageNum);
               }
             }),
+          itemCount: list.length,
           itemBuilder: (context, index) => list[index],
         ));
   }

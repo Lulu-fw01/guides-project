@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../guide/cubit/guide_view/guide_view_cubit.dart';
 import '../../guide/screens/guide_view_screen.dart';
+import '../cubit/favorites_page_cubit.dart';
 import '../provider/favorites_provider.dart';
 import '../widgets/favorites_page_core.dart';
 
@@ -21,6 +22,13 @@ class FavoritesScreen extends StatelessWidget {
         builder: (context, favoritesProvider, child) {
       switch (favoritesProvider.favoritesScreenState) {
         case FavoritesScreenState.viewFavorites:
+          // Call getNextPage only if there were no calls before.
+          if (favoritesProvider.pageNum == 0 &&
+              Provider.of<FavoritesPageCubit>(context, listen: false).state
+                  is FavoritesPageInitial) {
+            Provider.of<FavoritesPageCubit>(context, listen: false)
+                .getNextPage(0);
+          }
           return const FavoritesPageCore();
         case FavoritesScreenState.viewGuide:
           // Show chosen guide from profile screen.

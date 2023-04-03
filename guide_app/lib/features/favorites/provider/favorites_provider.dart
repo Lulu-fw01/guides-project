@@ -17,12 +17,6 @@ class FavoritesProvider extends ChangeNotifier {
 
   int? viewedGuideId = null;
 
-  /// Add guide to favorites or remove from favorites.
-  void toggleFavorite(GuideCardDto guideCardDto) {
-    if (guideCardDto.addedToFavorites) {
-    } else {}
-  }
-
   void reset() {
     guideCardDtos.clear();
     pageNum = 0;
@@ -57,7 +51,7 @@ class FavoritesProvider extends ChangeNotifier {
   }
 
   void removeFromFavorites(GuideCardDto dto) {
-    guideCardDtos.remove(dto);
+    guideCardDtos.removeWhere((element) => element == dto);
     // TODO count inserted and removed elements.
     notifyListeners();
   }

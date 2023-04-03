@@ -41,7 +41,7 @@ class FavoritesPageCubit extends Cubit<FavoritesPageState> {
     try {
       final nextPage = await favoritesRepository.getFavorites(0);
       log.fine('Favorites page refresh successful.');
-      emit(SuccessFavoritesPageState(nextPage));
+      emit(RefreshSuccessFavoritesPageState(nextPage));
     } on ResponseException catch (e) {
       String message = e.responseBody != null ? e.responseBody!.message : '';
       //log.warning('Got ResponseException with message: $message', e);

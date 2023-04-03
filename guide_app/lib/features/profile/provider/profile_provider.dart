@@ -50,9 +50,11 @@ class ProfileProvider extends ChangeNotifier {
   /// Try to find special guide
   /// card and change it favorites state.
   void toggleFavorites(GuideCardDto dto) {
-    guideCardDtos.firstWhere((element) => element == dto).addedToFavorites =
-        dto.addedToFavorites;
-    notifyListeners();
+    try {
+      guideCardDtos.firstWhere((element) => element == dto).addedToFavorites =
+          dto.addedToFavorites;
+      notifyListeners();
+    } catch (e) {}
   }
 }
 
