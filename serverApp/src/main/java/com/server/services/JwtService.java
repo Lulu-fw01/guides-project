@@ -1,16 +1,17 @@
 package com.server.services;
 
+import com.server.config.JwtPropertiesConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,7 +19,12 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SEC_TOKEN = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
+    private final JwtPropertiesConfig jwtPropertiesConfig;
+
+    @Autowired
+    public JwtService(JwtPropertiesConfig jwtPropertiesConfig) {
+        this.jwtPropertiesConfig = jwtPropertiesConfig;
+    }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
@@ -58,7 +64,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        var keyBytes = Decoders.BASE64.decode(SEC_TOKEN);
+        var keyBytes = Decoders.BASE64.decode(jwtPropertiesConfig.getToken());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

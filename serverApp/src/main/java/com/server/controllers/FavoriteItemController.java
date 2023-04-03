@@ -1,16 +1,11 @@
 package com.server.controllers;
 
+import com.server.config.JwtPropertiesConfig;
 import com.server.dto.FavoriteItemDTO;
-import com.server.dto.GuideDTO;
-import com.server.dto.GuideInfoDTO;
 import com.server.dto.GuideInfoPageResponse;
-import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.server.entities.FavoriteItem;
 import com.server.services.FavoriteItemService;
-
-import java.util.List;
 
 
 @RestController
@@ -18,10 +13,12 @@ import java.util.List;
 public class FavoriteItemController {
 
     private final FavoriteItemService favoriteItemService;
+    private final JwtPropertiesConfig jwtPropertiesConfig;
 
     @Autowired
-    public FavoriteItemController(FavoriteItemService favoriteItemService) {
+    public FavoriteItemController(FavoriteItemService favoriteItemService, JwtPropertiesConfig jwtPropertiesConfig) {
         this.favoriteItemService = favoriteItemService;
+        this.jwtPropertiesConfig = jwtPropertiesConfig;
     }
 
     @PostMapping

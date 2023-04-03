@@ -1,7 +1,6 @@
 package com.server.controllers;
 
 import com.server.dto.UserReportDTO;
-import com.server.entities.UserReport;
 import com.server.services.UserReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
