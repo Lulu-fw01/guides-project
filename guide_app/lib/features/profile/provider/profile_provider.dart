@@ -46,6 +46,16 @@ class ProfileProvider extends ChangeNotifier {
   bool isLastPage() {
     return pageNum == pagesAmount;
   }
+
+  /// Try to find special guide
+  /// card and change it favorites state.
+  void toggleFavorites(GuideCardDto dto) {
+    try {
+      guideCardDtos.firstWhere((element) => element == dto).addedToFavorites =
+          dto.addedToFavorites;
+      notifyListeners();
+    } catch (e) {}
+  }
 }
 
 enum ProfileScreenMode { profileInfo, viewGuide }

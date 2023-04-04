@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// SearchScreenProvider controls the search screen state (search mode view guide mode).
+/// [SearchScreenProvider] controls the search screen state (search mode view guide mode).
 class SearchScreenProvider extends ChangeNotifier {
   SearchScreenMode _searchScreenState = SearchScreenMode.searchMode;
 

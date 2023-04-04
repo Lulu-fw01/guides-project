@@ -28,9 +28,10 @@ class ProfileScreen extends StatelessWidget {
               child: Builder(builder: (context) {
                 // Call getNextPage only if there were no calls before.
                 if (profileProvider.pageNum == 0 &&
-                    Provider.of<ProfileCubit>(context).state
+                    Provider.of<ProfileCubit>(context, listen: false).state
                         is ProfileInitialState) {
-                  Provider.of<ProfileCubit>(context).getNextPage(0);
+                  Provider.of<ProfileCubit>(context, listen: false)
+                      .getNextPage(0);
                 }
                 return const ProfileCore();
               }));

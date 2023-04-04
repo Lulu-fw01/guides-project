@@ -12,7 +12,7 @@ import '../../mixin/exception_response_mixin.dart';
 import 'i_guide_repository.dart';
 
 class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
-  GuideRepository(this.email, this.guideClient);
+  GuideRepository({required this.email, required this.guideClient});
   final IGuideClient guideClient;
   final String email;
 
@@ -48,7 +48,7 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     }
   }
 
-  /// Get list of guides by user.
+  /// Get page of user's guides.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideCardsPage> getGuideCardsByUser(int pageNumber) async {

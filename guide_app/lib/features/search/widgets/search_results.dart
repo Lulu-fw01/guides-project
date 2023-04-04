@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../../favorites/cubit/favorites_cubit.dart';
 import '../bloc/search_bloc.dart';
 import '../provider/search_page_provider.dart';
+import '../provider/search_results_provider.dart';
 import '../provider/search_screen_provider.dart';
 
 /// Widget which show guide cards from search results.
@@ -20,16 +22,21 @@ class SearchResults extends StatelessWidget {
         Provider.of<SearchScreenProvider>(context, listen: false);
     final searchPageProvider =
         Provider.of<SearchPageProvider>(context, listen: false);
+    final searchResultsProvider = Provider.of<SearchResultsProvider>(context);
     final theme = Provider.of<MainTheme>(context);
+    final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
 
     List<Widget> list = [];
     // Guide cards.
-    list.addAll(searchPageProvider.guideCardDtos
+    list.addAll(searchResultsProvider.guideCardDtos
         .map(
           (dto) => GuideCard(
             dto,
             onClick: () {
               searchScreenProvider.showGuide(dto.id);
+            },
+            onFavoritesButtonClick: () {
+              favoritesCubit.toggleFavorite(dto);
             },
           ),
         )
@@ -48,12 +55,12 @@ class SearchResults extends StatelessWidget {
             if (_scrollController.offset ==
                     _scrollController.position.maxScrollExtent &&
                 !searchBloc.isLoadingPage &&
-                !searchPageProvider.isLastPage()) {
+                !searchResultsProvider.isLastPage()) {
               searchBloc.isLoadingPage = true;
               // Load next page.
               searchBloc.add(SearchGuidesByTitleEvent(
-                  searchPhrase: searchPageProvider.searchPhrase,
-                  pageNum: searchPageProvider.pageNum));
+                  searchPhrase: searchResultsProvider.searchPhrase,
+                  pageNum: searchResultsProvider.pageNum));
             }
           }),
         children: list,

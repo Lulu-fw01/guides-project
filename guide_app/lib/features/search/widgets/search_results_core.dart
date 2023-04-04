@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/full_screen_error.dart';
 import '../bloc/search_bloc.dart';
-import '../provider/search_page_provider.dart';
+import '../provider/search_results_provider.dart';
 import 'search_results.dart';
 
 /// Core of search results.
@@ -24,11 +24,11 @@ class SearchResultsCore extends StatelessWidget {
             content: Text(state.message)));
       }
     }), builder: (context, state) {
-      final searchPageProvider =
-          Provider.of<SearchPageProvider>(context, listen: false);
+      final searchResultsProvider =
+          Provider.of<SearchResultsProvider>(context, listen: false);
 
       if (state is SearchLoadingState &&
-          searchPageProvider.guideCardDtos.isEmpty) {
+          searchResultsProvider.guideCardDtos.isEmpty) {
         return Center(
             child: CircularProgressIndicator(
           color: theme.onSurface,
@@ -41,20 +41,20 @@ class SearchResultsCore extends StatelessWidget {
           if (page.pageNum == 0) {
             // New search request result.
             // Clear previous search result and set new.
-            searchPageProvider.guideCardDtos.clear();
-            searchPageProvider.guideCardDtos.addAll(page.guideCardDtos);
-            searchPageProvider.pageNum = 1;
-            searchPageProvider.pagesAmount = page.pageAmount;
-            searchPageProvider.searchPhrase = state.searchPhrase;
+            searchResultsProvider.guideCardDtos.clear();
+            searchResultsProvider.guideCardDtos.addAll(page.guideCardDtos);
+            searchResultsProvider.pageNum = 1;
+            searchResultsProvider.pagesAmount = page.pageAmount;
+            searchResultsProvider.searchPhrase = state.searchPhrase;
           } else {
             // Continue showing guides.
-            searchPageProvider.guideCardDtos.addAll(page.guideCardDtos);
-            searchPageProvider.pageNum++;
+            searchResultsProvider.guideCardDtos.addAll(page.guideCardDtos);
+            searchResultsProvider.pageNum++;
           }
           searchBloc.isLoadingPage = false;
         }
       } else if (state is SearchErrorState &&
-          searchPageProvider.guideCardDtos.isEmpty) {
+          searchResultsProvider.guideCardDtos.isEmpty) {
         return FullScreenError(
           onPressed: () => {} /*profileCubit.getNextPage(0)*/,
           message: state.message,

@@ -24,7 +24,7 @@ PreferredSizeWidget profileAppBar(
       );
     case ProfileScreenMode.viewGuide:
       return AppBar(
-        backgroundColor: theme.surface,
+        backgroundColor: theme.readableBackColor,
         leading: IconButton(
           onPressed: () {
             profileProvider.showProfileInfo();

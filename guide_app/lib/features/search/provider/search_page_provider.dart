@@ -1,20 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../common/dto/guide_card_dto.dart';
-
+/// This provider work with Search page states.
 class SearchPageProvider extends ChangeNotifier {
   SearchPageMode _searchPageState = SearchPageMode.noSearch;
-
-  final List<GuideCardDto> guideCardDtos = [];
-
-  /// Number of current page.
-  int pageNum = 0;
-
-  /// Total number of pages.
-  int pagesAmount = 0;
-
-  /// Current search phrase.
-  String searchPhrase = '';
 
   SearchPageMode get searchPageState => _searchPageState;
 
@@ -37,10 +25,6 @@ class SearchPageProvider extends ChangeNotifier {
   void searchFinished() {
     _searchPageState = SearchPageMode.noSearch;
     notifyListeners();
-  }
-
-  bool isLastPage() {
-    return pageNum == pagesAmount;
   }
 }
 

@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'common/repository/credentials_repository.dart';
@@ -13,6 +15,14 @@ String? token;
 String? email;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    if (kDebugMode) {
+      print(
+          '${record.level.name}: ${record.time}: [${record.loggerName}]: ${record.message}');
+    }
+  });
+
   final repo = CredentialsRepository();
 
   token = await repo.getToken();

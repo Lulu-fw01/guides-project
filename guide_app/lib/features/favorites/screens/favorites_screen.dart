@@ -1,38 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/dto/guide_card_dto.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/common/widgets/guide_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:provider/provider.dart';
 
-class FavoritesScreen extends StatefulWidget {
+import '../../../common/repository/guide/guide_repository.dart';
+import '../../guide/cubit/guide_view/guide_view_cubit.dart';
+import '../../guide/screens/guide_view_screen.dart';
+import '../cubit/favorites_page_cubit.dart';
+import '../provider/favorites_content_provider.dart';
+import '../provider/favorites_provider.dart';
+import '../widgets/favorites_page_core.dart';
+
+/// Screen with guides added to favorites.
+class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
-  FavoritesScreenState createState() => FavoritesScreenState();
-}
-
-class FavoritesScreenState extends State<FavoritesScreen> {
-  @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<MainTheme>(context);
+    final guideRepo = Provider.of<GuideRepository>(context, listen: false);
 
-    final guideCards = [
-      // GuideCardDto(1, 'Lulu-fw01', 'My first guide kkkkkkk kkkkkkk kkkkkkkkk',
-      //     '01.02.2023'),
-      // GuideCardDto(1, 'Lulu-fw01', 'My second guide', '01.02.2023'),
-      // GuideCardDto(2, 'Lulu-fw01', 'My fucking third guide', '01.02.2023'),
-      // GuideCardDto(3, 'Lulu-fw01', 'My fourth guide', '01.02.2023'),
-      // GuideCardDto(4, 'Lulu-fw01', 'My fifth guide', '01.02.2023'),
-      // GuideCardDto(5, 'Lulu-fw01', 'My whatever guide', '01.02.2023'),
-      // GuideCardDto(6, 'Lulu-fw01', 'Another one guide by me', '01.02.2023')
-    ];
-    return ListView.separated(
-        itemBuilder: (BuildContext context, int index) =>
-            GuideCard(guideCards[index], onClick: () {},),
-        separatorBuilder: (BuildContext context, int index) => Divider(
-              height: 3,
-              color: theme.onSurface,
-            ),
-        itemCount: guideCards.length);
+    return Consumer<FavoritesProvider>(
+        builder: (context, favoritesProvider, child) {
+      switch (favoritesProvider.favoritesScreenState) {
+        case FavoritesScreenState.viewFavorites:
+          // Loading first page if it was not loaded before.
+          if (Provider.of<FavoritesPageCubit>(context, listen: false).state
+              is FavoritesPageInitial) {
+            final favoritesPageCubit =
+                Provider.of<FavoritesPageCubit>(context, listen: false);
+            favoritesPageCubit.isLoadingPage = true;
+            final cards =
+                Provider.of<FavoritesContentProvider>(context, listen: false)
+                    .guideCardDtos;
+            // If this page has never build before
+            // and we haven't added any guides to favorites then we send -1.
+            // If we have added guides to favorites then we
+            // download guides after last in list.
+            favoritesPageCubit.getNextPage(cards.isEmpty ? -1 : cards.last.id);
+          }
+          return const FavoritesPageCore();
+        case FavoritesScreenState.viewGuide:
+          // Show chosen guide from profile screen.
+          // TODO Move BLOC somewhere.
+          // Нельзя перенести блок в main, но можно попробовать в провайдер.
+          return BlocProvider(
+              create: (context) => GuideViewCubit(guideRepository: guideRepo),
+              child: Builder(
+                builder: (context) {
+                  if (favoritesProvider.viewedGuideId != null) {
+                    // TODO fix: if guide have been already loaded we should not reload it again.
+                    Provider.of<GuideViewCubit>(context, listen: false)
+                        .showGuide(favoritesProvider.viewedGuideId!);
+                    return const GuideViewScreen();
+                  }
+                  return Container();
+                },
+              ));
+      }
+    });
   }
 }

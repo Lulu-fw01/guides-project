@@ -2,11 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
+import '../provider/favorites_provider.dart';
 
+/// App bar of favorites screen.
 PreferredSizeWidget favoritesAppBar(BuildContext context) {
   final theme = Provider.of<MainTheme>(context);
-  return AppBar(
-    backgroundColor: theme.surface,
-    title: const Center(child: Text('Избранное')),
-  );
+  final favoritesProvider = Provider.of<FavoritesProvider>(context);
+
+  switch (favoritesProvider.favoritesScreenState) {
+    case FavoritesScreenState.viewFavorites:
+      return AppBar(
+        backgroundColor: theme.surface,
+        title: Center(
+            child: Text(
+          'Избранное',
+          style: theme.titleText,
+        )),
+      );
+
+    case FavoritesScreenState.viewGuide:
+      return AppBar(
+        backgroundColor: theme.readableBackColor,
+        leading: IconButton(
+          onPressed: () {
+            favoritesProvider.showFavorites();
+          },
+          icon: Icon(Icons.arrow_back, color: theme.onSurface),
+        ),
+      );
+  }
 }
