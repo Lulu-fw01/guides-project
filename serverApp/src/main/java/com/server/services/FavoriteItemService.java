@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.compositeId.FavoriteId;
 import com.server.dto.*;
+import com.server.entities.Guide;
 import com.server.repository.FavoriteItemRepository;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
@@ -9,7 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.type.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +24,7 @@ import java.util.List;
 @Service
 public class FavoriteItemService {
 
+    private static final int FIRST_PAGE_CURSOR = -1;
     private final FavoriteItemRepository favoriteItemRepository;
     private final GuideHandleRepository guideHandleRepository;
     private final UserRepository userRepository;
@@ -79,121 +80,101 @@ public class FavoriteItemService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One of the parameters is null");
         }
 
+        int cursorInt;
+        int pageSizeInt;
+
+        try {
+            cursorInt = Integer.parseInt(cursor);
+            pageSizeInt = Integer.parseInt(pageSize);
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot parse Integer from Path variable");
+        }
+
         var guideIds = favoriteItemRepository
                 .findFavoritesByConcreteUser(email);
 
-        List<GuideDTO> guides = new ArrayList<>();
-        List<GuideDTO> allGuides = new ArrayList<>();
+        List<Guide> guides = new ArrayList<>();
+        List<Guide> allGuides = new ArrayList<>();
 
         try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
 
-            NativeQuery<Object[]> query = session.createNativeQuery(
-                            "SELECT id, creator_email, title, file_bytes, edit_date, is_blocked " +
-                                    "FROM guides " +
-                                    "JOIN (SELECT * FROM favorites f WHERE f.user_email IN (SELECT email FROM users u WHERE u.email = '" + email + "')) as ord " +
-                                    "ON ord.guide_id = guides.id " +
-                                    "WHERE (SELECT add_date_time FROM favorites WHERE guide_id = " + cursor + " AND user_email = '" + email + "')" + " > " + "ord.add_date_time " +
-                                    "ORDER BY add_date_time DESC " +
-                                    "LIMIT " + pageSize
-                    )
-                    .addScalar("id", LongType.INSTANCE)
-                    .addScalar("creator_email", StringType.INSTANCE)
-                    .addScalar("title", StringType.INSTANCE)
-                    .addScalar("file_bytes", StringType.INSTANCE)
-                    .addScalar("edit_date", TimestampType.INSTANCE)
-                    .addScalar("is_blocked", BooleanType.INSTANCE);
+            NativeQuery<Object[]> query = favoriteItemRepository.getPagesByCursor(session, pageSizeInt, cursorInt, email);
 
-            NativeQuery<Object[]> allQuery = session.createNativeQuery(
-                            "SELECT id, creator_email, title, file_bytes, edit_date, is_blocked " +
-                                    "FROM guides " +
-                                    "JOIN (SELECT * FROM favorites f WHERE f.user_email IN (SELECT email FROM users u WHERE u.email = '" + email + "')) as ord " +
-                                    "ON ord.guide_id = guides.id " +
-                                    "ORDER BY add_date_time DESC " +
-                                    "LIMIT " + pageSize
-                    )
-                    .addScalar("id", LongType.INSTANCE)
-                    .addScalar("creator_email", StringType.INSTANCE)
-                    .addScalar("title", StringType.INSTANCE)
-                    .addScalar("file_bytes", StringType.INSTANCE)
-                    .addScalar("edit_date", TimestampType.INSTANCE)
-                    .addScalar("is_blocked", BooleanType.INSTANCE);
+            NativeQuery<Object[]> allQuery = favoriteItemRepository.getAllPages(session, pageSizeInt, email);
 
             var list = query.list();
             var allList = allQuery.list();
 
-            for (var item : list) {
-                guides.add(new GuideDTO(
-                        (Long) item[0],
-                        (String) item[1],
-                        (String) item[2],
-                        (String) item[3],
-                        (Timestamp) item[4],
-                        (Boolean) item[5],
-                        checkIfAddedToFavorites((Long) item[0], email)
-                ));
-            }
-
-            for (var item : allList) {
-                allGuides.add(new GuideDTO(
-                        (Long) item[0],
-                        (String) item[1],
-                        (String) item[2],
-                        (String) item[3],
-                        (Timestamp) item[4],
-                        (Boolean) item[5],
-                        checkIfAddedToFavorites((Long) item[0], email)
-                ));
-            }
+            populateListsFromQueries(guides, allGuides, list, allList);
 
             session.getTransaction().commit();
         }
 
+        int pageAmount;
 
-        try {
-            var pageNumberInt = Integer.parseInt(cursor);
-            var pageSizeInt = Integer.parseInt(pageSize);
+        List<GuideInfoDTO> guideInfoList;
 
-            int pageAmount;
+        pageAmount = getTotalPages(pageSizeInt, guideHandleRepository.findByIds(guideIds).size());
+        if (cursorInt == FIRST_PAGE_CURSOR) {
+            guideInfoList = allGuides
+                    .stream()
+                    .map(guide -> new GuideInfoDTO(
+                            guide.getId(),
+                            guide.getCreatorEmail().getLogin(),
+                            guide.getTitle(),
+                            guide.getEditDate(),
+                            guide.getIsBlocked(),
+                            checkIfAddedToFavorites(guide.getId(), email)
+                    ))
+                    .toList();
+        } else {
+            guideInfoList = guides
+                    .stream()
+                    .map(guide -> new GuideInfoDTO(
+                            guide.getId(),
+                            guide.getCreatorEmail().getLogin(),
+                            guide.getTitle(),
+                            guide.getEditDate(),
+                            guide.getIsBlocked(),
+                            checkIfAddedToFavorites(guide.getId(), email)
+                    ))
+                    .toList();
+        }
 
-            List<GuideInfoDTO> guideInfoList;
+        return new GuideInfoPageResponse(
+                pageAmount,
+                guideInfoList,
+                cursorInt
+        );
+    }
 
-            if (pageNumberInt == -1) {
-                pageAmount = getTotalPages(pageSizeInt, guideHandleRepository.findByIds(guideIds).size());
-                guideInfoList = allGuides
-                        .stream()
-                        .map(guide -> new GuideInfoDTO(
-                                guide.getId(),
-                                guide.getCreatorLogin(),
-                                guide.getTitle(),
-                                guide.getEditDate(),
-                                guide.getIsBlocked(),
-                                checkIfAddedToFavorites(guide.getId(), email)
-                        ))
-                        .toList();
-            } else {
-                pageAmount = getTotalPages(pageSizeInt, guideHandleRepository.findByIds(guideIds).size());
-                guideInfoList = guides
-                        .stream()
-                        .map(guide -> new GuideInfoDTO(
-                                guide.getId(),
-                                guide.getCreatorLogin(),
-                                guide.getTitle(),
-                                guide.getEditDate(),
-                                guide.getIsBlocked(),
-                                checkIfAddedToFavorites(guide.getId(), email)
-                        ))
-                        .toList();
-            }
+    private void populateListsFromQueries(List<Guide> guides, List<Guide> allGuides, List<Object[]> list, List<Object[]> allList) {
+        for (var item : list) {
+            guides.add(new Guide(
+                    (Long) item[0],
+                    userRepository
+                            .findByEmail((String) item[1])
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found")),
+                    (String) item[2],
+                    (String) item[3],
+                    (Timestamp) item[4],
+                    (Boolean) item[5]
+            ));
+        }
 
-            return new GuideInfoPageResponse(
-                    pageAmount,
-                    guideInfoList,
-                    pageNumberInt
-            );
-        } catch (NumberFormatException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot parse Integer from Path variable");
+        for (var item : allList) {
+            allGuides.add(new Guide(
+                    (Long) item[0],
+                    userRepository
+                            .findByEmail((String) item[1])
+                            .orElseThrow(() -> new UsernameNotFoundException("User not found")),
+                    (String) item[2],
+                    (String) item[3],
+                    (Timestamp) item[4],
+                    (Boolean) item[5]
+            ));
         }
     }
 
