@@ -13,12 +13,10 @@ import com.server.services.FavoriteItemService;
 public class FavoriteItemController {
 
     private final FavoriteItemService favoriteItemService;
-    private final JwtPropertiesConfig jwtPropertiesConfig;
 
     @Autowired
-    public FavoriteItemController(FavoriteItemService favoriteItemService, JwtPropertiesConfig jwtPropertiesConfig) {
+    public FavoriteItemController(FavoriteItemService favoriteItemService) {
         this.favoriteItemService = favoriteItemService;
-        this.jwtPropertiesConfig = jwtPropertiesConfig;
     }
 
     @PostMapping
@@ -26,11 +24,11 @@ public class FavoriteItemController {
         favoriteItemService.addToFavorites(favoriteItem);
     }
 
-    @GetMapping("{email}/{pageNumber}/{pageSize}")
+    @GetMapping("{email}/{cursor}/{pageSize}")
     public GuideInfoPageResponse getFavorites(@PathVariable String email,
-                                              @PathVariable String pageNumber,
+                                              @PathVariable String cursor,
                                               @PathVariable String pageSize) {
-        return favoriteItemService.getFavorites(email, pageNumber, pageSize);
+        return favoriteItemService.getFavorites(email, cursor, pageSize);
     }
 
     @DeleteMapping

@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.type.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +24,7 @@ import java.util.List;
 @Service
 public class FavoriteItemService {
 
-    public static final int FIRST_PAGE_CURSOR = -1;
+    private static final int FIRST_PAGE_CURSOR = -1;
     private final FavoriteItemRepository favoriteItemRepository;
     private final GuideHandleRepository guideHandleRepository;
     private final UserRepository userRepository;
