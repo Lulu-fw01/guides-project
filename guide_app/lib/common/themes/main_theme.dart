@@ -8,6 +8,9 @@ class MainTheme {
   Color secondaryContainer = const Color(0xFFBDBDBD).withOpacity(0.35);
   static const Color readableText = Colors.black;
   Color onSurfaceVariant = const Color(0xFF2E1A7E).withOpacity(0.4);
+  static const errorRed = Color.fromARGB(255, 230, 115, 153);
+  static const successGreen = Color.fromARGB(255, 139, 223, 141);
+
   TextStyle smallInfoTextAuthor =
       GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w400);
   Color infoColor = const Color(0xFF2E1A7E).withOpacity(0.4);
@@ -25,6 +28,12 @@ class MainTheme {
       color: const Color(0xFF2E1A7E));
   TextStyle informationText = GoogleFonts.lato(
       fontSize: 16, fontWeight: FontWeight.w400, color: readableText);
+
+  /// [TextStyle] for snackbar text.
+  TextStyle snackBarInfoText = GoogleFonts.lato(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: const Color(0xFFF1F1F1));
 
   ThemeData get lightTheme {
     return ThemeData(

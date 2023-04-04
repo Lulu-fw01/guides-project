@@ -33,11 +33,16 @@ class SearchPage extends StatelessWidget {
               child: SearchInput(
                 onTextChange: (text) {
                   if (text.isEmpty) {
+                    // If search input is empty
+                    // then show no search results.
                     searchPageProvider.searchFinished();
                   } else {
+                    // If there were not search before
+                    // then start to show search results.
                     if (!searchPageProvider.isSearching()) {
                       searchPageProvider.searchStarted();
                     }
+                    // Start search event.
                     if (searchBloc.lastSearchPhrase != text) {
                       searchBloc.add(SearchGuidesByTitleEvent(
                           searchPhrase: text, pageNum: 0));

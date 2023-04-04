@@ -13,6 +13,7 @@ import '../../favorites/provider/favorites_content_provider.dart';
 import '../../favorites/provider/favorites_provider.dart';
 import '../../favorites/repository/favorites_repository.dart';
 import '../../favorites/screens/favorites_screen.dart';
+import '../../favorites/widgets/favorites_state_snack_bar.dart';
 import '../../guide/screens/guide_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../profile/provider/profile_provider.dart';
@@ -21,6 +22,7 @@ import '../../profile/widgets/profile_fab.dart';
 import '../../search/bloc/search_bloc.dart';
 import '../../search/client/search_client.dart';
 import '../../search/provider/search_page_provider.dart';
+import '../../search/provider/search_results_provider.dart';
 import '../../search/provider/search_screen_provider.dart';
 import '../../search/repository/search_repository.dart';
 import '../../search/screens/search_screen.dart';
@@ -49,6 +51,7 @@ class MainCoreState extends State<MainCore> {
   Widget build(BuildContext context) {
     final theme = Provider.of<MainTheme>(context);
     final credentials = UserCredentials.of(context);
+    // TODO move all providers to [CoreSettings].
     return MultiRepositoryProvider(
       // All repositories of app initialized here.
       providers: [
@@ -79,7 +82,9 @@ class MainCoreState extends State<MainCore> {
           ChangeNotifierProvider<FavoritesProvider>(
               create: (context) => FavoritesProvider()),
           ChangeNotifierProvider<FavoritesContentProvider>(
-              create: (context) => FavoritesContentProvider())
+              create: (context) => FavoritesContentProvider()),
+          ChangeNotifierProvider<SearchResultsProvider>(
+              create: (context) => SearchResultsProvider()),
 
           // TODO add later maybe.
           // ChangeNotifierProvider<SearchInputProvider>(
@@ -102,9 +107,10 @@ class MainCoreState extends State<MainCore> {
                           RepositoryProvider.of<FavoritesRepository>(context,
                               listen: false))
                     // Adding on guide added to favorites listeners.
-                    ..addOnAddedListener(
-                        Provider.of<SearchPageProvider>(context, listen: false)
-                            .toggleFavorites)
+                    ..addOnAddedListener(Provider.of<SearchResultsProvider>(
+                            context,
+                            listen: false)
+                        .toggleFavorites)
                     ..addOnAddedListener(
                         Provider.of<ProfileProvider>(context, listen: false)
                             .toggleFavorites)
@@ -113,9 +119,10 @@ class MainCoreState extends State<MainCore> {
                             listen: false)
                         .addToFavorites)
                     // Adding on guide removed from favorites listeners.
-                    ..addOnRemovedListener(
-                        Provider.of<SearchPageProvider>(context, listen: false)
-                            .toggleFavorites)
+                    ..addOnRemovedListener(Provider.of<SearchResultsProvider>(
+                            context,
+                            listen: false)
+                        .toggleFavorites)
                     ..addOnRemovedListener(
                         Provider.of<ProfileProvider>(context, listen: false)
                             .toggleFavorites)
@@ -129,18 +136,27 @@ class MainCoreState extends State<MainCore> {
                           RepositoryProvider.of<FavoritesRepository>(context,
                               listen: false))),
             ],
-            // TODO move scaffold inside another widget.
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildCoreAppBar(context, selectedPageIndex),
-              body: SafeArea(
-                  child: Container(
-                      color: Colors.white, child: _pages[selectedPageIndex])),
-              bottomNavigationBar: _buildBottomNavigationBar(theme),
-              floatingActionButton: selectedPageIndex == 3
-                  ? ProfileFab(
-                      onPressed: () => _onCreateNewGuidePressed(context))
-                  : null,
+            // TODO move this inside core_scaffold.dart.
+            child: BlocListener<FavoritesCubit, FavoritesState>(
+              listener: (context, state) {
+                final snack = buildFavoritesStateSnackBar(context, state);
+                if (snack == null) {
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(snack);
+              },
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: buildCoreAppBar(context, selectedPageIndex),
+                body: SafeArea(
+                    child: Container(
+                        color: Colors.white, child: _pages[selectedPageIndex])),
+                bottomNavigationBar: _buildBottomNavigationBar(theme),
+                floatingActionButton: selectedPageIndex == 3
+                    ? ProfileFab(
+                        onPressed: () => _onCreateNewGuidePressed(context))
+                    : null,
+              ),
             ),
           );
         }),

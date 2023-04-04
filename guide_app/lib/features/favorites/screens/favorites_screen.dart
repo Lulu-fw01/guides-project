@@ -7,6 +7,7 @@ import '../../../common/repository/guide/guide_repository.dart';
 import '../../guide/cubit/guide_view/guide_view_cubit.dart';
 import '../../guide/screens/guide_view_screen.dart';
 import '../cubit/favorites_page_cubit.dart';
+import '../provider/favorites_content_provider.dart';
 import '../provider/favorites_provider.dart';
 import '../widgets/favorites_page_core.dart';
 
@@ -28,7 +29,14 @@ class FavoritesScreen extends StatelessWidget {
             final favoritesPageCubit =
                 Provider.of<FavoritesPageCubit>(context, listen: false);
             favoritesPageCubit.isLoadingPage = true;
-            favoritesPageCubit.getNextPage(-1);
+            final cards =
+                Provider.of<FavoritesContentProvider>(context, listen: false)
+                    .guideCardDtos;
+            // If this page has never build before
+            // and we haven't added any guides to favorites then we send -1.
+            // If we have added guides to favorites then we
+            // download guides after last in list.
+            favoritesPageCubit.getNextPage(cards.isEmpty ? -1 : cards.last.id);
           }
           return const FavoritesPageCore();
         case FavoritesScreenState.viewGuide:
