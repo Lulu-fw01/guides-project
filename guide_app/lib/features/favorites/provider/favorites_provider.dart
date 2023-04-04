@@ -1,30 +1,14 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../common/dto/guide_card_dto.dart';
-
-/// This class contains data of favorites screen.
+/// This class controls favorites screen state.
 class FavoritesProvider extends ChangeNotifier {
-  List<GuideCardDto> guideCardDtos = [];
-
-  /// Number of current page.
-  int pageNum = 0;
-
-  /// Total number of pages.
-  int pagesAmount = 0;
-
   FavoritesScreenState favoritesScreenState =
       FavoritesScreenState.viewFavorites;
 
-  int? viewedGuideId = null;
+  int? viewedGuideId;
 
-  void reset() {
-    guideCardDtos.clear();
-    pageNum = 0;
-    pagesAmount = 0;
-  }
-
-  void setFavoritesScreenState(FavoritesScreenState favoritesScreenMode) {
-    favoritesScreenMode = favoritesScreenMode;
+  void setFavoritesScreenState(FavoritesScreenState newFavoritesScreenState) {
+    favoritesScreenState = newFavoritesScreenState;
     notifyListeners();
   }
 
@@ -38,22 +22,6 @@ class FavoritesProvider extends ChangeNotifier {
   /// Go to profile info screen.
   void showFavorites() {
     setFavoritesScreenState(FavoritesScreenState.viewFavorites);
-  }
-
-  bool isLastPage() {
-    return pageNum == pagesAmount;
-  }
-
-  void addToFavorites(GuideCardDto dto) {
-    guideCardDtos.insert(0, dto);
-    // TODO count inserted and removed elements.
-    notifyListeners();
-  }
-
-  void removeFromFavorites(GuideCardDto dto) {
-    guideCardDtos.removeWhere((element) => element == dto);
-    // TODO count inserted and removed elements.
-    notifyListeners();
   }
 }
 

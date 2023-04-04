@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/full_screen_error.dart';
 import '../cubit/favorites_page_cubit.dart';
-import '../provider/favorites_provider.dart';
+import '../provider/favorites_content_provider.dart';
 import 'favorites_page_content.dart';
 
 /// Class which contains BlocConsumer for controlling loading favorites page.
@@ -26,46 +25,49 @@ class FavoritesPageCore extends StatelessWidget {
             content: Text(state.errorMessage)));
       }
     }), builder: (context, state) {
-      final favoritesProvider =
-          Provider.of<FavoritesProvider>(context, listen: false);
+      final favoritesContentProvider =
+          Provider.of<FavoritesContentProvider>(context, listen: false);
       final favoritesPageCubit =
           Provider.of<FavoritesPageCubit>(context, listen: false);
 
       if (state is LoadingFavoritesPageState &&
-          favoritesProvider.guideCardDtos.isEmpty) {
+          favoritesContentProvider.guideCardDtos.isEmpty) {
         return Center(
             child: CircularProgressIndicator(
           color: theme.onSurface,
         ));
-      } else if (state is SuccessFavoritesPageState) {
-        // TODO maybe check page number.
+      } else if (state is SuccessFavoritesPageState &&
+          favoritesPageCubit.isLoadingPage) {
+        // We should not get values from here every build.
+        // Add card only if they were already loaded.
         if (state.nextPage.guideCardDtos.isNotEmpty) {
           final page = state.nextPage;
-          favoritesProvider.guideCardDtos.addAll(page.guideCardDtos);
-          favoritesProvider.pageNum++;
+          favoritesContentProvider.guideCardDtos.addAll(page.guideCardDtos);
+          favoritesContentProvider.pageNum++;
           favoritesPageCubit.isLoadingPage = false;
           // If it is first page we set pagesAmount
           // because we should not upload more pages than we have.
           if (page.pageNum == 0) {
-            favoritesProvider.pagesAmount = page.pageAmount;
+            favoritesContentProvider.pagesAmount = page.pageAmount;
           }
         }
       } else if (state is ErrorFavoritesPageState &&
-          favoritesProvider.guideCardDtos.isEmpty) {
+          favoritesContentProvider.guideCardDtos.isEmpty) {
         return FullScreenError(
           // TODO maybe change to refresh().
-          onPressed: () => favoritesPageCubit.getNextPage(0),
+          onPressed: () => favoritesPageCubit.getNextPage(-1),
           message: state.errorMessage,
         );
-      } else if (state is RefreshSuccessFavoritesPageState) {
+      } else if (state is RefreshSuccessFavoritesPageState &&
+          favoritesPageCubit.isLoadingPage) {
+        // We should not get values from here every build.
+        // Add card only if they were already loaded.
         final page = state.nextPage;
-        favoritesProvider.reset();
-        favoritesProvider.guideCardDtos.addAll(page.guideCardDtos);
-        favoritesProvider.pageNum++;
+        favoritesContentProvider.reset();
+        favoritesContentProvider.guideCardDtos.addAll(page.guideCardDtos);
+        favoritesContentProvider.pageNum++;
         favoritesPageCubit.isLoadingPage = false;
-        if (page.pageNum == 0) {
-          favoritesProvider.pagesAmount = page.pageAmount;
-        }
+        favoritesContentProvider.pagesAmount = page.pageAmount;
       }
       return FavoritesPageContent();
     });

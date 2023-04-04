@@ -17,12 +17,12 @@ class FavoritesPageCubit extends Cubit<FavoritesPageState> {
   final log = Logger('FavoritesPageCubit');
 
   /// Load next page of favorites guides.
-  /// [pageNum] - number of page to be loaded.
-  void getNextPage(int pageNum) async {
+  /// [cursor] - id of the last guide.
+  void getNextPage(int cursor) async {
     emit(LoadingFavoritesPageState());
     try {
-      final nextPage = await favoritesRepository.getFavorites(pageNum);
-      log.fine('Favorites page $pageNum was loaded.');
+      final nextPage = await favoritesRepository.getFavorites(cursor);
+      log.fine('Favorites page with $cursor was loaded.');
       emit(SuccessFavoritesPageState(nextPage));
     } on ResponseException catch (e) {
       String message = e.responseBody != null ? e.responseBody!.message : '';
@@ -39,7 +39,7 @@ class FavoritesPageCubit extends Cubit<FavoritesPageState> {
   Future<void> refresh() async {
     emit(RefreshLoadingFavoritesPageState());
     try {
-      final nextPage = await favoritesRepository.getFavorites(0);
+      final nextPage = await favoritesRepository.getFavorites(-1);
       log.fine('Favorites page refresh successful.');
       emit(RefreshSuccessFavoritesPageState(nextPage));
     } on ResponseException catch (e) {

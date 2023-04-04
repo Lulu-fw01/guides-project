@@ -22,12 +22,13 @@ class FavoritesScreen extends StatelessWidget {
         builder: (context, favoritesProvider, child) {
       switch (favoritesProvider.favoritesScreenState) {
         case FavoritesScreenState.viewFavorites:
-          // Call getNextPage only if there were no calls before.
-          if (favoritesProvider.pageNum == 0 &&
-              Provider.of<FavoritesPageCubit>(context, listen: false).state
-                  is FavoritesPageInitial) {
-            Provider.of<FavoritesPageCubit>(context, listen: false)
-                .getNextPage(0);
+          // Loading first page if it was not loaded before.
+          if (Provider.of<FavoritesPageCubit>(context, listen: false).state
+              is FavoritesPageInitial) {
+            final favoritesPageCubit =
+                Provider.of<FavoritesPageCubit>(context, listen: false);
+            favoritesPageCubit.isLoadingPage = true;
+            favoritesPageCubit.getNextPage(-1);
           }
           return const FavoritesPageCore();
         case FavoritesScreenState.viewGuide:

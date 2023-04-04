@@ -7,6 +7,7 @@ import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
 import '../cubit/favorites_cubit.dart';
 import '../cubit/favorites_page_cubit.dart';
+import '../provider/favorites_content_provider.dart';
 import '../provider/favorites_provider.dart';
 
 /// Display cards that were added to favorites.
@@ -24,13 +25,15 @@ class FavoritesPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final favoritesPageCubit =
         Provider.of<FavoritesPageCubit>(context, listen: false);
-    final favoritesProvider = Provider.of<FavoritesProvider>(context);
+    final favoritesProvider =
+        Provider.of<FavoritesProvider>(context, listen: false);
     final theme = Provider.of<MainTheme>(context);
     final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
+    final favoritesContentProvider =
+        Provider.of<FavoritesContentProvider>(context);
 
     List<Widget> list = [];
-    list.add(_loadingRefreshProgress(theme));
-    list.addAll(favoritesProvider.guideCardDtos
+    list.addAll(favoritesContentProvider.guideCardDtos
         .map(
           (dto) => GuideCard(
             dto,
@@ -80,9 +83,10 @@ class FavoritesPageContent extends StatelessWidget {
               if (_scrollController.offset ==
                       _scrollController.position.maxScrollExtent &&
                   !favoritesPageCubit.isLoadingPage &&
-                  !favoritesProvider.isLastPage()) {
+                  !favoritesContentProvider.isLastPage()) {
                 favoritesPageCubit.isLoadingPage = true;
-                favoritesPageCubit.getNextPage(favoritesProvider.pageNum);
+                favoritesPageCubit.getNextPage(
+                    favoritesContentProvider.guideCardDtos.last.id);
               }
             }),
           itemCount: list.length,
@@ -90,6 +94,7 @@ class FavoritesPageContent extends StatelessWidget {
         ));
   }
 
+  // TODO move to common.
   Widget _loadingProgress(MainTheme theme) {
     return BlocSelector<FavoritesPageCubit, FavoritesPageState, bool>(
         selector: (state) => state is LoadingFavoritesPageState,
@@ -105,6 +110,7 @@ class FavoritesPageContent extends StatelessWidget {
             : Container());
   }
 
+  // TODO remove from here.
   Widget _loadingRefreshProgress(MainTheme theme) {
     return BlocSelector<FavoritesPageCubit, FavoritesPageState, bool>(
         selector: (state) => state is RefreshLoadingFavoritesPageState,

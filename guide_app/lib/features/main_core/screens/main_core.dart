@@ -9,6 +9,7 @@ import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/client/favorites_client.dart';
 import '../../favorites/cubit/favorites_cubit.dart';
 import '../../favorites/cubit/favorites_page_cubit.dart';
+import '../../favorites/provider/favorites_content_provider.dart';
 import '../../favorites/provider/favorites_provider.dart';
 import '../../favorites/repository/favorites_repository.dart';
 import '../../favorites/screens/favorites_screen.dart';
@@ -77,6 +78,8 @@ class MainCoreState extends State<MainCore> {
               create: (context) => SearchPageProvider()),
           ChangeNotifierProvider<FavoritesProvider>(
               create: (context) => FavoritesProvider()),
+          ChangeNotifierProvider<FavoritesContentProvider>(
+              create: (context) => FavoritesContentProvider())
 
           // TODO add later maybe.
           // ChangeNotifierProvider<SearchInputProvider>(
@@ -105,9 +108,10 @@ class MainCoreState extends State<MainCore> {
                     ..addOnAddedListener(
                         Provider.of<ProfileProvider>(context, listen: false)
                             .toggleFavorites)
-                    ..addOnAddedListener(
-                        Provider.of<FavoritesProvider>(context, listen: false)
-                            .addToFavorites)
+                    ..addOnAddedListener(Provider.of<FavoritesContentProvider>(
+                            context,
+                            listen: false)
+                        .addToFavorites)
                     // Adding on guide removed from favorites listeners.
                     ..addOnRemovedListener(
                         Provider.of<SearchPageProvider>(context, listen: false)
@@ -116,7 +120,8 @@ class MainCoreState extends State<MainCore> {
                         Provider.of<ProfileProvider>(context, listen: false)
                             .toggleFavorites)
                     ..addOnRemovedListener(
-                        Provider.of<FavoritesProvider>(context, listen: false)
+                        Provider.of<FavoritesContentProvider>(context,
+                                listen: false)
                             .removeFromFavorites)),
               BlocProvider<FavoritesPageCubit>(
                   create: (context) => FavoritesPageCubit(

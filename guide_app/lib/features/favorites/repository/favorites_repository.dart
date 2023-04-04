@@ -27,15 +27,16 @@ class FavoritesRepository
   }
 
   /// Get page of user's favorite guides.
+  /// [cursor] - id of the lat guide
+  /// in last page. [cursor] is equal to -1
+  /// if requesting first page.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
-  Future<GuideCardsPage> getFavorites(int pageNum) async {
+  Future<GuideCardsPage> getFavorites(int cursor) async {
     // TODO remove later this delay only for testing.
     await Future.delayed(const Duration(seconds: 2));
-    if (pageNum < 0) {
-      // TODO throw exception.
-    }
-    final response = await favoritesClient.getFavorites(email, pageNum, 8);
+
+    final response = await favoritesClient.getFavorites(email, cursor, 8);
     if (response.statusCode != 200) {
       throwError(response);
     }
@@ -44,6 +45,8 @@ class FavoritesRepository
   }
 
   /// Remove guide from favorites.
+  /// [guideId] - id of the guide
+  /// to be removed from favorites.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<void> removeFromFavorites(int guideId) async {

@@ -41,7 +41,7 @@ class FavoritesClient implements IFavoritesClient {
   /// Pageable request.
   /// <p>
   /// [userEmail] - user's email.
-  /// [pageNum] - number of page.
+  /// [cursor] - id of last guide in last page.
   /// [pageSize] - size of page.
   /// <p>
   /// Returns [http.Response].
@@ -51,9 +51,9 @@ class FavoritesClient implements IFavoritesClient {
   /// Author - @Lulu-fw01.
   @override
   Future<http.Response> getFavorites(
-      String userEmail, int pageNum, int pageSize) async {
+      String userEmail, int cursor, int pageSize) async {
     var url =
-        Uri.parse('${ApiConstants.favoritesUri}/$userEmail/$pageNum/$pageSize');
+        Uri.parse('${ApiConstants.favoritesUri}/$userEmail/$cursor/$pageSize');
     try {
       var response = await http.get(
         url,
