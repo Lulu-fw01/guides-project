@@ -177,45 +177,52 @@ class MainCoreState extends State<MainCore> {
   }
 
   // TODO later use widget from core_navigation_bar.
-  Widget _buildBottomNavigationBar(MainTheme theme) => NavigationBar(
-          height: 80,
-          selectedIndex: selectedPageIndex,
-          backgroundColor: theme.surface,
-          onDestinationSelected: (int index) {
-            setState(() {
-              selectedPageIndex = index;
-            });
-          },
-          destinations: [
-            NavigationDestination(
-                icon: const Icon(Icons.home_outlined),
-                selectedIcon: Icon(
-                  Icons.home,
-                  color: theme.onSurface,
-                ),
-                label: "Главное"),
-            NavigationDestination(
-                icon: const Icon(
-                  Icons.search_outlined,
-                ),
-                selectedIcon: Icon(
-                  Icons.search,
-                  color: theme.onSurface,
-                ),
-                label: "Поиск"),
-            NavigationDestination(
-                icon: const Icon(Icons.bookmarks_outlined),
-                selectedIcon: Icon(
-                  Icons.bookmarks,
-                  color: theme.onSurface,
-                ),
-                label: "Избранное"),
-            NavigationDestination(
-                icon: const Icon(Icons.person_outline),
-                selectedIcon: Icon(
-                  Icons.person,
-                  color: theme.onSurface,
-                ),
-                label: "Профиль")
-          ]);
+  Widget _buildBottomNavigationBar(MainTheme theme) => Container(
+        decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  width: 1, color: theme.onSurface.withOpacity(0.4))),
+        ),
+        child: NavigationBar(
+            height: 80,
+            selectedIndex: selectedPageIndex,
+            backgroundColor: theme.readableBackColor,
+            onDestinationSelected: (int index) {
+              setState(() {
+                selectedPageIndex = index;
+              });
+            },
+            destinations: [
+              NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: Icon(
+                    Icons.home,
+                    color: theme.onSurface,
+                  ),
+                  label: "Главное"),
+              NavigationDestination(
+                  icon: const Icon(
+                    Icons.search_outlined,
+                  ),
+                  selectedIcon: Icon(
+                    Icons.search,
+                    color: theme.onSurface,
+                  ),
+                  label: "Поиск"),
+              NavigationDestination(
+                  icon: const Icon(Icons.bookmarks_outlined),
+                  selectedIcon: Icon(
+                    Icons.bookmarks,
+                    color: theme.onSurface,
+                  ),
+                  label: "Избранное"),
+              NavigationDestination(
+                  icon: const Icon(Icons.person_outline),
+                  selectedIcon: Icon(
+                    Icons.person,
+                    color: theme.onSurface,
+                  ),
+                  label: "Профиль")
+            ]),
+      );
 }
