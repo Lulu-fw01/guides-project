@@ -1,12 +1,19 @@
 import 'package:flutter/widgets.dart';
 
+import '../dto/user_info_dto.dart';
+
 class UserCredentials extends InheritedWidget {
   const UserCredentials(
-      {super.key, required this.email, required this.token, child})
+      {super.key,
+      required this.email,
+      required this.token,
+      required this.userInfo,
+      child})
       : super(child: child);
 
   final String email;
   final String token;
+  final UserInfoDto userInfo;
 
   static UserCredentials? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<UserCredentials>();
