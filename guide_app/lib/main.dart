@@ -27,12 +27,14 @@ void main() async {
 
   token = await repo.getToken();
   email = await repo.getEmail();
-
-  runApp(const MyApp());
+  runApp(MyApp(
+    repo: repo,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.repo});
+  final CredentialsRepository repo;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,8 @@ class MyApp extends StatelessWidget {
         home: Provider<MainTheme>.value(
           value: appTheme,
           child: BlocProvider(
-            create: (BuildContext context) => InitCubit(email, token),
+            create: (BuildContext context) =>
+                InitCubit(email, token, credentialsRepository: repo),
             child: BlocBuilder<InitCubit, InitState>(builder: (context, state) {
               if (state is InitAuthorized) {
                 return UserCredentials(

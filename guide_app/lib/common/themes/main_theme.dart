@@ -35,6 +35,11 @@ class MainTheme {
       fontWeight: FontWeight.normal,
       color: const Color(0xFFF1F1F1));
 
+  TextStyle bottomSheetRedText = GoogleFonts.lato(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: const Color.fromARGB(255, 230, 115, 153));
+
   ThemeData get lightTheme {
     return ThemeData(
         useMaterial3: true,
