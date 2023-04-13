@@ -33,7 +33,8 @@ class SearchResultsCore extends StatelessWidget {
             child: CircularProgressIndicator(
           color: theme.onSurface,
         ));
-      } else if (state is SearchByTitleSuccessState) {
+      } else if (state is SearchByTitleSuccessState &&
+          state.searchPhrase != searchResultsProvider.searchPhrase) {
         final searchBloc = Provider.of<SearchBloc>(context, listen: false);
         // TODO maybe check page number.
         if (state.nextPage.guideCardDtos.isNotEmpty) {

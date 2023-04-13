@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/widgets/user_credentials.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
 import '../cubit/favorites_cubit.dart';
@@ -29,6 +31,9 @@ class FavoritesPageContent extends StatelessWidget {
         Provider.of<FavoritesProvider>(context, listen: false);
     final theme = Provider.of<MainTheme>(context);
     final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
+    final guideUtilsCubit =
+        Provider.of<GuideUtilsCubit>(context, listen: false);
+    final credentials = UserCredentials.of(context);
     final favoritesContentProvider =
         Provider.of<FavoritesContentProvider>(context);
 
@@ -43,6 +48,11 @@ class FavoritesPageContent extends StatelessWidget {
             onFavoritesButtonClick: () {
               favoritesCubit.toggleFavorite(dto);
             },
+            onRemove: dto.author == credentials.userLogin
+                ? () {
+                    guideUtilsCubit.removeGuide(dto.id);
+                  }
+                : null,
           ),
         )
         .toList());

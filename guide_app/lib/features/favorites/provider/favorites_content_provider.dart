@@ -33,4 +33,10 @@ class FavoritesContentProvider extends ChangeNotifier {
     guideCardDtos.removeWhere((element) => element == dto);
     notifyListeners();
   }
+
+  /// Remove guide.
+  void removeGuide(int guideId) {
+    guideCardDtos.removeWhere((element) => element.id == guideId);
+    notifyListeners();
+  }
 }

@@ -130,6 +130,7 @@ class GuideEditScreenState extends State<GuideEditScreen> {
       showListCheck: false,
       showRedo: false,
       showUndo: false,
+      showLink: false,
     );
   }
 

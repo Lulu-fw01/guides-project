@@ -28,4 +28,6 @@ class UserCredentials extends InheritedWidget {
   @override
   bool updateShouldNotify(covariant UserCredentials oldCredentials) =>
       email != oldCredentials.email || token != oldCredentials.token;
+
+  String get userLogin => userInfo.login;
 }

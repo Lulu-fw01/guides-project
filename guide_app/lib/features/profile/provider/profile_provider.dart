@@ -56,6 +56,12 @@ class ProfileProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {}
   }
+
+  /// Remove guide.
+  void removeGuide(int guideId) {
+    guideCardDtos.removeWhere((element) => element.id == guideId);
+    notifyListeners();
+  }
 }
 
 enum ProfileScreenMode { profileInfo, viewGuide }

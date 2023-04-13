@@ -85,4 +85,28 @@ class GuideClient implements IGuideClient {
       throw FetchDataException(e.toString());
     }
   }
+
+  /// RemoveGuide by id.
+  /// <p>
+  /// [guideId] - guide id.
+  /// <p>
+  /// Returns [http.Response].
+  /// <p>
+  /// Throws [FetchDataException].
+  /// <p>
+  /// Author - @Lulu-fw01.
+  @override
+  Future<http.Response> removeGuide(int guideId) {
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl}${ApiConstants.guideHandling}/$guideId");
+    try {
+      var response = http.delete(url, headers: {
+        "Authorization": 'Bearer $token',
+        "Content-Type": "application/json"
+      });
+      return response;
+    } catch (e) {
+      throw FetchDataException(e.toString());
+    }
+  }
 }
