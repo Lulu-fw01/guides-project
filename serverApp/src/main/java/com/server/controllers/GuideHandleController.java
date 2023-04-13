@@ -23,8 +23,8 @@ public class GuideHandleController {
         guideHandleService.createGuide(guide);
     }
 
-    @DeleteMapping
-    public void removeGuide(@RequestBody Long id) {
+    @DeleteMapping("/{id}")
+    public void removeGuide(@PathVariable Long id) {
         guideHandleService.removeGuide(id);
     }
 

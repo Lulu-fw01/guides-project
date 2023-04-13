@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/cubit/favorites_cubit.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
@@ -26,6 +28,9 @@ class ProfileContent extends StatelessWidget {
     final profileCubit = Provider.of<ProfileCubit>(context, listen: false);
     final profileProvider = Provider.of<ProfileProvider>(context);
     final theme = Provider.of<MainTheme>(context);
+    final guideUtilsCubit =
+        Provider.of<GuideUtilsCubit>(context, listen: false);
+    final credentials = UserCredentials.of(context);
     final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
 
     List<Widget> list = [];
@@ -40,6 +45,11 @@ class ProfileContent extends StatelessWidget {
             onFavoritesButtonClick: () {
               favoritesCubit.toggleFavorite(dto);
             },
+            onRemove: dto.author == credentials.userLogin
+                ? () {
+                    guideUtilsCubit.removeGuide(dto.id);
+                  }
+                : null,
           ),
         )
         .toList());

@@ -3,18 +3,27 @@ import 'package:provider/provider.dart';
 
 import '../dto/guide_card_dto.dart';
 import '../themes/main_theme.dart';
+import 'guide_card_popup_menu_btn.dart';
 
 /// Guide card widget.
 /// v1.
 /// Author: @Lulu-fw01
 class GuideCard extends StatelessWidget {
-  const GuideCard(this.guideCardDto,
-      {required this.onClick, required this.onFavoritesButtonClick, super.key});
+  const GuideCard(
+    this.guideCardDto, {
+    super.key,
+    required this.onClick,
+    required this.onFavoritesButtonClick,
+    this.onEdit,
+    this.onRemove,
+  });
 
   /// Guide card data.
   final GuideCardDto guideCardDto;
   final void Function() onClick;
   final void Function() onFavoritesButtonClick;
+  final void Function()? onEdit;
+  final void Function()? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +92,13 @@ class GuideCard extends StatelessWidget {
                       icon: guideCardDto.addedToFavorites
                           ? const Icon(Icons.bookmark)
                           : const Icon(Icons.bookmark_add_outlined)),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_horiz),
+                  // IconButton(
+                  //   onPressed: () {},
+                  //   icon: const Icon(Icons.more_horiz),
+                  // )
+                  GuideCardPopupMenuBtn(
+                    onEdit: onEdit,
+                    onRemove: onRemove,
                   )
                 ],
               )

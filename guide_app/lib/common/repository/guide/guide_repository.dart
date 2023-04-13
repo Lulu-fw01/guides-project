@@ -67,7 +67,7 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   }
 
   /// Get guide by id.
-  /// [if] guide id.
+  /// [guideId] guide id.
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideDto> getGuideById(int guideId) async {
@@ -78,5 +78,16 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
       throwError(response);
     }
     return GuideDto.fromJson(jsonDecode(response.body));
+  }
+
+  /// Remove guide.
+  /// [guideId] guide id.
+  /// * Throws: see [ExceptionResponseMixin.throwError].
+  @override
+  Future<void> removeGuide(int guideId) async {
+    final response = await guideClient.removeGuide(guideId);
+    if (response.statusCode != 200) {
+      throwError(response);
+    }
   }
 }

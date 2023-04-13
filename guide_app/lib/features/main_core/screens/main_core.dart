@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/widgets/snack_bars.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
+import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/user_credentials.dart';
@@ -101,6 +103,7 @@ class MainCoreState extends State<MainCore> {
                       searchRepository: RepositoryProvider.of<SearchRepository>(
                           context,
                           listen: false))),
+              // Favorites cubit settings.
               BlocProvider<FavoritesCubit>(
                   create: (context) => FavoritesCubit(
                       favoritesRepository:
@@ -135,6 +138,23 @@ class MainCoreState extends State<MainCore> {
                       favoritesRepository:
                           RepositoryProvider.of<FavoritesRepository>(context,
                               listen: false))),
+              // Guide utils cubit settings.
+              BlocProvider<GuideUtilsCubit>(
+                  create: ((context) => GuideUtilsCubit(
+                      guideRepository: RepositoryProvider.of<GuideRepository>(
+                          context,
+                          listen: false))
+                    ..addOnGuideRemoveListener(
+                        (Provider.of<SearchResultsProvider>(context,
+                                listen: false)
+                            .removeGuide))
+                    ..addOnGuideRemoveListener(
+                        Provider.of<ProfileProvider>(context, listen: false)
+                            .removeGuide)
+                    ..addOnGuideRemoveListener(
+                        Provider.of<FavoritesContentProvider>(context,
+                                listen: false)
+                            .removeGuide)))
             ],
             // TODO move this inside core_scaffold.dart.
             child: BlocListener<FavoritesCubit, FavoritesState>(
@@ -145,17 +165,27 @@ class MainCoreState extends State<MainCore> {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(snack);
               },
-              child: Scaffold(
-                backgroundColor: Colors.white,
-                appBar: buildCoreAppBar(context, selectedPageIndex),
-                body: SafeArea(
-                    child: Container(
-                        color: Colors.white, child: _pages[selectedPageIndex])),
-                bottomNavigationBar: _buildBottomNavigationBar(theme),
-                floatingActionButton: selectedPageIndex == 3
-                    ? ProfileFab(
-                        onPressed: () => _onCreateNewGuidePressed(context))
-                    : null,
+              child: BlocListener<GuideUtilsCubit, GuideUtilsState>(
+                listener: (context, state) {
+                  final snack = buildGuideUtilsSnackBar(context, state);
+                  if (snack == null) {
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(snack);
+                },
+                child: Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: buildCoreAppBar(context, selectedPageIndex),
+                  body: SafeArea(
+                      child: Container(
+                          color: Colors.white,
+                          child: _pages[selectedPageIndex])),
+                  bottomNavigationBar: _buildBottomNavigationBar(theme),
+                  floatingActionButton: selectedPageIndex == 3
+                      ? ProfileFab(
+                          onPressed: () => _onCreateNewGuidePressed(context))
+                      : null,
+                ),
               ),
             ),
           );

@@ -8,4 +8,5 @@ class ApiConstants {
   static String searchByAuthorLoginUri = '$baseUrl/search/username';
   static String searchByCategoryNameUri = '$baseUrl/search/category';
   static String favoritesUri = '$baseUrl/favorites';
+  static String users = '$baseUrl/users';
 }

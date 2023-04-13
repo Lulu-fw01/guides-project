@@ -6,10 +6,10 @@ part 'user_info_dto.g.dart';
 /// For code generation run  flutter pub run build_runner build --delete-conflicting-outputs.
 @JsonSerializable()
 class UserInfoDto {
-  UserInfoDto(this.email, this.login, this.birthday, this.role, this.isBlocked);
+  UserInfoDto(this.email, this.login, this.role, this.isBlocked);
   final String email;
   final String login;
-  final DateTime birthday;
+  //final DateTime birthday;
   final String role;
   final bool isBlocked;
 

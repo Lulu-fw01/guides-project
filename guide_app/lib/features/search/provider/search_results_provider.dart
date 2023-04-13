@@ -28,4 +28,10 @@ class SearchResultsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {}
   }
+
+  /// Remove guide.
+  void removeGuide(int guideId) {
+    guideCardDtos.removeWhere((element) => element.id == guideId);
+    notifyListeners();
+  }
 }
