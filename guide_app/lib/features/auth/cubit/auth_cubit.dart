@@ -47,6 +47,6 @@ class AuthCubit extends Cubit<AuthState> {
       },
       test: (error) => error is AppException,
     );
-    // TODO add logic for other errors.
+    // TODO rewrite and add logic for other errors.
   }
 }

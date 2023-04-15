@@ -13,7 +13,6 @@ class GuideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO add different variations of screen: edit, watch.
     return BlocProvider(
         // TODO move repository in reository provider in main screen.
         create: (context) => GuideCubit(

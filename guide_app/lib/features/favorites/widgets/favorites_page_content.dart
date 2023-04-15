@@ -120,19 +120,4 @@ class FavoritesPageContent extends StatelessWidget {
             : Container());
   }
 
-  // TODO remove from here.
-  Widget _loadingRefreshProgress(MainTheme theme) {
-    return BlocSelector<FavoritesPageCubit, FavoritesPageState, bool>(
-        selector: (state) => state is RefreshLoadingFavoritesPageState,
-        builder: (context, isLoading) => isLoading
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: CircularProgressIndicator(
-                    color: theme.onSurface,
-                  ),
-                ),
-              )
-            : Container());
-  }
 }
