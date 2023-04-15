@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.dto.JwtResponseDTO;
@@ -18,12 +19,14 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("sign-up")
+    @Operation(summary = "Sign up")
     public JwtResponseDTO register(@RequestBody RegisterDTO registerRequestBody) {
         return authenticationService.register(registerRequestBody);
     }
 
     @PostMapping
+    @Operation(summary = "Authenticate")
     public JwtResponseDTO login(@RequestBody LoginDTO loginRequestBody) {
         return authenticationService.login(loginRequestBody);
     }

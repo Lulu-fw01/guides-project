@@ -1,6 +1,8 @@
 package com.server.controllers;
 
 import com.server.dto.TagDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 import com.server.services.TagService;
 
@@ -17,16 +19,22 @@ public class TagController {
     }
 
     @PostMapping
+    @Operation(summary = "Create tag for guide")
+    @SecurityRequirement(name = "Bearer Authentication")
     public void addTag(@RequestBody TagDTO tag) {
         tagService.addTag(tag);
     }
 
     @GetMapping
+    @Operation(summary = "Get tags for a guide")
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<String> getTags(@RequestBody Long id) {
         return tagService.getTags(id);
     }
 
     @DeleteMapping
+    @Operation(summary = "Remove tag from a guide")
+    @SecurityRequirement(name = "Bearer Authentication")
     public void removeTag(@RequestBody TagDTO tag) {
         tagService.deleteTag(tag);
     }
