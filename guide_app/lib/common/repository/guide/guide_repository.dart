@@ -52,11 +52,6 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideCardsPage> getGuideCardsByUser(int pageNumber) async {
-    // TODO remove later this delay only for testing.
-    await Future.delayed(Duration(seconds: 2));
-    if (pageNumber < 0) {
-      // TODO throw exception.
-    }
     final dto = UserGuidePageDto.standardPage(email, pageNumber);
     final response = await guideClient.getGuideCardsByUser(dto);
     if (response.statusCode != 200) {
@@ -71,8 +66,6 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideDto> getGuideById(int guideId) async {
-    // TODO remove later this delay only for testing.
-    await Future.delayed(Duration(seconds: 2));
     final response = await guideClient.getGuideById(guideId);
     if (response.statusCode != 200) {
       throwError(response);
