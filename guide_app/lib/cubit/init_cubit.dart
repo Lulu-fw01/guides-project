@@ -36,6 +36,8 @@ class InitCubit extends Cubit<InitState> {
       emit(InitUnauthorized());
     } on AppException catch (e) {
       emit(InitUnauthorized());
+    } catch (e) {
+      emit(InitUnauthorized());
     }
   }
 
