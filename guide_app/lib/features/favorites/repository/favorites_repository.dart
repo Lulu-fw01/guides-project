@@ -33,9 +33,6 @@ class FavoritesRepository
   /// * Throws: see [ExceptionResponseMixin.throwError].
   @override
   Future<GuideCardsPage> getFavorites(int cursor) async {
-    // TODO remove later this delay only for testing.
-    await Future.delayed(const Duration(seconds: 2));
-
     final response = await favoritesClient.getFavorites(email, cursor, 8);
     if (response.statusCode != 200) {
       throwError(response);
