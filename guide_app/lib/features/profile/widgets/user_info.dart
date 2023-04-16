@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/features/profile/dto/user_info_dto.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/dto/user_info_dto.dart';
+import '../../../common/themes/main_theme.dart';
 
 class UserInfo extends StatelessWidget {
   const UserInfo({super.key, required this.userInfoDto});

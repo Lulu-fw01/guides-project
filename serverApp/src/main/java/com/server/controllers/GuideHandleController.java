@@ -27,10 +27,10 @@ public class GuideHandleController {
         guideHandleService.createGuide(guide);
     }
 
-    @DeleteMapping
     @Operation(summary = "Remove guide")
     @SecurityRequirement(name = "Bearer Authentication")
-    public void removeGuide(@RequestBody Long id) {
+    @DeleteMapping("/{id}")
+    public void removeGuide(@PathVariable Long id) {
         guideHandleService.removeGuide(id);
     }
 

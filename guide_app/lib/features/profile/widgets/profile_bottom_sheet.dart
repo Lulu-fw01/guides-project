@@ -20,7 +20,7 @@ class ProfileBottomSheet extends StatelessWidget {
           ),
           title: Text(
             'Выйти',
-            style: theme.bottomSheetRedText,
+            style: theme.buttonsRedText,
           ),
           onTap: () {
             onLogout();

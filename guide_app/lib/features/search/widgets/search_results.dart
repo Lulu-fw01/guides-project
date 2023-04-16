@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/cubit/favorites_cubit.dart';
 import '../bloc/search_bloc.dart';
 import '../provider/search_page_provider.dart';
@@ -23,6 +25,9 @@ class SearchResults extends StatelessWidget {
     final searchPageProvider =
         Provider.of<SearchPageProvider>(context, listen: false);
     final searchResultsProvider = Provider.of<SearchResultsProvider>(context);
+    final guideUtilsCubit =
+        Provider.of<GuideUtilsCubit>(context, listen: false);
+    final credentials = UserCredentials.of(context);
     final theme = Provider.of<MainTheme>(context);
     final favoritesCubit = Provider.of<FavoritesCubit>(context, listen: false);
 
@@ -38,6 +43,11 @@ class SearchResults extends StatelessWidget {
             onFavoritesButtonClick: () {
               favoritesCubit.toggleFavorite(dto);
             },
+            onRemove: dto.author == credentials.userLogin
+                ? () {
+                    guideUtilsCubit.removeGuide(dto.id);
+                  }
+                : null,
           ),
         )
         .toList());
