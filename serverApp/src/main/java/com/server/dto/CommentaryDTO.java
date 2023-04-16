@@ -11,8 +11,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class CommentaryDTO {
 
-    private Long id;
-
     private String userEmail;
 
     private Long guideId;

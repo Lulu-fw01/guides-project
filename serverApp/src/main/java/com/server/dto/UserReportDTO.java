@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserReportDTO {
-    private Long id;
-
     private String reporterEmail;
 
     private String violatorEmail;
@@ -19,6 +17,4 @@ public class UserReportDTO {
     private String comment;
 
     private ReportCategory reportCategory;
-
-    private ReportStatus reportStatus;
 }

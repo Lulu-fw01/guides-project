@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InteractionDTO {
-    private String userEmail;
+public class EditGuideDTO {
+    private Long id;
 
-    private Long guideId;
+    private String title;
 
-    private Integer usersMark;
+    private String contents;
 }

@@ -1,5 +1,8 @@
 package com.server.controllers;
 
+import com.server.dto.CommentaryIdDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 import com.server.dto.CommentaryDTO;
 import com.server.services.CommentaryService;
@@ -18,19 +21,25 @@ public class CommentaryController {
     }
 
     @PostMapping
+    @Operation(summary = "Add commentary to a guide")
+    @SecurityRequirement(name = "Bearer Authentication")
     public void addCommentary(@RequestBody CommentaryDTO commentary) {
         commentaryService.addCommentary(commentary);
     }
 
     @DeleteMapping
-    public void deleteCommentary(@RequestBody CommentaryDTO commentary) {
+    @Operation(summary = "Delete commentary")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public void deleteCommentary(@RequestBody CommentaryIdDTO commentary) {
         commentaryService.deleteCommentary(commentary);
     }
 
     // TODO: PUT or PATCH method to edit commentary?
 
-    @GetMapping
-    public List<CommentaryDTO> commentariesByPost(@RequestBody Long id) {
+    @GetMapping("{id}")
+    @Operation(summary = "Get list of commentaries by guide id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public List<CommentaryDTO> commentariesByPost(@PathVariable("id") Long id) {
         return commentaryService.getCommentariesByPost(id);
     }
 }

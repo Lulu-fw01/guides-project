@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.dto.GuideReportDTO;
 import com.server.entities.GuideReport;
+import com.server.enums.ReportStatus;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.GuideReportRepository;
 import com.server.repository.UserRepository;
@@ -43,7 +44,7 @@ public class GuideReportService implements ReportService, Validator<GuideReport>
                         .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
                 reportDTO.getComment(),
                 reportDTO.getReportCategory(),
-                reportDTO.getReportStatus()
+                ReportStatus.OPENED
         );
         nullBodyRequestCheck(report);
 

@@ -2,6 +2,7 @@ package com.server.services;
 
 import com.server.dto.UserReportDTO;
 import com.server.entities.UserReport;
+import com.server.enums.ReportStatus;
 import com.server.repository.UserReportRepository;
 import com.server.repository.UserRepository;
 import com.server.utils.Validator;
@@ -38,7 +39,7 @@ public class UserReportService implements ReportService, Validator<UserReport> {
                         .orElseThrow(() -> new UsernameNotFoundException("Violator user does not exist")),
                 reportDTO.getComment(),
                 reportDTO.getReportCategory(),
-                reportDTO.getReportStatus()
+                ReportStatus.OPENED
         );
 
         nullBodyRequestCheck(report);

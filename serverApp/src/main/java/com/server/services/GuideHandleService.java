@@ -87,33 +87,29 @@ public class GuideHandleService implements Validator<Guide> {
         );
     }
 
-    public void editGuide(GuideDTO guideDTO) {
-        var guide = new Guide(
-                guideDTO.getId(),
-                userRepository
-                        .findByEmail(guideDTO.getCreatorLogin())
-                        .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
-                guideDTO.getTitle(),
-                guideDTO.getFileBytes(),
-                guideDTO.getEditDate(),
-                guideDTO.getIsBlocked()
-        );
+    public void editGuide(EditGuideDTO guideDTO) {
+        if (guideDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
 
-        nullBodyRequestCheck(guide);
+        if (Stream.of(guideDTO.getId(),
+                        guideDTO.getContents(),
+                        guideDTO.getTitle())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "One of the transferred attributes is null." +
+                            " Consider sending request in the following format:" +
+                            " id, title, contents");
+        }
 
-        checkIfSomeFieldIsNull(guide);
-
-        var selectedGuideOptional = guideHandleRepository.findById(guide.getId());
+        var selectedGuideOptional = guideHandleRepository.findById(guideDTO.getId());
 
         if (selectedGuideOptional.isPresent()) {
             var selectedGuide = selectedGuideOptional.get();
 
-            selectedGuide.setId(guide.getId());
-            selectedGuide.setCreatorEmail(guide.getCreatorEmail());
-            selectedGuide.setEditDate(guide.getEditDate());
-            selectedGuide.setTitle(guide.getTitle());
-            selectedGuide.setFileBytes(guide.getFileBytes());
-            selectedGuide.setIsBlocked(guide.getIsBlocked());
+            selectedGuide.setEditDate(new Timestamp(System.currentTimeMillis()));
+            selectedGuide.setTitle(guideDTO.getTitle());
+            selectedGuide.setFileBytes(guideDTO.getContents());
 
             guideHandleRepository.save(selectedGuide);
             return;

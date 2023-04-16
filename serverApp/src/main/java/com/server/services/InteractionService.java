@@ -52,8 +52,7 @@ public class InteractionService {
                 .map(interaction -> new InteractionDTO(
                         interaction.getInteractionId().getEmail().getEmail(),
                         interaction.getInteractionId().getId().getId(),
-                        interaction.getUsersMark(),
-                        interaction.getViewDate()
+                        interaction.getUsersMark()
                 ))
                 .toList();
     }
@@ -69,7 +68,7 @@ public class InteractionService {
                                 .orElseThrow(() -> new IllegalArgumentException("The guide does not exist"))
                 ),
                 interactionDTO.getUsersMark(),
-                interactionDTO.getViewDate()
+                new Timestamp(System.currentTimeMillis())
         );
 
         interactionRepository.save(interaction);
@@ -133,60 +132,5 @@ public class InteractionService {
             session.getTransaction().commit();
         }
         return result;
-    }
-
-    public List<GuideDTO> getRecentlyViewed(String email) {
-
-        List<InteractionDTO> interactionDTOS = new ArrayList<>();
-
-        try (SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory()) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-
-            NativeQuery<Object[]> query = session.createNativeQuery(
-                            "SELECT user_email, guide_id, users_mark, view_date FROM interactions i " +
-                                    "JOIN guides ON guide_id = guides.id " +
-                                    "WHERE i.user_email = " + "'" + email + "'" +
-                                    " ORDER BY i.view_date DESC " +
-                                    "LIMIT 10"
-                    )
-                    .addScalar("user_email", StringType.INSTANCE)
-                    .addScalar("guide_id", LongType.INSTANCE)
-                    .addScalar("users_mark", IntegerType.INSTANCE)
-                    .addScalar("view_date", TimestampType.INSTANCE);
-
-            var list = query.list();
-
-            for (var item : list) {
-                interactionDTOS.add(new InteractionDTO(
-                        (String) item[0],
-                        (Long) item[1],
-                        (Integer) item[2],
-                        (Timestamp) item[3])
-                );
-            }
-
-            session.getTransaction().commit();
-        }
-
-        var ids = interactionDTOS
-                .stream()
-                .map(InteractionDTO::getGuideId)
-                .toList();
-
-
-        return guideHandleRepository
-                .findByIds(ids)
-                .stream()
-                .map(guide -> new GuideDTO(
-                        guide.getId(),
-                        guide.getCreatorEmail().getLogin(),
-                        guide.getTitle(),
-                        guide.getFileBytes(),
-                        guide.getEditDate(),
-                        guide.getIsBlocked(),
-                        favoriteItemService.checkIfAddedToFavorites(guide.getId(), email)
-                ))
-                .toList();
     }
 }
