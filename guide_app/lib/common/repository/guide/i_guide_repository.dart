@@ -9,4 +9,5 @@ abstract class IGuideRepository {
   Future<GuideCardsPage> getGuideCardsByUser(int pageNumber);
   Future<GuideDto> getGuideById(int guideId);
   Future<void> removeGuide(int guideId);
+  Future<void> updateGuide(int id, Document quillDocument);
 }
