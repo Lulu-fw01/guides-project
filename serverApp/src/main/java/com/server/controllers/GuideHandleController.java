@@ -65,7 +65,7 @@ public class GuideHandleController {
     @PutMapping
     @Operation(summary = "Edit guide")
     @SecurityRequirement(name = "Bearer Authentication")
-    public void editGuide(@RequestBody GuideDTO guide) {
+    public void editGuide(@RequestBody EditGuideDTO guide) {
         guideHandleService.editGuide(guide);
     }
 
