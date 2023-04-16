@@ -37,37 +37,48 @@ class MyApp extends StatelessWidget {
     var appTheme = MainTheme();
     return MaterialApp(
         theme: appTheme.lightTheme,
-        home: Provider<MainTheme>.value(
-          value: appTheme,
-          child: BlocProvider(
-            create: (BuildContext context) => InitCubit(
-                credentialsRepository: CredentialsRepository(),
-                userInfoRepository: UserRepository(UserClient())),
-            child: Builder(builder: (context) {
-              final initCubit = Provider.of<InitCubit>(context, listen: false);
-              final theme = Provider.of<MainTheme>(context, listen: false);
-              initCubit.start();
-
-              return BlocBuilder<InitCubit, InitState>(
-                  builder: (context, state) {
-                if (state is InitCubitInitial) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: theme.onSurface,
-                    ),
-                  );
-                }
-                if (state is InitAuthorized) {
-                  return UserCredentials(
-                      email: state.email,
-                      token: state.token,
-                      userInfo: state.userInfo,
-                      child: const MainCore());
-                }
-                return const AuthScreen();
-              });
-            }),
-          ),
+        home: Home(
+          appTheme: appTheme,
         ));
+  }
+}
+
+class Home extends StatelessWidget {
+  const Home({super.key, required this.appTheme});
+  final MainTheme appTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Provider<MainTheme>.value(
+      value: appTheme,
+      child: BlocProvider(
+        create: (BuildContext context) => InitCubit(
+            credentialsRepository: CredentialsRepository(),
+            userInfoRepository: UserRepository(UserClient())),
+        child: Builder(builder: (context) {
+          final initCubit = Provider.of<InitCubit>(context, listen: false);
+          final theme = Provider.of<MainTheme>(context, listen: false);
+          initCubit.start();
+
+          return BlocBuilder<InitCubit, InitState>(builder: (context, state) {
+            if (state is InitCubitInitial) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: theme.onSurface,
+                ),
+              );
+            }
+            if (state is InitAuthorized) {
+              return UserCredentials(
+                  email: state.email,
+                  token: state.token,
+                  userInfo: state.userInfo,
+                  child: const MainCore());
+            }
+            return const AuthScreen();
+          });
+        }),
+      ),
+    );
   }
 }

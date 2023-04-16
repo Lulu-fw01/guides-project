@@ -1,16 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:provider/provider.dart';
 
+import '../../../common/dto/guide_dto.dart';
 import '../../../common/themes/main_theme.dart';
 import '../cubit/guide_cubit.dart';
 import '../widgets/tool_bar.dart';
 
 /// Guide input screen.
 class GuideInput extends StatelessWidget {
-  GuideInput({super.key});
-  final _quillController = quill.QuillController.basic();
+  GuideInput({super.key, this.guideDto}) {
+    if (guideDto != null) {
+      final jsonDoc = jsonDecode(guideDto!.content);
+      _quillController = quill.QuillController(
+        document: quill.Document.fromJson(jsonDoc),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    } else {
+      _quillController = quill.QuillController.basic();
+    }
+  }
+  final GuideDto? guideDto;
+  late final quill.QuillController _quillController;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +47,11 @@ class GuideInput extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: theme.secondaryContainer,
-          actions: [_buildNextButton(guideCubit, theme)],
+          actions: [
+            guideDto == null
+                ? _buildNextButton(guideCubit, theme)
+                : _buildSaveButton(guideCubit, theme)
+          ],
         ),
         floatingActionButton: ToolBar(quillController: _quillController),
         backgroundColor: Colors.white,
@@ -48,15 +66,28 @@ class GuideInput extends StatelessWidget {
 
   Widget _buildNextButton(GuideCubit guideCubit, MainTheme theme) {
     return TextButton(
-        onPressed: () => onNextButtonClick(guideCubit),
+        onPressed: () => _onNextButtonClick(guideCubit),
         child: Text(
           'Дальше',
           style: TextStyle(color: theme.onSurface),
         ));
   }
 
-  void onNextButtonClick(GuideCubit guideCubit) {
+  Widget _buildSaveButton(GuideCubit guideCubit, MainTheme theme) {
+    return TextButton(
+        onPressed: () => _onSaveButtonClick(guideCubit),
+        child: Text(
+          'Сохранить',
+          style: TextStyle(color: theme.onSurface),
+        ));
+  }
+
+  void _onNextButtonClick(GuideCubit guideCubit) {
     guideCubit.createNewGuide(_quillController.document);
+  }
+
+  void _onSaveButtonClick(GuideCubit guideCubit) {
+    guideCubit.updateGuide(guideDto!.id, _quillController.document);
   }
 }
 

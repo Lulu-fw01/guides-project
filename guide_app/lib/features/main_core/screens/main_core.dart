@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/widgets/snack_bars.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
 import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/repository/guide/guide_repository.dart';
 import '../../../common/themes/main_theme.dart';
+import '../../../common/widgets/snack_bars.dart';
 import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/client/favorites_client.dart';
 import '../../favorites/cubit/favorites_cubit.dart';

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/widgets/user_credentials.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
+import '../../../common/widgets/user_credentials.dart';
+import '../../guide/screens/guide_update_screen.dart';
 import '../cubit/favorites_cubit.dart';
 import '../cubit/favorites_page_cubit.dart';
 import '../provider/favorites_content_provider.dart';
@@ -53,32 +54,23 @@ class FavoritesPageContent extends StatelessWidget {
                     guideUtilsCubit.removeGuide(dto.id);
                   }
                 : null,
+            onEdit: dto.author == credentials.userLogin
+                ? () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GuideUpdateScreen(
+                            email: credentials.email,
+                            token: credentials.token,
+                            guideId: dto.id,
+                          ),
+                        ));
+                  }
+                : null,
           ),
         )
         .toList());
     list.add(_loadingProgress(theme));
-
-    //
-    // return RefreshIndicator(
-    //     color: theme.onSurface,
-    //     onRefresh: () => onRefresh(favoritesPageCubit),
-    //     child: ListView.bui(
-    //       physics: const AlwaysScrollableScrollPhysics(),
-    //       key: const PageStorageKey('favorites_page_cards'),
-    //       controller: _scrollController
-    //         ..addListener(() {
-    //           // If we at the end of the list we will upload
-    //           // next page if it is not last.
-    //           if (_scrollController.offset ==
-    //                   _scrollController.position.maxScrollExtent &&
-    //               !favoritesPageCubit.isLoadingPage &&
-    //               !favoritesProvider.isLastPage()) {
-    //             favoritesPageCubit.isLoadingPage = true;
-    //             favoritesPageCubit.getNextPage(favoritesProvider.pageNum);
-    //           }
-    //         }),
-    //       children: list,
-    //     ));
 
     return RefreshIndicator(
         color: theme.onSurface,
@@ -119,5 +111,4 @@ class FavoritesPageContent extends StatelessWidget {
               )
             : Container());
   }
-
 }
