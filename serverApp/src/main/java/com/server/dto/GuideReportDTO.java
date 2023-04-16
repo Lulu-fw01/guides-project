@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GuideReportDTO {
-    private Long id;
-
     private String reporterEmail;
 
     private Long guideId;
@@ -19,6 +17,4 @@ public class GuideReportDTO {
     private String comment;
 
     private ReportCategory reportCategory;
-
-    private ReportStatus reportStatus;
 }

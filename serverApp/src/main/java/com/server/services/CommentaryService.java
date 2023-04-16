@@ -1,6 +1,7 @@
 package com.server.services;
 
 import com.server.dto.CommentaryDTO;
+import com.server.dto.CommentaryIdDTO;
 import com.server.entities.Commentary;
 import com.server.repository.GuideHandleRepository;
 import com.server.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.server.repository.CommentaryRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -40,7 +42,7 @@ public class CommentaryService implements Validator<Commentary> {
                 guideHandleRepository
                         .findById(commentaryDTO.getGuideId())
                         .orElseThrow(() -> new IllegalArgumentException("The guide does not exist")),
-                commentaryDTO.getEditDate(),
+                new Timestamp(System.currentTimeMillis()),
                 commentaryDTO.getContents()
         );
 
@@ -51,25 +53,9 @@ public class CommentaryService implements Validator<Commentary> {
         commentaryRepository.save(commentary);
     }
 
-    public void deleteCommentary(CommentaryDTO commentaryDTO) {
-        var commentary = new Commentary(
-                commentaryDTO.getId(),
-                userRepository
-                        .findByEmail(commentaryDTO.getUserEmail())
-                        .orElseThrow(() -> new UsernameNotFoundException("The user does not exist")),
-                guideHandleRepository
-                        .findById(commentaryDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("The guide does not exist")),
-                commentaryDTO.getEditDate(),
-                commentaryDTO.getContents()
-        );
-
-        nullBodyRequestCheck(commentary);
-
-        checkIfSomeFieldIsNull(commentary);
-
-        if (commentaryRepository.existsById(commentary.getId())) {
-            commentaryRepository.deleteById(commentary.getId());
+    public void deleteCommentary(CommentaryIdDTO commentaryDTO) {
+        if (commentaryRepository.existsById(commentaryDTO.getId())) {
+            commentaryRepository.deleteById(commentaryDTO.getId());
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The commentary by given id does not exist");
         }
@@ -80,11 +66,10 @@ public class CommentaryService implements Validator<Commentary> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
-        var comentaries = commentaryRepository.commentariesByPost(id);
+        var commentaries = commentaryRepository.commentariesByPost(id);
 
-        return comentaries.stream()
+        return commentaries.stream()
                 .map(commentary -> new CommentaryDTO(
-                        commentary.getId(),
                         commentary.getUserEmail().getEmail(),
                         commentary.getGuideId().getId(),
                         commentary.getEditDate(),

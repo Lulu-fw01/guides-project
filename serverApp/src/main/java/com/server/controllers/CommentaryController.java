@@ -1,5 +1,6 @@
 package com.server.controllers;
 
+import com.server.dto.CommentaryIdDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +30,16 @@ public class CommentaryController {
     @DeleteMapping
     @Operation(summary = "Delete commentary")
     @SecurityRequirement(name = "Bearer Authentication")
-    public void deleteCommentary(@RequestBody CommentaryDTO commentary) {
+    public void deleteCommentary(@RequestBody CommentaryIdDTO commentary) {
         commentaryService.deleteCommentary(commentary);
     }
 
     // TODO: PUT or PATCH method to edit commentary?
 
-    @GetMapping
+    @GetMapping("{id}")
     @Operation(summary = "Get list of commentaries by guide id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public List<CommentaryDTO> commentariesByPost(@RequestBody Long id) {
+    public List<CommentaryDTO> commentariesByPost(@PathVariable("id") Long id) {
         return commentaryService.getCommentariesByPost(id);
     }
 }
