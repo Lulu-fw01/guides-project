@@ -59,10 +59,13 @@ class FavoritesPageContent extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => GuideUpdateScreen(
-                            email: credentials.email,
-                            token: credentials.token,
-                            guideId: dto.id,
+                          builder: (context) => Provider(
+                            create: (context) => theme,
+                            builder: (context, child) => GuideUpdateScreen(
+                              email: credentials.email,
+                              token: credentials.token,
+                              guideId: dto.id,
+                            ),
                           ),
                         ));
                   }
