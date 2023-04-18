@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class UserInfoService {
@@ -48,6 +50,18 @@ public class UserInfoService {
     public List<UserInfoDTO> getAllUsers(PageRequestDTO userPagingDTO) {
         if (userPagingDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (Stream.of(userPagingDTO.getPageNumber(), userPagingDTO.getPageSize())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Some of the attributes are null. \n" +
+                            "Consider using pageNumber, pageSize"
+            );
+        }
+
+        if (userPagingDTO.getPageSize() < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than 1");
         }
 
         var users = userRepository.findAll(

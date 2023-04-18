@@ -41,7 +41,7 @@ public class GuideReportService implements ReportService, Validator<GuideReport>
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
                 guideHandleRepository
                         .findById(reportDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guide does not exist")),
                 reportDTO.getComment(),
                 reportDTO.getReportCategory(),
                 ReportStatus.OPENED
@@ -49,6 +49,10 @@ public class GuideReportService implements ReportService, Validator<GuideReport>
         nullBodyRequestCheck(report);
 
         checkIfSomeFieldIsNull(report);
+
+        if (reportDTO.getComment().length() < 1 || reportDTO.getComment().length() > 256) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment length must not be less than 1");
+        }
 
         guideReportRepository.save(report);
     }

@@ -12,6 +12,8 @@ import com.server.entities.Subscription;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class SubscriptionService {
@@ -27,6 +29,11 @@ public class SubscriptionService {
     public void subscribe(SubscriptionDTO subscriptionDTO) {
         if (subscriptionDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (Stream.of(subscriptionDTO.getUserEmail(), subscriptionDTO.getSubscriptionUserEmail())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null.\nConsider using userEmail, subscriptionUserEmail");
         }
 
         var subscription = new Subscription(
@@ -47,6 +54,11 @@ public class SubscriptionService {
     public void unsubscribe(SubscriptionDTO subscriptionDTO) {
         if (subscriptionDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (Stream.of(subscriptionDTO.getUserEmail(), subscriptionDTO.getSubscriptionUserEmail())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null.\nConsider using userEmail, subscriptionUserEmail");
         }
 
         var id = new SubscriptionId(

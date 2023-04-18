@@ -41,7 +41,7 @@ public class CommentaryService implements Validator<Commentary> {
                         .orElseThrow(() -> new UsernameNotFoundException("The user does not exist")),
                 guideHandleRepository
                         .findById(commentaryDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("The guide does not exist")),
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The guide does not exist")),
                 new Timestamp(System.currentTimeMillis()),
                 commentaryDTO.getContents()
         );
@@ -50,10 +50,18 @@ public class CommentaryService implements Validator<Commentary> {
 
         checkIfSomeFieldIsNull(commentary);
 
+        if (commentaryDTO.getContents().length() < 1 || commentaryDTO.getContents().length() > 256) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment contents length must not be less than 1 or more than 256");
+        }
+
         commentaryRepository.save(commentary);
     }
 
     public void deleteCommentary(CommentaryIdDTO commentaryDTO) {
+        if (commentaryDTO == null || commentaryDTO.getId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         if (commentaryRepository.existsById(commentaryDTO.getId())) {
             commentaryRepository.deleteById(commentaryDTO.getId());
         } else {
