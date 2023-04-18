@@ -6,8 +6,8 @@ import '../../favorites/widgets/favorites_app_bar.dart';
 import '../../profile/widgets/profile_app_bar.dart';
 import '../../search/widgets/search_app_bar.dart';
 
-/// Builder of all screens app bars.
-PreferredSizeWidget? buildCoreAppBar(
+/// Builder for all pages of [MainScaffold].
+PreferredSizeWidget? buildMainAppBar(
     BuildContext context, int selectedPageIndex) {
   final initCubit = Provider.of<InitCubit>(context);
   switch (selectedPageIndex) {

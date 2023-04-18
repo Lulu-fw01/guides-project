@@ -7,6 +7,7 @@ import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
 import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/cubit/favorites_cubit.dart';
+import '../../main_core/provider/core_provider.dart';
 import '../bloc/search_bloc.dart';
 import '../provider/search_page_provider.dart';
 import '../provider/search_results_provider.dart';
@@ -46,6 +47,12 @@ class SearchResults extends StatelessWidget {
             onRemove: dto.author == credentials.userLogin
                 ? () {
                     guideUtilsCubit.removeGuide(dto.id);
+                  }
+                : null,
+            onEdit: dto.author == credentials.userLogin
+                ? () {
+                    Provider.of<CoreProvider>(context, listen: false)
+                        .updateGuide(dto.id);
                   }
                 : null,
           ),

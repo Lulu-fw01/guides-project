@@ -63,6 +63,7 @@ class MainTheme {
           onSecondary: Colors.black,
           primary: Colors.white,
           secondary: Colors.grey,
+          shadow: Colors.red,
         ));
   }
 }

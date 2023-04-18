@@ -12,7 +12,8 @@ import '../widgets/tool_bar.dart';
 
 /// Guide input screen.
 class GuideInput extends StatelessWidget {
-  GuideInput({super.key, this.guideDto}) {
+  GuideInput(
+      {super.key, this.guideDto, this.onBackButtonClick, this.onSuccess}) {
     if (guideDto != null) {
       final jsonDoc = jsonDecode(guideDto!.content);
       _quillController = quill.QuillController(
@@ -25,6 +26,8 @@ class GuideInput extends StatelessWidget {
   }
   final GuideDto? guideDto;
   late final quill.QuillController _quillController;
+  final void Function()? onBackButtonClick;
+  final void Function()? onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +44,22 @@ class GuideInput extends StatelessWidget {
           // TODO implemet something for loading.
         }
         if (state is GuideSuccessState) {
-          Navigator.of(context).pop();
+          if (onSuccess != null) {
+            onSuccess!();
+          } else {
+            Navigator.of(context).pop();
+          }
         }
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: onBackButtonClick != null
+              ? BackButton(
+                  onPressed: () {
+                    onBackButtonClick!();
+                  },
+                )
+              : null,
           backgroundColor: theme.secondaryContainer,
           actions: [
             guideDto == null

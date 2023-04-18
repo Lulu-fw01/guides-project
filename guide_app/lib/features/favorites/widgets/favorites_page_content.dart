@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +6,7 @@ import '../../../common/cubit/guide_utils_cubit.dart';
 import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
 import '../../../common/widgets/user_credentials.dart';
-import '../../guide/screens/guide_update_screen.dart';
+import '../../main_core/provider/core_provider.dart';
 import '../cubit/favorites_cubit.dart';
 import '../cubit/favorites_page_cubit.dart';
 import '../provider/favorites_content_provider.dart';
@@ -56,18 +55,8 @@ class FavoritesPageContent extends StatelessWidget {
                 : null,
             onEdit: dto.author == credentials.userLogin
                 ? () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Provider(
-                            create: (context) => theme,
-                            builder: (context, child) => GuideUpdateScreen(
-                              email: credentials.email,
-                              token: credentials.token,
-                              guideId: dto.id,
-                            ),
-                          ),
-                        ));
+                    Provider.of<CoreProvider>(context, listen: false)
+                        .updateGuide(dto.id);
                   }
                 : null,
           ),
