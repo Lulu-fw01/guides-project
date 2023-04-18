@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset goofyahh:oncascadedelete1
+--changeset goofyahh:oncascadedelete_favorites
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.favorites
     drop constraint favorites_guide_id_fkey,
@@ -9,7 +9,7 @@ alter table "GUIDE_DB".public.favorites
             references guides
             on delete cascade;
 
---changeset goofyahh:oncascadedelete2
+--changeset goofyahh:oncascadedelete_tags_1
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.tags
     drop constraint tags_guide_id_fkey,
@@ -18,7 +18,7 @@ alter table "GUIDE_DB".public.tags
             references guides
             on delete cascade;
 
---changeset goofyahh:oncascadedelete3
+--changeset goofyahh:oncascadedelete_interactions
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.interactions
     drop constraint interactions_guide_id_fkey,
@@ -27,7 +27,7 @@ alter table "GUIDE_DB".public.interactions
             references guides
             on delete cascade;
 
---changeset goofyahh:oncascadedelete4
+--changeset goofyahh:oncascadedelete_comments
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.comments
     drop constraint comments_guide_id_fkey,
@@ -36,7 +36,7 @@ alter table "GUIDE_DB".public.comments
             references guides
             on delete cascade;
 
---changeset goofyahh:oncascadedelete5
+--changeset goofyahh:oncascadedelete_guide_reports
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.guide_reports
     drop constraint guide_reports_guide_id_fkey,
@@ -45,7 +45,7 @@ alter table "GUIDE_DB".public.guide_reports
             references guides
             on delete cascade;
 
---changeset goofyahh:oncascadedelete6
+--changeset goofyahh:oncascadedelete_tags_2
 --preconditions onFail:HALT onError:HALT
 alter table "GUIDE_DB".public.tags
     drop constraint tags_category_name_fkey,

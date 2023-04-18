@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:guide_app/common/dto/edit_guide_dto.dart';
 import 'package:http/http.dart' as http;
 
 import '../api/api_constants.dart';
@@ -104,6 +105,31 @@ class GuideClient implements IGuideClient {
         "Authorization": 'Bearer $token',
         "Content-Type": "application/json"
       });
+      return response;
+    } catch (e) {
+      throw FetchDataException(e.toString());
+    }
+  }
+
+  /// Update guide.
+  /// <p>
+  /// [dto] - dto with updated guide data.
+  /// <p>
+  /// Returns [http.Response].
+  /// <p>
+  /// Throws [FetchDataException].
+  /// <p>
+  /// Author - @Lulu-fw01.
+  @override
+  Future<http.Response> updateGuide(EditGuideDto dto) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.guideHandling);
+    try {
+      var response = await http.put(url,
+          headers: {
+            "Authorization": 'Bearer $token',
+            "Content-Type": "application/json"
+          },
+          body: jsonEncode(dto));
       return response;
     } catch (e) {
       throw FetchDataException(e.toString());

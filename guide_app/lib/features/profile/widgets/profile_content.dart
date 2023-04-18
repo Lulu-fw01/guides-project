@@ -8,6 +8,7 @@ import '../../../common/themes/main_theme.dart';
 import '../../../common/widgets/guide_card.dart';
 import '../../../common/widgets/user_credentials.dart';
 import '../../favorites/cubit/favorites_cubit.dart';
+import '../../main_core/provider/core_provider.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
 
@@ -48,6 +49,12 @@ class ProfileContent extends StatelessWidget {
             onRemove: dto.author == credentials.userLogin
                 ? () {
                     guideUtilsCubit.removeGuide(dto.id);
+                  }
+                : null,
+            onEdit: dto.author == credentials.userLogin
+                ? () {
+                    Provider.of<CoreProvider>(context, listen: false)
+                        .updateGuide(dto.id);
                   }
                 : null,
           ),

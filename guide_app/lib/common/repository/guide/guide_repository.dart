@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter_quill/flutter_quill.dart';
 
 import '../../client/i_guide_client.dart';
+import '../../dto/edit_guide_dto.dart';
 import '../../dto/guide_cards_page.dart';
 import '../../dto/guide_dto.dart';
 import '../../dto/new_guide_dto.dart';
@@ -22,21 +23,7 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
   @override
   Future<void> addNewGuide(Document quillDocument) async {
     final delta = quillDocument.toDelta();
-    final operations = delta.toList();
-    String title = "Без названия";
-    // Trying to get title from document.
-    // TODO make more interesting.
-    for (var operation in operations) {
-      if (operation.isInsert &&
-          operation.data is String &&
-          operation.data.toString().length > 1) {
-        title = operation.data.toString().replaceAll('\n', "");
-        break;
-      }
-    }
-    if (title.length > 84) {
-      title = "${title.substring(0, 81)}...";
-    }
+    String title = _getTitle(delta);
 
     log('New guide with title: $title');
     var jsonGuide = jsonEncode(delta.toJson());
@@ -82,5 +69,43 @@ class GuideRepository with ExceptionResponseMixin implements IGuideRepository {
     if (response.statusCode != 200) {
       throwError(response);
     }
+  }
+
+  /// Update guide.
+  /// [id] - id of the guide to be updated.
+  /// [quillDocument] - document with content.
+  /// * Throws: see [ExceptionResponseMixin.throwError].
+  @override
+  Future<void> updateGuide(int id, Document quillDocument) async {
+    final delta = quillDocument.toDelta();
+    String title = _getTitle(delta);
+
+    log('Updating guide with title: $title');
+    var jsonGuide = jsonEncode(delta.toJson());
+
+    final dto = EditGuideDto(id, title, jsonGuide);
+    final response = await guideClient.updateGuide(dto);
+    if (response.statusCode != 200) {
+      throwError(response);
+    }
+  }
+
+  String _getTitle(Delta delta) {
+    final operations = delta.toList();
+    String title = "Без названия";
+    // Trying to get title from document.
+    // TODO make more interesting.
+    for (var operation in operations) {
+      if (operation.isInsert &&
+          operation.data is String &&
+          operation.data.toString().length > 1) {
+        title = operation.data.toString().replaceAll('\n', "");
+        break;
+      }
+    }
+    if (title.length > 84) {
+      title = "${title.substring(0, 81)}...";
+    }
+    return title;
   }
 }
