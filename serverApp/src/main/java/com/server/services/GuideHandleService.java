@@ -44,6 +44,11 @@ public class GuideHandleService implements Validator<Guide> {
                 new Timestamp(System.currentTimeMillis()),
                 false
         );
+
+        if (guideDTO.getTitle().length() < 1 || guideDTO.getTitle().length() > 84) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title length must not be less than 1 or more than 84");
+        }
+
         nullBodyRequestCheck(guide);
 
         checkIfSomeFieldIsNull(guide);
@@ -64,6 +69,18 @@ public class GuideHandleService implements Validator<Guide> {
     }
 
     public GuidePageResponse getListOfAllGuides(PageRequestDTO pageRequestDTO) {
+        if (Stream.of(pageRequestDTO.getPageNumber(), pageRequestDTO.getPageSize())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "One of the transferred attributes is null." +
+                            " Consider sending request in the following format:" +
+                            " pageNumber, pageSize");
+        }
+
+        if (pageRequestDTO.getPageSize() < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than one");
+        }
+
         var guides = guideHandleRepository
                 .findAll(PageRequest.of(pageRequestDTO.getPageNumber(), pageRequestDTO.getPageSize(),
                         Sort.by("editDate").descending()));
@@ -111,6 +128,10 @@ public class GuideHandleService implements Validator<Guide> {
             selectedGuide.setTitle(guideDTO.getTitle());
             selectedGuide.setFileBytes(guideDTO.getContents());
 
+            if (selectedGuide.getTitle().length() < 1 || guideDTO.getTitle().length() > 84) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title length must not be less than 1");
+            }
+
             guideHandleRepository.save(selectedGuide);
             return;
         }
@@ -141,6 +162,18 @@ public class GuideHandleService implements Validator<Guide> {
     }
 
     public GuidePageResponse getListOfGuidesByUser(UserGuidePageDTO userPagingDTO) {
+        if (Stream.of(userPagingDTO.getEmail(), userPagingDTO.getPageNumber(), userPagingDTO.getPageSize())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "One of the transferred attributes is null." +
+                            " Consider sending request in the following format:" +
+                            " email, pageNumber, pageSize");
+        }
+
+        if (userPagingDTO.getPageSize() < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than one");
+        }
+
         var pageable =
                 PageRequest.of(userPagingDTO.getPageNumber(), userPagingDTO.getPageSize(),
                         Sort.by("guides.edit_date").descending());
@@ -184,9 +217,14 @@ public class GuideHandleService implements Validator<Guide> {
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
+
+        if (!guideHandleRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The guide does not exist by given ID");
+        }
+
         var guide = guideHandleRepository
                 .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("The guide does not exist by given ID"));
+                .get();
 
         return new GuideDTO(
                 guide.getId(),
@@ -200,6 +238,18 @@ public class GuideHandleService implements Validator<Guide> {
     }
 
     public GuideInfoPageResponse getListOfGuideInfoByUser(UserGuidePageDTO userPagingDTO) {
+        if (Stream.of(userPagingDTO.getEmail(), userPagingDTO.getPageNumber(), userPagingDTO.getPageSize())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "One of the transferred attributes is null." +
+                            " Consider sending request in the following format:" +
+                            " email, pageNumber, pageSize");
+        }
+
+        if (userPagingDTO.getPageSize() < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than one");
+        }
+
         var pageable =
                 PageRequest.of(userPagingDTO.getPageNumber(), userPagingDTO.getPageSize(),
                         Sort.by("guides.edit_date").descending());

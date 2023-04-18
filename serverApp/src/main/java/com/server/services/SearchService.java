@@ -33,6 +33,10 @@ public class SearchService {
         try {
             var numOfAllGuidesByTitle = guideHandleRepository.searchByTitle(title).size();
 
+            if (Integer.parseInt(pageSize) < 1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than 1");
+            }
+
             int totalPages = getTotalPages(Integer.parseInt(pageSize), numOfAllGuidesByTitle);
 
             var guideInfoDTOList = guideHandleRepository
@@ -65,6 +69,10 @@ public class SearchService {
 
         try {
             var numOfAllGuidesByTitle = guideHandleRepository.searchByCategory(category).size();
+
+            if (Integer.parseInt(pageSize) < 1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than 1");
+            }
 
             int totalPages = getTotalPages(Integer.parseInt(pageSize), numOfAllGuidesByTitle);
 
@@ -99,6 +107,10 @@ public class SearchService {
         try {
             var numOfAllGuidesByAuthor = guideHandleRepository.searchByAuthor(author).size();
 
+            if (Integer.parseInt(pageSize) < 1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than 1");
+            }
+
             int totalPages = getTotalPages(Integer.parseInt(pageSize), numOfAllGuidesByAuthor);
 
             var dtos = guideHandleRepository
@@ -125,12 +137,16 @@ public class SearchService {
     }
 
     private int getTotalPages(int pageSize, int numOfAllGuidesByUser) {
-        int totalPages;
-        if (numOfAllGuidesByUser % pageSize == 0) {
-            totalPages = numOfAllGuidesByUser / pageSize;
-        } else {
-            totalPages = numOfAllGuidesByUser / pageSize + 1;
+        try {
+            int totalPages;
+            if (numOfAllGuidesByUser % pageSize == 0) {
+                totalPages = numOfAllGuidesByUser / pageSize;
+            } else {
+                totalPages = numOfAllGuidesByUser / pageSize + 1;
+            }
+            return totalPages;
+        } catch (ArithmeticException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Division by zero");
         }
-        return totalPages;
     }
 }

@@ -11,6 +11,8 @@ import com.server.repository.TagRepository;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class TagService {
@@ -32,14 +34,20 @@ public class TagService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
+        if (Stream.of(tagDTO.getCategory(), tagDTO.getGuideId())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. \n" +
+                    "Consider using guideId, category");
+        }
+
         var tag = new Tag(
                 new TagId(
                         guideHandleRepository
                                 .findById(tagDTO.getGuideId())
-                                .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guide does not exist")),
                         categoryRepository
                                 .findById(tagDTO.getCategory())
-                                .orElseThrow(() -> new IllegalArgumentException("Category does not exist"))
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"))
                 )
         );
         tagRepository.save(tag);
@@ -50,13 +58,19 @@ public class TagService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
+        if (Stream.of(tagDTO.getCategory(), tagDTO.getGuideId())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. \n" +
+                    "Consider using guideId, category");
+        }
+
         var id = new TagId(
                 guideHandleRepository
                         .findById(tagDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guide does not exist")),
                 categoryRepository
                         .findById(tagDTO.getCategory())
-                        .orElseThrow(() -> new IllegalArgumentException("Category does not exist"))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category does not exist"))
         );
 
         if (tagRepository.existsById(id)) {

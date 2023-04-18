@@ -35,7 +35,7 @@ public class UserReportService implements ReportService, Validator<UserReport> {
                         .findByEmail(reportDTO.getReporterEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User reporter does not exist")),
                 userRepository
-                        .findByEmail(reportDTO.getReporterEmail())
+                        .findByEmail(reportDTO.getViolatorEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("Violator user does not exist")),
                 reportDTO.getComment(),
                 reportDTO.getReportCategory(),
@@ -45,6 +45,10 @@ public class UserReportService implements ReportService, Validator<UserReport> {
         nullBodyRequestCheck(report);
 
         checkIfSomeFieldIsNull(report);
+
+        if (reportDTO.getComment().length() < 1 || reportDTO.getComment().length() > 256) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment length must not be less than 1 or more than 256");
+        }
 
         userReportRepository.save(report);
     }

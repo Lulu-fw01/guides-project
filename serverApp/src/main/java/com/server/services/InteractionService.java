@@ -26,6 +26,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class InteractionService {
@@ -58,6 +60,15 @@ public class InteractionService {
     }
 
     public void setReaction(InteractionDTO interactionDTO) {
+        if (interactionDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (Stream.of(interactionDTO.getGuideId(), interactionDTO.getUsersMark(), interactionDTO.getUserEmail())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. \nConsider using userEmail, guideId, usersMark");
+        }
+
         var interaction = new Interaction(
                 new InteractionId(
                         userRepository
@@ -65,7 +76,7 @@ public class InteractionService {
                                 .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
                         guideHandleRepository
                                 .findById(interactionDTO.getGuideId())
-                                .orElseThrow(() -> new IllegalArgumentException("The guide does not exist"))
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The guide does not exist"))
                 ),
                 interactionDTO.getUsersMark(),
                 new Timestamp(System.currentTimeMillis())
@@ -75,13 +86,22 @@ public class InteractionService {
     }
 
     public void deleteReaction(InteractionDTO interactionDTO) {
+        if (interactionDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (Stream.of(interactionDTO.getGuideId(), interactionDTO.getUserEmail())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. \nConsider using userEmail, guideId");
+        }
+
         var id = new InteractionId(
                 userRepository
                         .findByEmail(interactionDTO.getUserEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist")),
                 guideHandleRepository
                         .findById(interactionDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("The guide does not exist"))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The guide does not exist"))
         );
 
         if (interactionRepository.existsById(id)) {

@@ -20,15 +20,19 @@ public class CategoryService {
     }
 
     public void createCategory(Category category) {
-        if (category == null) {
+        if (category == null || category.getName() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
+        if (category.getName().length() < 2 || category.getName().length() > 16) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name length must not be less than 2 or more than 16");
         }
 
         categoryRepository.save(category);
     }
 
     public void deleteCategory(Category category) {
-        if (category == null) {
+        if (category == null || category.getName() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 

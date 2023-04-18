@@ -58,6 +58,14 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user already exists");
         }
 
+        if (userRepository.findByLogin(registerRequestBody.getLogin()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The login is taken");
+        }
+
+        if (registerRequestBody.getLogin().length() < 2 || registerRequestBody.getLogin().length() > 20) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The login must not be less than 2 characters or more than 20");
+        }
+
         var user = new User(
                 registerRequestBody.getEmail(),
                 registerRequestBody.getLogin(),

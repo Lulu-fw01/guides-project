@@ -25,10 +25,10 @@ public class TagController {
         tagService.addTag(tag);
     }
 
-    @GetMapping
+    @GetMapping("{id}")
     @Operation(summary = "Get tags for a guide")
     @SecurityRequirement(name = "Bearer Authentication")
-    public List<String> getTags(@RequestBody Long id) {
+    public List<String> getTags(@PathVariable("id") Long id) {
         return tagService.getTags(id);
     }
 

@@ -20,6 +20,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 public class FavoriteItemService {
@@ -43,11 +45,16 @@ public class FavoriteItemService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
+        if (Stream.of(favoriteItemDTO.getUserEmail(), favoriteItemDTO.getGuideId())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. Consider using guideId, userEmail");
+        }
+
         var favoriteItem = new FavoriteItem(
                 new FavoriteId(
                         guideHandleRepository
                                 .findById(favoriteItemDTO.getGuideId())
-                                .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guide does not exist")),
                         userRepository
                                 .findByEmail(favoriteItemDTO.getUserEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException("User does not exist"))
@@ -63,10 +70,15 @@ public class FavoriteItemService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
         }
 
+        if (Stream.of(favoriteItemDTO.getUserEmail(), favoriteItemDTO.getGuideId())
+                .anyMatch(Objects::isNull)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some of the attributes are null. Consider using guideId, userEmail");
+        }
+
         var id = new FavoriteId(
                 guideHandleRepository
                         .findById(favoriteItemDTO.getGuideId())
-                        .orElseThrow(() -> new IllegalArgumentException("Guide does not exist")),
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guide does not exist")),
                 userRepository
                         .findByEmail(favoriteItemDTO.getUserEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User does not exist"))
@@ -86,6 +98,10 @@ public class FavoriteItemService {
         try {
             cursorInt = Integer.parseInt(cursor);
             pageSizeInt = Integer.parseInt(pageSize);
+
+            if (pageSizeInt < 1) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Page size must not be less than 1");
+            }
         } catch (NumberFormatException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot parse Integer from Path variable");
         }
