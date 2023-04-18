@@ -39,7 +39,7 @@ class GuideUpdateScreen extends StatelessWidget {
         return BlocConsumer<GuideViewCubit, GuideViewState>(
           listener: (context, state) {
             if (state is GuideViewErrorState) {
-              Navigator.of(context).pop();
+              Provider.of<CoreProvider>(context, listen: false).goToMain();
             }
           },
           builder: (context, state) {
@@ -54,7 +54,12 @@ class GuideUpdateScreen extends StatelessWidget {
                 },
               );
             }
-            return Container();
+            // TODO later refactor this and GuideInput.
+            return const Scaffold(
+                backgroundColor: Colors.white,
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ));
           },
         );
       }),

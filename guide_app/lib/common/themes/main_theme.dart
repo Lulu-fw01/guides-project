@@ -49,6 +49,7 @@ class MainTheme {
     return ThemeData(
         useMaterial3: true,
         textSelectionTheme: TextSelectionThemeData(cursorColor: onSurface),
+        shadowColor: Colors.black,
         colorScheme: ColorScheme(
           surface: surface,
           onSurface: onSurface,
@@ -63,7 +64,9 @@ class MainTheme {
           onSecondary: Colors.black,
           primary: Colors.white,
           secondary: Colors.grey,
-          shadow: Colors.red,
+          shadow: Colors.black
+          
+          
         ));
   }
 }
