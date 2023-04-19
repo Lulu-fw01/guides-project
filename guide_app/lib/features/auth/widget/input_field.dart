@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guide_app/common/themes/main_theme.dart';
 
-Widget buildInput(MainTheme theme, FocusNode focusNode, String hint,
+Widget buildInput(MainTheme theme, String hint,
         {TextInputType? keyboardType,
         TextEditingController? controller,
         String? Function(String?)? validator,
@@ -16,7 +16,6 @@ Widget buildInput(MainTheme theme, FocusNode focusNode, String hint,
       obscureText: obscureText,
       enableSuggestions: enableSuggestions,
       autocorrect: autoCorrect,
-      focusNode: focusNode,
       keyboardType: keyboardType,
       style: TextStyle(color: theme.onSurface),
       cursorColor: theme.onSurface,

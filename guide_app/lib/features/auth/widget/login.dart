@@ -1,31 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
-import 'package:guide_app/features/auth/mixin/view_dependency.dart';
-import 'package:guide_app/features/auth/widget/input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
+
+import '../../../common/themes/main_theme.dart';
+import '../cubit/auth_cubit.dart';
+import 'input_field.dart';
 
 /// Login form.
-class Login extends StatefulWidget {
-  const Login({super.key, this.onViewChange, this.onSignUpClicked});
+class Login extends StatelessWidget {
+  Login({super.key, this.onSignUpClicked});
 
-  final void Function(bool inputView)? onViewChange;
   final void Function()? onSignUpClicked;
-
-  @override
-  LoginState createState() => LoginState();
-}
-
-class LoginState extends State<Login> with ViewDependency {
-  final _loginFocus = FocusNode();
-  final _passwordFocus = FocusNode();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  @override
-  void Function(bool inputView)? get onViewChange => widget.onViewChange;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -70,8 +58,7 @@ class LoginState extends State<Login> with ViewDependency {
 
   /// Email or login input
   Widget _buildLoginInput(MainTheme theme) {
-    addOnViewChange(_loginFocus);
-    return buildInput(theme, _loginFocus, 'Почта или логин',
+    return buildInput(theme, 'Почта или логин',
         keyboardType: TextInputType.emailAddress,
         controller: _emailController, validator: (value) {
       if (value == null || value == "") {
@@ -83,8 +70,7 @@ class LoginState extends State<Login> with ViewDependency {
 
   /// Password input text field.
   Widget _buildPasswordInput(MainTheme theme) {
-    addOnViewChange(_passwordFocus);
-    return buildInput(theme, _passwordFocus, 'Пароль',
+    return buildInput(theme, 'Пароль',
         obscureText: true,
         enableSuggestions: false,
         autoCorrect: false,
@@ -119,7 +105,7 @@ class LoginState extends State<Login> with ViewDependency {
           foregroundColor: theme.onSurface,
           padding: const EdgeInsets.only(left: 12, right: 12),
         ),
-        onPressed: widget.onSignUpClicked,
+        onPressed: onSignUpClicked,
         child: Text(
           'Зарегистрироваться',
           style: TextStyle(color: theme.onSurface),

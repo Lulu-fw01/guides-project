@@ -1,33 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
-import 'package:guide_app/features/auth/mixin/view_dependency.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
 
+import '../../../common/themes/main_theme.dart';
+import '../cubit/auth_cubit.dart';
 import 'input_field.dart';
 
 /// Sign up form.
 class SignUp extends StatefulWidget {
-  const SignUp({super.key, this.onViewChange, this.onLoginClicked});
+  const SignUp({super.key, this.onLoginClicked});
 
-  final void Function(bool inputView)? onViewChange;
   final void Function()? onLoginClicked;
 
   @override
   SignUpState createState() => SignUpState();
 }
 
-class SignUpState extends State<SignUp> with ViewDependency {
-  @override
-  void Function(bool inputView)? get onViewChange => widget.onViewChange;
-
-  final _loginFocus = FocusNode();
-  final _passwordFocus = FocusNode();
-  final _repeatPasswordFocus = FocusNode();
-  final _nameFocus = FocusNode();
-  final _emailFocus = FocusNode();
-
+class SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
@@ -84,9 +73,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
 
   /// Name input.
   Widget _buildNameInput(MainTheme theme) {
-    addOnViewChange(_nameFocus);
-    return buildInput(theme, _nameFocus, 'Имя',
-        keyboardType: TextInputType.name, validator: (value) {
+    return buildInput(theme, 'Имя', keyboardType: TextInputType.name,
+        validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь";
       }
@@ -96,9 +84,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
 
   /// Login input.
   Widget _buildLoginInput(MainTheme theme) {
-    addOnViewChange(_loginFocus);
-    return buildInput(theme, _loginFocus, 'Логин',
-        keyboardType: TextInputType.name, validator: (value) {
+    return buildInput(theme, 'Логин', keyboardType: TextInputType.name,
+        validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь.";
       }
@@ -107,9 +94,8 @@ class SignUpState extends State<SignUp> with ViewDependency {
   }
 
   Widget _buildEmailInput(MainTheme theme) {
-    addOnViewChange(_emailFocus);
-    return buildInput(theme, _emailFocus, 'Email',
-        keyboardType: TextInputType.emailAddress, validator: (value) {
+    return buildInput(theme, 'Email', keyboardType: TextInputType.emailAddress,
+        validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь.";
       }
@@ -119,8 +105,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
 
   /// Password input text field.
   Widget _buildPasswordInput(MainTheme theme) {
-    addOnViewChange(_passwordFocus);
-    return buildInput(theme, _passwordFocus, 'Пароль',
+    return buildInput(theme, 'Пароль',
         obscureText: true,
         enableSuggestions: false,
         autoCorrect: false, validator: (value) {
@@ -136,8 +121,7 @@ class SignUpState extends State<SignUp> with ViewDependency {
   }
 
   Widget _buildRepeatPasswordInput(MainTheme theme) {
-    addOnViewChange(_repeatPasswordFocus);
-    return buildInput(theme, _repeatPasswordFocus, 'Пароль еще раз',
+    return buildInput(theme, 'Пароль еще раз',
         obscureText: true,
         enableSuggestions: false,
         autoCorrect: false, validator: (value) {
