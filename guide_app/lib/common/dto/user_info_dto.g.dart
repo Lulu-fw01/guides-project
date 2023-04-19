@@ -11,6 +11,7 @@ UserInfoDto _$UserInfoDtoFromJson(Map<String, dynamic> json) => UserInfoDto(
       json['login'] as String,
       json['role'] as String,
       json['isBlocked'] as bool,
+      json['numberOfCreatedGuides'] as int,
     );
 
 Map<String, dynamic> _$UserInfoDtoToJson(UserInfoDto instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$UserInfoDtoToJson(UserInfoDto instance) =>
       'login': instance.login,
       'role': instance.role,
       'isBlocked': instance.isBlocked,
+      'numberOfCreatedGuides': instance.numberOfCreatedGuides,
     };

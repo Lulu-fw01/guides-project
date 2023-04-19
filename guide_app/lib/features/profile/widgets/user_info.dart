@@ -17,6 +17,9 @@ class UserInfo extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 8,
+          ),
           Text(
             userInfoDto.login,
             style: GoogleFonts.lato(
@@ -25,7 +28,7 @@ class UserInfo extends StatelessWidget {
                 color: const Color(0xFF2E1A7E)),
           ),
           Text(
-            'guides: ',
+            'guides: ${userInfoDto.numberOfCreatedGuides}',
             style: theme.informationText,
           )
         ],

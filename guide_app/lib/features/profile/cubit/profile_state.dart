@@ -20,8 +20,9 @@ class ProfileSuccessState extends ProfileState {
 }
 
 class ProfileRefreshSuccessState extends ProfileState {
-  ProfileRefreshSuccessState(this.nextPage);
+  ProfileRefreshSuccessState(this.nextPage, this.userInfo);
   final GuideCardsPage nextPage;
+  final UserInfoDto userInfo;
 }
 
 class ProfileHeadIsReadyState extends ProfileState {}

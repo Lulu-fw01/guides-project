@@ -60,6 +60,7 @@ class ProfileCore extends StatelessWidget {
         profileProvider.guideCardDtos.addAll(page.guideCardDtos);
         profileProvider.pageNum++;
         profileCubit.isLoadingPage = false;
+        profileProvider.userInfoDto = state.userInfo;
         if (page.pageNum == 0) {
           profileProvider.pagesAmount = page.pageAmount;
         }

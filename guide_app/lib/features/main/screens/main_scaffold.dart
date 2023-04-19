@@ -49,7 +49,7 @@ class MainScaffold extends StatelessWidget {
                     child: mainScaffoldProvider.getCurrentPage())),
             bottomNavigationBar:
                 _buildBottomNavigationBar(context, mainScaffoldProvider),
-            floatingActionButton: mainScaffoldProvider.selectedPageIndex == 3
+            floatingActionButton: mainScaffoldProvider.selectedPageIndex == 2
                 ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
                 : null,
           );

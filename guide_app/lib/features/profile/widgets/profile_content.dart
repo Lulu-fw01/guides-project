@@ -11,6 +11,7 @@ import '../../favorites/cubit/favorites_cubit.dart';
 import '../../main_core/provider/core_provider.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
+import 'user_info.dart';
 
 /// Part of [ProfileContent] where we draw guide cards.
 class ProfileContent extends StatelessWidget {
@@ -36,6 +37,11 @@ class ProfileContent extends StatelessWidget {
 
     List<Widget> list = [];
     list.add(_loadingRefreshProgress(theme));
+    if (profileProvider.userInfoDto != null) {
+      list.add(UserInfo(
+        userInfoDto: profileProvider.userInfoDto!,
+      ));
+    }
     list.addAll(profileProvider.guideCardDtos
         .map(
           (dto) => GuideCard(
@@ -64,10 +70,9 @@ class ProfileContent extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-          border: Border(
-              top: BorderSide(
-                  width: 1, color: theme.onSurface.withOpacity(0.4))),
-        ),
+        border: Border(
+            top: BorderSide(width: 1, color: theme.onSurface.withOpacity(0.4))),
+      ),
       child: RefreshIndicator(
           color: theme.onSurface,
           onRefresh: () => onRefresh(profileProvider, profileCubit),
