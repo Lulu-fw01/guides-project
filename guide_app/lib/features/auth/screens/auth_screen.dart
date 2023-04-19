@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:guide_app/common/repository/credentials_repository.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
-import 'package:guide_app/cubit/init_cubit.dart';
-import 'package:guide_app/features/auth/client/auth_client.dart';
-import 'package:guide_app/features/auth/cubit/auth_cubit.dart';
-import 'package:guide_app/features/auth/repository/auth_repository.dart';
-import 'package:guide_app/features/auth/widget/guide_logo.dart';
-import 'package:guide_app/features/auth/widget/login.dart';
-import 'package:guide_app/features/auth/widget/sign_up.dart';
 import 'package:provider/provider.dart';
+
+import '../../../common/repository/credentials_repository.dart';
+import '../../../common/themes/main_theme.dart';
+import '../../../cubit/init_cubit.dart';
+import '../client/auth_client.dart';
+import '../cubit/auth_cubit.dart';
+import '../repository/auth_repository.dart';
+import '../widget/dynamic_guide_logo.dart';
+import '../widget/login.dart';
+import '../widget/sign_up.dart';
 
 /// Screen for user authorization.
 class AuthScreen extends StatefulWidget {
@@ -41,25 +42,6 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       parent: _controller,
       curve: Curves.easeInOutQuart,
     );
-  }
-
-  void _viewChange(bool inputView) {
-    debugPrint('inp: $inputView');
-    if (_inputView != inputView) {
-      _inputView = inputView;
-      if (!_inputView) {
-        debugPrint('foreward');
-        _controller.forward();
-      } else {
-        debugPrint("back");
-        _controller.reverse(from: 1);
-      }
-      return;
-    }
-    if (_inputView) {
-      debugPrint('Second back');
-      _controller.reverse(from: 1);
-    }
   }
 
   @override
@@ -102,9 +84,8 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   Widget _buildLogin() => Column(
         children: [
-          _buildDynamicGuideLogo(),
+          const DynamicGuideLogo(),
           Login(
-            onViewChange: _viewChange,
             onSignUpClicked: () => setState(() {
               _isSignUp = true;
             }),
@@ -115,33 +96,13 @@ class AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   // TODO wrap with listView, maybe do something with center widget in build method.
   Widget _buildSignUp() => Column(
         children: [
-          _buildDynamicGuideLogo(),
+          const DynamicGuideLogo(),
           SignUp(
-            onViewChange: _viewChange,
             onLoginClicked: () => setState(() {
               _isSignUp = false;
             }),
           )
         ],
-      );
-
-  // TODO move to another file.
-  Widget _buildDynamicGuideLogo() => SizeTransition(
-        sizeFactor: _animation,
-        axis: Axis.vertical,
-        child: Center(
-          child: Column(
-            children: const [
-              SizedBox(
-                height: 8,
-              ),
-              GuideLogo(),
-              SizedBox(
-                height: 16,
-              ),
-            ],
-          ),
-        ),
       );
 
   void _onSuccessAuth(InitCubit initCubit,
