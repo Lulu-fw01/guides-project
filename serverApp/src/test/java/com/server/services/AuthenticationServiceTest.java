@@ -29,30 +29,12 @@ class AuthenticationServiceTest {
     private JwtService jwtService;
 
     @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
     private AuthenticationService authenticationService;
 
     private User user;
-
-    @BeforeEach
-    private void createRegisterBody() {
-        user = new User(
-                "email@email.com",
-                "loginlogin",
-                "password_password",
-                new Date(System.currentTimeMillis()),
-                UserRoles.USER,
-                false
-        );
-    }
 
     @Test
     public void registerWithNullRegisterBody() {
@@ -62,7 +44,7 @@ class AuthenticationServiceTest {
     @Test
     public void registerWhenOneAttributeIsMissing() {
         assertThrows(ResponseStatusException.class,
-                () -> authenticationService.register(new RegisterDTO(null, "l", "p", new Date(System.currentTimeMillis()))),
+                () -> authenticationService.register(new RegisterDTO(null, "ll", "p", new Date(System.currentTimeMillis()))),
                 "One of the transferred attributes is null." +
                         " Consider sending request in the following format:" +
                         " email, login, password, date");
@@ -78,6 +60,17 @@ class AuthenticationServiceTest {
                 "One of the transferred attributes is null." +
                         " Consider sending request in the following format:" +
                         " email, login, password, date");
+    }
+
+    @Test
+    public void registerWithIncorrectLogin() {
+        assertThrows(ResponseStatusException.class,
+                () -> authenticationService.register(new RegisterDTO("email", "l", "p", new Date(System.currentTimeMillis())))
+        );
+
+        assertThrows(ResponseStatusException.class,
+                () -> authenticationService.register(new RegisterDTO("email", "llllllllllllllllllllll", "p", new Date(System.currentTimeMillis())))
+        );
     }
 
     @Test

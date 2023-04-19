@@ -49,6 +49,17 @@ class CategoryServiceTest {
     }
 
     @Test
+    public void createCategoryWithIncorrectName() {
+        assertThrows(ResponseStatusException.class,
+                () -> categoryService.createCategory(new Category("a"))
+        );
+
+        assertThrows(ResponseStatusException.class,
+                () -> categoryService.createCategory(new Category("aaaaaaaaaaaaaaaaa"))
+        );
+    }
+
+    @Test
     public void deleteCategoryWithNullRequestBody() {
         assertThrows(ResponseStatusException.class,
                 () -> categoryService.deleteCategory(null),

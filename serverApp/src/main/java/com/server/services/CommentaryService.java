@@ -35,6 +35,10 @@ public class CommentaryService implements Validator<Commentary> {
     }
 
     public void addCommentary(CommentaryDTO commentaryDTO) {
+        if (commentaryDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body is null");
+        }
+
         var commentary = new Commentary(
                 userRepository
                         .findByEmail(commentaryDTO.getUserEmail())

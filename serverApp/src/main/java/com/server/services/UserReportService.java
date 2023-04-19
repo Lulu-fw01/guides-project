@@ -29,6 +29,10 @@ public class UserReportService implements ReportService, Validator<UserReport> {
 
     @Override
     public <T> void createReport(T reportDTOGen) {
+        if (reportDTOGen == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request body is null");
+        }
+
         var reportDTO = (UserReportDTO) reportDTOGen;
         var report = new UserReport(
                 userRepository

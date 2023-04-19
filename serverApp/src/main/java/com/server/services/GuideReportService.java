@@ -34,6 +34,10 @@ public class GuideReportService implements ReportService, Validator<GuideReport>
 
     @Override
     public <T> void createReport(T reportDTOGen) {
+        if (reportDTOGen == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The request ody is null");
+        }
+
         var reportDTO = (GuideReportDTO) reportDTOGen;
         var report = new GuideReport(
                 userRepository
