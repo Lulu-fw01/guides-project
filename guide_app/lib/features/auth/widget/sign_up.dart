@@ -78,6 +78,7 @@ class SignUpState extends State<SignUp> {
       if (value == null || value == "") {
         return "Введите что-нибудь";
       }
+      if (value.contains(RegExp(r'^[A-Za-z0-9_.]+$'))) {}
       return null;
     });
   }
@@ -88,6 +89,9 @@ class SignUpState extends State<SignUp> {
         validator: (value) {
       if (value == null || value == "") {
         return "Введите что-нибудь.";
+      }
+      if (!RegExp(r"^[a-z0-9._-]*$").hasMatch(value)) {
+        return "Логин может содержать прописные латинские буквы, цифры и символы - _ .";
       }
       return null;
     }, controller: _loginController);
@@ -114,7 +118,10 @@ class SignUpState extends State<SignUp> {
         return "Введите что-нибудь.";
       }
       if (value.length < 8) {
-        return "Длина пароля должны быть не меньше 8 символов.";
+        return "Длина пароля должна быть не меньше 8 символов.";
+      }
+      if (!RegExp(r"^[a-zA-Z0-9@$*#_-]*$").hasMatch(value)) {
+        return "Пароль может содержать латинские буквы, цифры и символы @ \$ * # _ -";
       }
       return null;
     }, controller: _passwordController);

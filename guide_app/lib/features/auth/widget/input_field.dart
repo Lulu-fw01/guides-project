@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:guide_app/common/themes/main_theme.dart';
+
+import '../../../common/themes/main_theme.dart';
 
 Widget buildInput(MainTheme theme, String hint,
         {TextInputType? keyboardType,
@@ -26,6 +27,7 @@ Widget buildInput(MainTheme theme, String hint,
 /// Decoration for every TextField in auth screen.
 InputDecoration buildInputDecoration(MainTheme theme, String hint) =>
     InputDecoration(
+        errorMaxLines: 2,
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: theme.onSurface)),
         suffixStyle: TextStyle(color: theme.onSurface),
