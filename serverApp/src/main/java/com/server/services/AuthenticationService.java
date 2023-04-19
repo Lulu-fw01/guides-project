@@ -55,15 +55,15 @@ public class AuthenticationService {
         }
 
         if (userRepository.findByEmail(registerRequestBody.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь уже зарегистрирован на данную почту");
         }
 
         if (userRepository.findByLogin(registerRequestBody.getLogin()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The login is taken");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Логин занят");
         }
 
         if (registerRequestBody.getLogin().length() < 2 || registerRequestBody.getLogin().length() > 20) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The login must not be less than 2 characters or more than 20");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Логин не может быть менее двух или более 20 символов");
         }
 
         var user = new User(
