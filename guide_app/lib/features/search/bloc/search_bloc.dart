@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
@@ -15,7 +16,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required this.searchRepository}) : super(SearchInitial()) {
     on<SearchGuidesByTitleEvent>((event, emit) async {
       await _onSearchGuidesByTitle(event, emit);
-    });
+    }, transformer: restartable());
   }
   bool isLoadingPage = false;
   String lastSearchPhrase = '';
@@ -32,7 +33,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       // Try to get next search page.
       final page = await searchRepository.searchGuidesByTitle(
           event.searchPhrase, event.pageNum);
-      log.fine('Search by title page ${event.pageNum} was loaded.');
+      if (emit.isDone) {
+        return;
+      }
+      // This part only for last event.
+      log.fine(
+          'Search by title ${event.searchPhrase} page ${event.pageNum} was loaded.');
       emit(SearchByTitleSuccessState(event.searchPhrase, page));
     } on ResponseException catch (e) {
       // Got error http response.

@@ -15,7 +15,7 @@ PreferredSizeWidget profileAppBar(
   switch (profileProvider.profileScreenState) {
     case ProfileScreenMode.profileInfo:
       return AppBar(
-        backgroundColor: theme.surface,
+        backgroundColor: theme.readableBackColor,
         actions: [
           IconButton(
               onPressed: () {

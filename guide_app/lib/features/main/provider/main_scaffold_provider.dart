@@ -10,7 +10,7 @@ import '../../search/screens/search_screen.dart';
 class MainScaffoldProvider extends ChangeNotifier {
   int selectedPageIndex = 0;
   final List<Widget> _pages = const [
-    HomeScreen(),
+    //HomeScreen(),
     SearchScreen(),
     FavoritesScreen(),
     ProfileScreen()

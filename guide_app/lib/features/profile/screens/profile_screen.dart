@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
                     Provider.of<ProfileCubit>(context, listen: false).state
                         is ProfileInitialState) {
                   Provider.of<ProfileCubit>(context, listen: false)
-                      .getNextPage(0);
+                      .refresh();
                 }
                 return const ProfileCore();
               }));

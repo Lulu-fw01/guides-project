@@ -12,7 +12,7 @@ PreferredSizeWidget favoritesAppBar(BuildContext context) {
   switch (favoritesProvider.favoritesScreenState) {
     case FavoritesScreenState.viewFavorites:
       return AppBar(
-        backgroundColor: theme.surface,
+        backgroundColor: theme.readableBackColor,
         title: Center(
             child: Text(
           'Избранное',

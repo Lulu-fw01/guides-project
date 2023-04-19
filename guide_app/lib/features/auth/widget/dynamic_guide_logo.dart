@@ -28,7 +28,7 @@ class DynamicGuideLogoState extends State<DynamicGuideLogo>
     );
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeInOutQuart,
+      curve: Curves.elasticInOut,
     );
   }
 

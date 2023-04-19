@@ -87,13 +87,13 @@ class MainScaffold extends StatelessWidget {
             mainScaffoldProvider.changePage(index);
           },
           destinations: [
-            NavigationDestination(
-                icon: const Icon(Icons.home_outlined),
-                selectedIcon: Icon(
-                  Icons.home,
-                  color: theme.onSurface,
-                ),
-                label: "Главное"),
+            // NavigationDestination(
+            //     icon: const Icon(Icons.home_outlined),
+            //     selectedIcon: Icon(
+            //       Icons.home,
+            //       color: theme.onSurface,
+            //     ),
+            //     label: "Главное"),
             NavigationDestination(
                 icon: const Icon(
                   Icons.search_outlined,
@@ -121,58 +121,3 @@ class MainScaffold extends StatelessWidget {
     );
   }
 }
-
-// class MainScaffoldState extends State<MainScaffold> {
-//   int selectedPageIndex = 0;
-//   final List<Widget> _pages = const [
-//     HomeScreen(),
-//     SearchScreen(),
-//     FavoritesScreen(),
-//     ProfileScreen()
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocListener<FavoritesCubit, FavoritesState>(
-//       listener: (context, state) {
-//         final snack = buildFavoritesStateSnackBar(context, state);
-//         if (snack == null) {
-//           return;
-//         }
-//         ScaffoldMessenger.of(context).showSnackBar(snack);
-//       },
-//       child: BlocListener<GuideUtilsCubit, GuideUtilsState>(
-//         listener: (context, state) {
-//           final snack = buildGuideUtilsSnackBar(context, state);
-//           if (snack == null) {
-//             return;
-//           }
-//           ScaffoldMessenger.of(context).showSnackBar(snack);
-//         },
-//         child: Scaffold(
-//           backgroundColor: Colors.white,
-//           appBar: buildCoreAppBar(context, selectedPageIndex),
-//           body: SafeArea(
-//               child: Container(
-//                   color: Colors.white, child: _pages[selectedPageIndex])),
-//           bottomNavigationBar: _buildBottomNavigationBar(context),
-//           floatingActionButton: selectedPageIndex == 3
-//               ? ProfileFab(onPressed: () => _onCreateNewGuidePressed(context))
-//               : null,
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _onCreateNewGuidePressed(BuildContext context) {
-//     final theme = Provider.of<MainTheme>(context, listen: false);
-//     final credentials = UserCredentials.of(context);
-//     Navigator.of(context).push(MaterialPageRoute(
-//       builder: (BuildContext context) => Provider(
-//         create: (context) => theme,
-//         builder: (context, child) =>
-//             GuideScreen(email: credentials.email, token: credentials.token),
-//       ),
-//     ));
-//   }
-// }

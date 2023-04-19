@@ -28,7 +28,8 @@ class ProfileCore extends StatelessWidget {
       final profileProvider =
           Provider.of<ProfileProvider>(context, listen: false);
 
-      if (state is ProfileLoadingState &&
+      if ((state is ProfileLoadingState ||
+              state is ProfileRefreshLoadingState) &&
           profileProvider.guideCardDtos.isEmpty) {
         return Center(
             child: CircularProgressIndicator(
@@ -50,8 +51,7 @@ class ProfileCore extends StatelessWidget {
       } else if (state is ProfileErrorState &&
           profileProvider.guideCardDtos.isEmpty) {
         return FullScreenError(
-          // TODO maybe change to refresh().
-          onPressed: () => profileCubit.getNextPage(0),
+          onPressed: () => profileCubit.refresh(),
           message: state.message,
         );
       } else if (state is ProfileRefreshSuccessState) {
