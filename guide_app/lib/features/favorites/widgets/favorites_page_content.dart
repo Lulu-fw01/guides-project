@@ -64,28 +64,35 @@ class FavoritesPageContent extends StatelessWidget {
         .toList());
     list.add(_loadingProgress(theme));
 
-    return RefreshIndicator(
-        color: theme.onSurface,
-        onRefresh: () => onRefresh(favoritesPageCubit),
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          key: const PageStorageKey('favorites_page_cards'),
-          controller: _scrollController
-            ..addListener(() {
-              // If we at the end of the list we will upload
-              // next page if it is not last.
-              if (_scrollController.offset ==
-                      _scrollController.position.maxScrollExtent &&
-                  !favoritesPageCubit.isLoadingPage &&
-                  !favoritesContentProvider.isLastPage()) {
-                favoritesPageCubit.isLoadingPage = true;
-                favoritesPageCubit.getNextPage(
-                    favoritesContentProvider.guideCardDtos.last.id);
-              }
-            }),
-          itemCount: list.length,
-          itemBuilder: (context, index) => list[index],
-        ));
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  width: 1, color: theme.onSurface.withOpacity(0.4))),
+        ),
+      child: RefreshIndicator(
+          color: theme.onSurface,
+          onRefresh: () => onRefresh(favoritesPageCubit),
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            key: const PageStorageKey('favorites_page_cards'),
+            controller: _scrollController
+              ..addListener(() {
+                // If we at the end of the list we will upload
+                // next page if it is not last.
+                if (_scrollController.offset ==
+                        _scrollController.position.maxScrollExtent &&
+                    !favoritesPageCubit.isLoadingPage &&
+                    !favoritesContentProvider.isLastPage()) {
+                  favoritesPageCubit.isLoadingPage = true;
+                  favoritesPageCubit.getNextPage(
+                      favoritesContentProvider.guideCardDtos.last.id);
+                }
+              }),
+            itemCount: list.length,
+            itemBuilder: (context, index) => list[index],
+          )),
+    );
   }
 
   // TODO move to common.

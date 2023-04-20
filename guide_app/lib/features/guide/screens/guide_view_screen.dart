@@ -50,10 +50,13 @@ class GuideViewScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16.0, right: 16),
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     height: 8,
                   ),
+                  Text(guide.login, style: theme.guideAuthorText,),
+                  Text(guide.getEditDateAsText(), style: theme.informationText),
                   quill.QuillEditor(
                     controller: quillController,
                     readOnly: true,

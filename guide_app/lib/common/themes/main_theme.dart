@@ -28,6 +28,8 @@ class MainTheme {
       color: const Color(0xFF2E1A7E));
   TextStyle informationText = GoogleFonts.lato(
       fontSize: 16, fontWeight: FontWeight.w400, color: readableColor);
+  TextStyle guideAuthorText = GoogleFonts.lato(
+      fontSize: 19, fontWeight: FontWeight.w400, color: readableColor);
   // -----------------------------------------------------------------------------
   /// [TextStyle] for snackbar text.
   TextStyle snackBarInfoText = GoogleFonts.lato(
@@ -51,22 +53,19 @@ class MainTheme {
         textSelectionTheme: TextSelectionThemeData(cursorColor: onSurface),
         shadowColor: Colors.black,
         colorScheme: ColorScheme(
-          surface: surface,
-          onSurface: onSurface,
-          secondaryContainer: secondaryContainer,
-          onSurfaceVariant: onSurfaceVariant,
-          background: Colors.white,
-          brightness: Brightness.light,
-          error: Colors.red,
-          onBackground: Colors.black,
-          onError: Colors.white,
-          onPrimary: Colors.black,
-          onSecondary: Colors.black,
-          primary: Colors.white,
-          secondary: Colors.grey,
-          shadow: Colors.black
-          
-          
-        ));
+            surface: surface,
+            onSurface: onSurface,
+            secondaryContainer: secondaryContainer,
+            onSurfaceVariant: onSurfaceVariant,
+            background: Colors.white,
+            brightness: Brightness.light,
+            error: Colors.red,
+            onBackground: Colors.black,
+            onError: Colors.white,
+            onPrimary: Colors.black,
+            onSecondary: Colors.black,
+            primary: Colors.white,
+            secondary: Colors.grey,
+            shadow: Colors.black));
   }
 }

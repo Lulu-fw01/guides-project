@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
     var appTheme = MainTheme();
     return MaterialApp(
         theme: appTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
         home: Home(
           appTheme: appTheme,
         ));

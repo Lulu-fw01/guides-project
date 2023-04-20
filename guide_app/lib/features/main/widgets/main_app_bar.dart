@@ -11,11 +11,11 @@ PreferredSizeWidget? buildMainAppBar(
     BuildContext context, int selectedPageIndex) {
   final initCubit = Provider.of<InitCubit>(context);
   switch (selectedPageIndex) {
-    case 1:
+    case 0:
       return searchAppBar(context);
-    case 2:
+    case 1:
       return favoritesAppBar(context);
-    case 3:
+    case 2:
       return profileAppBar(context, () {
         initCubit.logout();
       });

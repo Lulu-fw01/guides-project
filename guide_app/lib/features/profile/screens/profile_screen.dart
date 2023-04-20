@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/repository/guide/guide_repository.dart';
+import '../../../common/repository/user_repository.dart';
 import '../../guide/cubit/guide_view/guide_view_cubit.dart';
 import '../../guide/screens/guide_view_screen.dart';
 import '../cubit/profile_cubit.dart';
@@ -16,6 +17,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final guideRepo = Provider.of<GuideRepository>(context, listen: false);
+    final userRepository = Provider.of<UserRepository>(context, listen: false);
 
     return Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
@@ -24,14 +26,14 @@ class ProfileScreen extends StatelessWidget {
           // Show profile info and user's guides.
           // TODO Move BLOC to main core.
           return BlocProvider(
-              create: (context) => ProfileCubit(guideRepository: guideRepo),
+              create: (context) => ProfileCubit(
+                  guideRepository: guideRepo, userRepository: userRepository),
               child: Builder(builder: (context) {
                 // Call getNextPage only if there were no calls before.
                 if (profileProvider.pageNum == 0 &&
                     Provider.of<ProfileCubit>(context, listen: false).state
                         is ProfileInitialState) {
-                  Provider.of<ProfileCubit>(context, listen: false)
-                      .getNextPage(0);
+                  Provider.of<ProfileCubit>(context, listen: false).refresh();
                 }
                 return const ProfileCore();
               }));

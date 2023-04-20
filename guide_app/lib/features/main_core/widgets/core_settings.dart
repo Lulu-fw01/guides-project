@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:guide_app/common/client/user_client.dart';
+import 'package:guide_app/common/repository/user_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/client/guide_client.dart';
@@ -47,6 +49,10 @@ class CoreSettings extends StatelessWidget {
                   email: credentials.email,
                   favoritesClient: FavoritesClient(credentials.token),
                 )),
+        RepositoryProvider<UserRepository>(
+            create: (context) => UserRepository(
+                UserClient(token: credentials.token),
+                email: credentials.email))
       ],
       // All providers of app initialized here.
       child: MultiProvider(

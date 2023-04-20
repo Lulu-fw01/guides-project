@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:intl/intl.dart';
 
 part 'guide_dto.g.dart';
 
@@ -26,4 +27,9 @@ class GuideDto {
 
   factory GuideDto.fromJson(Map<String, dynamic> json) =>
       _$GuideDtoFromJson(json);
+
+  String getEditDateAsText() {
+    var formatter = DateFormat('dd.MM.yyyy');
+    return formatter.format(editDate);
+  }
 }

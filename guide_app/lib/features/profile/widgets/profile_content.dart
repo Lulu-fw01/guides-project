@@ -11,6 +11,7 @@ import '../../favorites/cubit/favorites_cubit.dart';
 import '../../main_core/provider/core_provider.dart';
 import '../cubit/profile_cubit.dart';
 import '../provider/profile_provider.dart';
+import 'user_info.dart';
 
 /// Part of [ProfileContent] where we draw guide cards.
 class ProfileContent extends StatelessWidget {
@@ -36,6 +37,11 @@ class ProfileContent extends StatelessWidget {
 
     List<Widget> list = [];
     list.add(_loadingRefreshProgress(theme));
+    if (profileProvider.userInfoDto != null) {
+      list.add(UserInfo(
+        userInfoDto: profileProvider.userInfoDto!,
+      ));
+    }
     list.addAll(profileProvider.guideCardDtos
         .map(
           (dto) => GuideCard(
@@ -62,26 +68,32 @@ class ProfileContent extends StatelessWidget {
         .toList());
     list.add(_loadingProgress(theme));
 
-    return RefreshIndicator(
-        color: theme.onSurface,
-        onRefresh: () => onRefresh(profileProvider, profileCubit),
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          key: const PageStorageKey('profile_page_cards'),
-          controller: _scrollController
-            ..addListener(() {
-              // If we at the end of the list we will upload
-              // next page if it is not last.
-              if (_scrollController.offset ==
-                      _scrollController.position.maxScrollExtent &&
-                  !profileCubit.isLoadingPage &&
-                  !profileProvider.isLastPage()) {
-                profileCubit.isLoadingPage = true;
-                profileCubit.getNextPage(profileProvider.pageNum);
-              }
-            }),
-          children: list,
-        ));
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+            top: BorderSide(width: 1, color: theme.onSurface.withOpacity(0.4))),
+      ),
+      child: RefreshIndicator(
+          color: theme.onSurface,
+          onRefresh: () => onRefresh(profileProvider, profileCubit),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            key: const PageStorageKey('profile_page_cards'),
+            controller: _scrollController
+              ..addListener(() {
+                // If we at the end of the list we will upload
+                // next page if it is not last.
+                if (_scrollController.offset ==
+                        _scrollController.position.maxScrollExtent &&
+                    !profileCubit.isLoadingPage &&
+                    !profileProvider.isLastPage()) {
+                  profileCubit.isLoadingPage = true;
+                  profileCubit.getNextPage(profileProvider.pageNum);
+                }
+              }),
+            children: list,
+          )),
+    );
   }
 
   Widget _loadingProgress(MainTheme theme) {
