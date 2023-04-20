@@ -36,6 +36,11 @@ class AuthenticationServiceTest {
 
     private User user;
 
+    @BeforeEach
+    public void initUser() {
+        user = new User();
+    }
+
     @Test
     public void registerWithNullRegisterBody() {
         assertThrows(ResponseStatusException.class, () -> authenticationService.register(null), "The request body is null");
